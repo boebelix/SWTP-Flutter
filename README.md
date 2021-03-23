@@ -1,2 +1,10 @@
-# Hettel-SWTP-2021-Flutter
-Mobil-App für SWTP-Projekt 2021
+# Softwaretechnik Praktikum mit Flutter
+
+Für das Studienprojekt wird eine Flutter App entwickelt.
+
+## Entwickler
+- Yannis Heim
+- Maurice Didion
+- Stefan Böbel
+
+
