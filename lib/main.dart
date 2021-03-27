@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:swtp_app/endpoints/LogInEndpoint.dart';
+import 'package:swtp_app/models/Credentials.dart';
 
 void main() {
   runApp(MyApp());
@@ -6,6 +8,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,15 +50,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  LogInEndpoint _endpoint = LogInEndpoint();
 
   void _incrementCounter() {
     setState(() {
+      print("Test");
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      Credentials cerd = Credentials.name("test", "test");
+      _endpoint.signIn(cerd);
     });
   }
 
