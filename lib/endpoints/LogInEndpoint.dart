@@ -13,7 +13,7 @@ class LogInEndpoint
     print(data.toJson());
     print(jsonEncode(data.toJson()));
     return await http.post(
-      Uri.https("10.0.2.2:9080","/api/authentication"),
+      Uri.http("10.0.2.2:9080","/api/authentication"),
       body: jsonEncode(data.toJson())
     ).then((response){
 
