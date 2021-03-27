@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
-
-class Credentials{
-
+class Credentials {
   String _username;
   String _password;
 
@@ -19,9 +16,5 @@ class Credentials{
     _username = value;
   }
 
-  Map<String, dynamic> toJson() => {
-    "username":   username,
-    "password":   password,
-  };
-
+  Map<String, dynamic> toJson() => {"username": username, "password": password};
 }
