@@ -10,13 +10,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -35,15 +33,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  LogInEndpoint _endpoint = LogInEndpoint();
 
   void _incrementCounter() {
     setState(() {
+      print("Test");
+
+      Credentials credentials = Credentials("test", "test");
+      _endpoint.signIn(credentials);
 
     });
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {

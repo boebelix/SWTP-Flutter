@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.hskl.swtp_app">
    <application
-        android:usesCleartextTraffic="true"
         android:label="swtp_app"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -38,8 +37,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <uses-library
-               android:name="org.apache.http.legacy"
-               android:required="false" />
     </application>
 </manifest>
