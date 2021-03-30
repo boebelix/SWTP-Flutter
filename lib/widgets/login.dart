@@ -14,7 +14,7 @@ class _LoginState extends State<Login> {
   final TextEditingController password = TextEditingController();
   String _errorMsg;
 
-  void _onPressed() {
+  void _sendLoginData() {
     try {
       UserService userService = UserService();
       print(username.text);
@@ -63,7 +63,7 @@ class _LoginState extends State<Login> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
                 child: ElevatedButton(
-                    onPressed: _onPressed,
+                    onPressed: _sendLoginData,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                         (Colors.black12),
@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
                 child: ElevatedButton(
-                    onPressed: _onPressed,
+                    onPressed: null,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                         (Colors.black12),
