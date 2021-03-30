@@ -18,11 +18,11 @@ class LogInEndpoint {
             },
             body: jsonEncode(data.toJson()))
         .then((response) {
-          Map<String, dynamic> responseData= jsonDecode(response.body);
-          print(response.body);
           if(response.statusCode ==HttpStatus.ok){
+            Map<String, dynamic> responseData= jsonDecode(response.body);
             return responseData;
           }else{
+            print('throws');
             throw HttpException('Unauthorized');
           }
     });
