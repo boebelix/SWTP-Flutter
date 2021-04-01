@@ -50,6 +50,7 @@ class _LoginState extends State<Login> {
                 labelText: 'Passwort',
               ),
               controller: password,
+              obscureText: true,
             ),
             _errorMsg == null
                 ? Container()
