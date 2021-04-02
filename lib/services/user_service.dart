@@ -1,6 +1,8 @@
 import 'package:swtp_app/endpoints/LogInEndpoint.dart';
+import 'package:swtp_app/endpoints/register_endpoint.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/models/User.dart';
+import 'package:swtp_app/models/register_credentials.dart';
 
 class UserService {
   static final UserService _instance = UserService._internal();
@@ -26,6 +28,11 @@ class UserService {
 
   bool isSignedIn() {
     return _token != null && _user != null;
+  }
+
+  void registerUser(RegisterCredentials credentials) async{
+    Map<String,dynamic> responseData= await RegisterEndpoint().register(credentials);
+    _user = User.fromJSON(responseData);
   }
 
   User get user => _user;

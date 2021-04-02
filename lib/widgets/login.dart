@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/widgets/register.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -26,6 +27,7 @@ class _LoginState extends State<Login> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,9 @@ class _LoginState extends State<Login> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
                 child: ElevatedButton(
-                    onPressed: null,
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Register()));
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                         (Colors.black12),

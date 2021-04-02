@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:http/http.dart' as http;
-import 'package:swtp_app/models/User.dart';
 
 class LogInEndpoint {
   Future<Map<String, dynamic>> signIn(Credentials data) async {
@@ -26,5 +25,6 @@ class LogInEndpoint {
             throw HttpException('Unauthorized');
           }
     });
+
   }
 }
