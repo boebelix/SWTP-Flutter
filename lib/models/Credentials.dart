@@ -4,7 +4,6 @@ class Credentials {
 
   Credentials(this._username, this._password);
 
-
   Map<String, dynamic> toJson() =>
       {"username": _username, "password": _password};
 }

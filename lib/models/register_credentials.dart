@@ -20,7 +20,6 @@ class RegisterCredentials {
       this._zip,
       this._city);
 
-
   Map<String, dynamic> toJson() => {
         "username": _username,
         "password": _password,

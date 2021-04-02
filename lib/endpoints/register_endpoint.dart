@@ -9,20 +9,19 @@ class RegisterEndpoint {
     print(credentials.toJson());
     return await http
         .post(Uri.http("10.0.2.2:9080", "/api/users"),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-        },
-        body: jsonEncode(credentials.toJson()))
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+            },
+            body: jsonEncode(credentials.toJson()))
         .then((response) {
-      if(response.statusCode ==HttpStatus.ok){
-        Map<String, dynamic> responseData= jsonDecode(response.body);
+      if (response.statusCode == HttpStatus.ok) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData;
-      }else{
+      } else {
         print('throws');
         throw HttpException('Unauthorized');
       }
     });
-
   }
 }

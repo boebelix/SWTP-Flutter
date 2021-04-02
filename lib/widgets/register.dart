@@ -25,8 +25,16 @@ class _RegisterStage extends State<Register> {
   void _sendRegisterData() {
     try {
       UserService userService = UserService();
-      userService.registerUser(RegisterCredentials(username.text, password.text, email.text,
-          firstname.text, lastname.text, street.text, streetNr.text, zip.text, city.text));
+      userService.registerUser(RegisterCredentials(
+          username.text,
+          password.text,
+          email.text,
+          firstname.text,
+          lastname.text,
+          street.text,
+          streetNr.text,
+          zip.text,
+          city.text));
       Navigator.pop(context);
     } on HttpException catch (error) {
       setState(() {
