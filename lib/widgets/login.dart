@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:swtp_app/models/Credentials.dart';
+import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
 import 'package:swtp_app/widgets/register.dart';
 

@@ -1,7 +1,7 @@
-import 'package:swtp_app/endpoints/LogInEndpoint.dart';
+import 'package:swtp_app/endpoints/login_endpoint.dart';
 import 'package:swtp_app/endpoints/register_endpoint.dart';
-import 'package:swtp_app/models/Credentials.dart';
-import 'package:swtp_app/models/User.dart';
+import 'package:swtp_app/models/login_credentials.dart';
+import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 
 class UserService {

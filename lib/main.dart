@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:swtp_app/endpoints/LogInEndpoint.dart';
-import 'package:swtp_app/models/Credentials.dart';
+import 'package:swtp_app/endpoints/login_endpoint.dart';
+import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/widgets/login.dart';
 
-import 'models/User.dart';
+import 'models/user.dart';
 
 void main() {
   runApp(MyApp());
