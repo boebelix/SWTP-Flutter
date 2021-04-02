@@ -1,13 +1,13 @@
 class RegisterCredentials {
-  String _username;
-  String _password;
-  String _email;
-  String _firstname;
-  String _lastname;
-  String _street;
-  String _streetNr;
-  String _zip;
-  String _city;
+  final String _username;
+  final String _password;
+  final String _email;
+  final String _firstname;
+  final String _lastname;
+  final String _street;
+  final String _streetNr;
+  final String _zip;
+  final String _city;
 
   RegisterCredentials(
       this._username,
@@ -20,13 +20,6 @@ class RegisterCredentials {
       this._zip,
       this._city);
 
-  set password(String value) {
-    _password = value;
-  }
-
-  set username(String value) {
-    _username = value;
-  }
 
   Map<String, dynamic> toJson() => {
         "username": _username,
