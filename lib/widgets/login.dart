@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _LoginState extends State<Login> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text( AppLocalizations.of(context).login),
       ),
       body: Container(
         margin: EdgeInsets.all(deviceSize.width * 0.1),

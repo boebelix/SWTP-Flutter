@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:swtp_app/endpoints/LogInEndpoint.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/widgets/login.dart';
@@ -14,6 +15,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('de', ''),
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -32,17 +42,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   LogInEndpoint _endpoint = LogInEndpoint();
-
-  void _incrementCounter() {
-    setState(() {
-      print("Test");
-
-      Credentials credentials = Credentials("test", "test");
-      _endpoint.signIn(credentials);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
