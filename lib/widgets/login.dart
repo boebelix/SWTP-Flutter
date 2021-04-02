@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:swtp_app/models/Credentials.dart';
+import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/widgets/register.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -37,7 +38,6 @@ class _LoginState extends State<Login> {
       body: Container(
         margin: EdgeInsets.all(deviceSize.width * 0.1),
         child: Column(
-
           children: [
             TextFormField(
               decoration: InputDecoration(
@@ -60,9 +60,9 @@ class _LoginState extends State<Login> {
                   ),
             SizedBox(
               width: double.infinity,
-              height: deviceSize.height*0.1,
+              height: deviceSize.height * 0.1,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
                 child: ElevatedButton(
                     onPressed: _sendLoginData,
                     style: ButtonStyle(
@@ -80,11 +80,14 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(
               width: double.infinity,
-              height: deviceSize.height*0.1,
+              height: deviceSize.height * 0.1,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
                 child: ElevatedButton(
-                    onPressed: null,
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Register()));
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                         (Colors.black12),

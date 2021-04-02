@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:swtp_app/models/Credentials.dart';
+import 'package:swtp_app/models/login_credentials.dart';
 import 'package:http/http.dart' as http;
-import 'package:swtp_app/models/User.dart';
 
 class LogInEndpoint {
   Future<Map<String, dynamic>> signIn(Credentials data) async {
@@ -18,13 +17,13 @@ class LogInEndpoint {
             },
             body: jsonEncode(data.toJson()))
         .then((response) {
-          if(response.statusCode ==HttpStatus.ok){
-            Map<String, dynamic> responseData= jsonDecode(response.body);
-            return responseData;
-          }else{
-            print('throws');
-            throw HttpException('Unauthorized');
-          }
+      if (response.statusCode == HttpStatus.ok) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        return responseData;
+      } else {
+        print('throws');
+        throw HttpException('Unauthorized');
+      }
     });
   }
 }
