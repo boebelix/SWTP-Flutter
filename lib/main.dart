@@ -3,7 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:swtp_app/endpoints/LogInEndpoint.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/widgets/login.dart';
-
+import 'package:swtp_app/generated/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'models/User.dart';
 
 void main() {
@@ -16,14 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       localizationsDelegates: [
+        S.delegate,
+
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en', ''),
-        const Locale('de', ''),
-      ],
+      supportedLocales: S.delegate.supportedLocales,
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:swtp_app/generated/l10n.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _LoginState extends State<Login> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text( AppLocalizations.of(context).login),
+        title: Text( S.of(context).login),
       ),
       body: Container(
         margin: EdgeInsets.all(deviceSize.width * 0.1),
@@ -42,13 +43,13 @@ class _LoginState extends State<Login> {
           children: [
             TextFormField(
               decoration: InputDecoration(
-                labelText: 'Nutzername',
+                labelText: S.of(context).user_name,
               ),
               controller: username,
             ),
             TextFormField(
               decoration: InputDecoration(
-                labelText: 'Passwort',
+                labelText: S.of(context).password,
               ),
               controller: password,
               obscureText: true,
@@ -72,7 +73,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     child: Text(
-                      'Einloggen',
+                      S.of(context).login,
                       style: TextStyle(
                         fontSize: 30,
                       ),
@@ -92,7 +93,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     child: Text(
-                      'Registrieren',
+                     S.of(context).register,
                       style: TextStyle(
                         fontSize: 30,
                       ),
