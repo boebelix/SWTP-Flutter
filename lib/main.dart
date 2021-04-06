@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:swtp_app/endpoints/LogInEndpoint.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/widgets/login.dart';
+import 'package:swtp_app/screens/login_screen.dart';
+import 'package:swtp_app/screens/tabs_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'SWTP',
       localizationsDelegates: [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -22,26 +22,15 @@ class MyApp extends StatelessWidget {
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        accentColor: Colors.amber,
+        canvasColor: Color.fromRGBO(255, 254, 229, 1),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        '/': (ctx) => LoginScreen(),
+        TabScreen.routeName: (ctx) => TabScreen(),
+        LoginScreen.routeName: (ctx) => LoginScreen(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  LogInEndpoint _endpoint = LogInEndpoint();
-
-  @override
-  Widget build(BuildContext context) {
-    return Login();
-  }
-}
