@@ -4,6 +4,7 @@ import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/generated/l10n.dart';
 
 class TabScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -67,17 +68,17 @@ class _TabScreenState extends State<TabScreen> {
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.map),
-            label: 'Karte',
+            label: S.of(context).map,
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.group),
-            label: 'Gruppe',
+            label: S.of(context).groups,
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.account_circle),
-            label: 'Profil',
+            label: S.of(context).profile,
           ),
         ],
       ),

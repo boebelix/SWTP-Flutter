@@ -48,13 +48,13 @@ class _LoginState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
+                IconButton(
                   onPressed: () {
                     setState(() {
                       S.load(Locale('en'));
                     });
                   },
-                  child: Image.asset('icons/flags/png/gb.png',
+                  icon: Image.asset('icons/flags/png/gb.png',
                       package: 'country_icons'),
                 ),
                 IconButton(
@@ -63,7 +63,7 @@ class _LoginState extends State<LoginScreen> {
                       S.load(Locale('de'));
                     });
                   },
-                  icon: Image.asset('icons/flags/png/en.png',
+                  icon: Image.asset('icons/flags/png/de.png',
                       package: 'country_icons'), //Text(S.of(context).german)),
                 )
               ],
