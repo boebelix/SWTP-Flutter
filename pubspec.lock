@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  country_icons:
+    dependency: "direct main"
+    description:
+      name: country_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -184,3 +191,4 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
+  flutter: ">=0.1.4"
