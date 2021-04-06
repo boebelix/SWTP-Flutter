@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/Credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
-import 'package:swtp_app/generated/l10n.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -34,25 +33,28 @@ class _LoginState extends State<Login> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text( S.of(context).login),
+        title: Text(S.of(context).login),
       ),
       body: Container(
         margin: EdgeInsets.all(deviceSize.width * 0.1),
         child: Column(
-
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                    onPressed: (){setState(() {
-                      S.load(Locale('en'));
-                    });},
+                    onPressed: () {
+                      setState(() {
+                        S.load(Locale('en'));
+                      });
+                    },
                     child: Text(S.of(context).english)),
                 ElevatedButton(
-                    onPressed: (){setState(() {
-                      S.load(Locale('de'));
-                    });},
+                    onPressed: () {
+                      setState(() {
+                        S.load(Locale('de'));
+                      });
+                    },
                     child: Text(S.of(context).german)),
               ],
             ),
@@ -77,9 +79,9 @@ class _LoginState extends State<Login> {
                   ),
             SizedBox(
               width: double.infinity,
-              height: deviceSize.height*0.1,
+              height: deviceSize.height * 0.1,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
                 child: ElevatedButton(
                     onPressed: _sendLoginData,
                     style: ButtonStyle(
@@ -97,9 +99,9 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(
               width: double.infinity,
-              height: deviceSize.height*0.1,
+              height: deviceSize.height * 0.1,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, deviceSize.height*0.02, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
                 child: ElevatedButton(
                     onPressed: null,
                     style: ButtonStyle(
@@ -108,7 +110,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     child: Text(
-                     S.of(context).register,
+                      S.of(context).register,
                       style: TextStyle(
                         fontSize: 30,
                       ),
