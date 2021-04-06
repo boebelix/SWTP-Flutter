@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:country_icons/country_icons.dart';
 
 void main() {
   runApp(MyApp());

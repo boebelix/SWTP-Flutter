@@ -5,7 +5,6 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
-import 'package:country_icons/country_icons.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -50,20 +49,22 @@ class _LoginState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        S.load(Locale('en'));
-                      });
-                    },
-                    child: Image.asset('icons/flags/png/gb.png', package: 'country_icons'),
+                  onPressed: () {
+                    setState(() {
+                      S.load(Locale('en'));
+                    });
+                  },
+                  child: Image.asset('icons/flags/png/gb.png',
+                      package: 'country_icons'),
                 ),
                 IconButton(
-                    onPressed: () {
-                      setState(() {
-                        S.load(Locale('de'));
-                      });
-                    },
-                    icon: Image.asset('icons/flags/png/en.png', package: 'country_icons'),//Text(S.of(context).german)),
+                  onPressed: () {
+                    setState(() {
+                      S.load(Locale('de'));
+                    });
+                  },
+                  icon: Image.asset('icons/flags/png/en.png',
+                      package: 'country_icons'), //Text(S.of(context).german)),
                 )
               ],
             ),

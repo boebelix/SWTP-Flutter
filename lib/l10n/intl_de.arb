@@ -5,5 +5,15 @@
   "login": "Einloggen",
   "register": "Registrieren",
   "user_name": "Nutzername",
-  "password": "Password"
+  "password": "Password",
+  "email":"E-Mail Adresse",
+  "first_name": "Vorname",
+  "last_name": "Nachname",
+  "street": "Straße",
+  "house_number": "Hausnummer",
+  "postcode": "PLZ",
+  "town": "Stadt",
+  "profile": "Profil",
+  "groups": "Gruppen",
+  "map": "Karte"
 }
