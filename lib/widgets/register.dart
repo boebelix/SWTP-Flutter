@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
-import 'package:swtp_app/generated/l10n.dart';
 
 class Register extends StatefulWidget {
   @override

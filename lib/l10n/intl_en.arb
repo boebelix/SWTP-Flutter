@@ -6,7 +6,7 @@
   "register": "Register",
   "user_name": "User name",
   "password": "Password",
-  "email":"E-Mail adress",
+  "email": "E-Mail adress",
   "first_name": "First name",
   "last_name": "Last name",
   "street": "Street",
