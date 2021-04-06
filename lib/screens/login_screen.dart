@@ -2,15 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:swtp_app/models/login_credentials.dart';
+import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
-import 'package:swtp_app/widgets/register.dart';
 
-class Login extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
+  static const routeName = '/login';
+
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<LoginScreen> {
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
   String _errorMsg;
@@ -21,6 +23,9 @@ class _LoginState extends State<Login> {
       print(username.text);
       print(password.text);
       userService.logIn(Credentials(username.text, password.text));
+      if (userService.isSignedIn()) {
+        Navigator.popAndPushNamed(context, TabScreen.routeName);
+      }
     } on HttpException catch (error) {
       setState(() {
         _errorMsg = error.message;
@@ -85,8 +90,7 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Register()));
+                      Navigator.popAndPushNamed(context, TabScreen.routeName);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
