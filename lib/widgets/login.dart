@@ -41,6 +41,21 @@ class _LoginState extends State<Login> {
         child: Column(
 
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                    onPressed: (){setState(() {
+                      S.load(Locale('en'));
+                    });},
+                    child: Text(S.of(context).english)),
+                ElevatedButton(
+                    onPressed: (){setState(() {
+                      S.load(Locale('de'));
+                    });},
+                    child: Text(S.of(context).german)),
+              ],
+            ),
             TextFormField(
               decoration: InputDecoration(
                 labelText: S.of(context).user_name,

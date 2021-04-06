@@ -1,5 +1,7 @@
 {
   "@@locale": "en",
+  "german": "german",
+  "english": "english",
   "login": "Login",
   "register":"Register",
   "user_name": "user name",

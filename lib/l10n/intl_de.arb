@@ -1,5 +1,7 @@
 {
   "@@locale": "de",
+  "german": "deutsch",
+  "english": "englisch",
   "login":"Einloggen",
   "register":"Registrieren",
   "user_name": "Nutzername",
