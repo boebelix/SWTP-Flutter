@@ -30,7 +30,7 @@ class UserService {
     return _token != null && _user != null;
   }
 
-  void registerUser(RegisterCredentials credentials) async {
+  void registerUser({RegisterCredentials credentials}) async {
     Map<String, dynamic> responseData =
         await RegisterEndpoint().register(credentials);
     _user = User.fromJSON(responseData);
