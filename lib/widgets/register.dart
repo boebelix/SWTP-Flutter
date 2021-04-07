@@ -5,6 +5,8 @@ import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
 
 class Register extends StatefulWidget {
+  static const routeName = "/register";
+
   @override
   _RegisterStage createState() => _RegisterStage();
 }
@@ -26,12 +28,25 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
-  String _errorMsg;
+  @override
+  void initState() {
+    username.text = "username";
+    password.text = "1234";
+    repeatPassword.text = "12345";
+    email.text = "abcd1234@stud.hs-kl.de";
+    firstname.text = "firstname";
+    lastname.text = "Lastname";
+    street.text = "Street";
+    streetNr.text = "42a";
+    zip.text = "11111";
+    city.text = "City";
+    super.initState();
+  }
 
   void _sendRegisterData() {
     try {
       UserService userService = UserService();
-      if (password.text == repeatPassword.text) {
+      if (_formKey.currentState.validate()) {
         userService.registerUser(
           credentials: RegisterCredentials(
             username.text,
@@ -46,15 +61,9 @@ class _RegisterStage extends State<Register> {
           ),
         );
         Navigator.pop(context);
-      } else {
-        setState(() {
-          _errorMsg = 'Passwörter stimmen nicht überein';
-        });
       }
-    } on HttpException catch (error) {
-      setState(() {
-        _errorMsg = error.message;
-      });
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -93,6 +102,22 @@ class _RegisterStage extends State<Register> {
               labelText: 'Vorname',
               icon: Icon(Icons.account_circle),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Bitte geben Sie einen Vornamen ein";
+              }
+
+              RegExp regexFirstname = RegExp(
+                r"^[A-ZÄÖÜ][a-zäöü]+\b",
+                multiLine: false,
+              );
+
+              if (!regexFirstname.hasMatch(value)) {
+                return "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+              }
+
+              return null;
+            },
             controller: firstname,
           ),
           TextFormField(
@@ -100,6 +125,22 @@ class _RegisterStage extends State<Register> {
               labelText: 'Nachname',
               icon: Icon(Icons.account_circle),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Bitte geben Sie einen Nachnamen ein";
+              }
+
+              RegExp regexLastname = RegExp(
+                r"^[A-ZÄÖÜ][a-zäöü]+\b",
+                multiLine: false,
+              );
+
+              if (!regexLastname.hasMatch(value)) {
+                return "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+              }
+
+              return null;
+            },
             controller: lastname,
           ),
           Row(
@@ -111,6 +152,22 @@ class _RegisterStage extends State<Register> {
                     labelText: 'Straße',
                     icon: Icon(Icons.location_city),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Bitte geben Sie Ihre Straße ein";
+                    }
+
+                    RegExp regexLastname = RegExp(
+                      r"^[A-ZÄÖÜ][a-zäöü]+\b",
+                      multiLine: false,
+                    );
+
+                    if (!regexLastname.hasMatch(value)) {
+                      return "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+                    }
+
+                    return null;
+                  },
                   controller: street,
                 ),
               ),
@@ -123,6 +180,22 @@ class _RegisterStage extends State<Register> {
                   decoration: InputDecoration(
                     labelText: 'Nr.',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Bitte geben Sie Ihre Hausnummer ein";
+                    }
+
+                    RegExp regexStreetNr = RegExp(
+                      r"^[1-9]([0-9]?)([a-zA-Z]?)$",
+                      multiLine: false,
+                    );
+
+                    if (!regexStreetNr.hasMatch(value)) {
+                      return "Die Hausnummer beginnt mit Zahlen und kann mit einem Buchstaben enden";
+                    }
+
+                    return null;
+                  },
                   controller: streetNr,
                 ),
               ),
@@ -136,6 +209,22 @@ class _RegisterStage extends State<Register> {
                   decoration: InputDecoration(
                       labelText: 'Postleitzahl',
                       icon: Icon(Icons.location_city)),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Bitte geben Sie Ihre Postleitzahl ein";
+                    }
+
+                    RegExp regexZipCode = RegExp(
+                      r"^\d{5}$",
+                      multiLine: false,
+                    );
+
+                    if (!regexZipCode.hasMatch(value)) {
+                      return "Die Postleitzahl besteht aus 5 Zahlen";
+                    }
+
+                    return null;
+                  },
                   controller: zip,
                 ),
               ),
@@ -148,6 +237,22 @@ class _RegisterStage extends State<Register> {
                   decoration: InputDecoration(
                     labelText: 'Stadt',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Bitte geben Sie Ihre Stadt ein";
+                    }
+
+                    RegExp regexCity = RegExp(
+                      r"^[A-ZÄÖÜ][a-zäöü-]+\b",
+                      multiLine: false,
+                    );
+
+                    if (!regexCity.hasMatch(value)) {
+                      return "Der Stadt muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+                    }
+
+                    return null;
+                  },
                   controller: city,
                 ),
               ),
@@ -165,6 +270,13 @@ class _RegisterStage extends State<Register> {
               labelText: 'Nutzername',
               icon: Icon(Icons.account_circle),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Bitte geben wählen Sie einen Nutzernamen";
+              }
+
+              return null;
+            },
             controller: username,
           ),
           TextFormField(
@@ -172,6 +284,23 @@ class _RegisterStage extends State<Register> {
               labelText: 'Email Adresse',
               icon: Icon(Icons.email),
             ),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Bitte geben Sie Ihre E-Mailadresse ein";
+              }
+
+              RegExp regexEmail = RegExp(
+                r"^\w{4}\d{4,}@stud\.(hs-kl|fh-kl)\.de$",
+                multiLine: false,
+              );
+
+              if (!regexEmail.hasMatch(value)) {
+                return "Es handelt sich um keine gültige Hochschule E-Mailadresse";
+              }
+
+              return null;
+            },
             controller: email,
           ),
           TextFormField(
@@ -179,6 +308,65 @@ class _RegisterStage extends State<Register> {
               labelText: 'Passwort',
               icon: Icon(Icons.vpn_key),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Sie müssen ein Passwort wählen";
+              }
+
+              int passwordLength = value.length;
+              RegExp regexHasNumber = RegExp(
+                r"\d",
+                multiLine: false,
+              );
+              RegExp regexHasSpecialSign = RegExp(
+                r"[!§$&?]",
+                multiLine: false,
+              );
+              RegExp regexUpperAndLowerCase = RegExp(
+                r"([A-Z])(?=.*[a-z])|([a-z])(?=.*[A-Z])",
+                multiLine: false,
+              );
+
+              bool hasMinLen = passwordLength > 5;
+              bool hasLenBigger7 = passwordLength > 7;
+              bool hasNumber = regexHasNumber.hasMatch(value);
+              bool hasSpecialSign = regexHasSpecialSign.hasMatch(value);
+              bool hasUpperAndLowerCase =
+                  regexUpperAndLowerCase.hasMatch(value);
+
+              if (hasMinLen &&
+                  hasUpperAndLowerCase &&
+                  hasNumber &&
+                  hasSpecialSign &&
+                  hasLenBigger7) {
+                // TODO Passwortstärke Visual darstellen siehe SWTP Projekt
+                // sehr sicher
+
+                return null;
+              } else if (hasMinLen &&
+                  hasUpperAndLowerCase &&
+                  hasNumber &&
+                  hasSpecialSign) {
+                // TODO siehe oben
+                // sicher
+
+                return null;
+              } else if (hasMinLen && hasUpperAndLowerCase) {
+                // TODO siehe oben
+                // mittel sicher
+
+                return null;
+              } else if (hasMinLen) {
+                // TODO siehe oben
+                // akzeptabel
+
+                return null;
+              } else {
+                // nicht sicher
+
+                return "Passwort nicht sicher";
+              }
+            },
             controller: password,
             obscureText: true,
           ),
@@ -187,39 +375,43 @@ class _RegisterStage extends State<Register> {
               labelText: 'Passwort wiederholen',
               icon: Icon(Icons.vpn_key),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Bitte wiederholen Sie die Passworteingabe";
+              }
+              if (value != password.text) {
+                return "Die Eingabe stimmt nicht mit dem Passwort überein";
+              }
+              return null;
+            },
             controller: repeatPassword,
             obscureText: true,
           ),
-          _errorMsg == null
-              ? Container()
-              : Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    _errorMsg,
-                    style: TextStyle(color: Colors.redAccent),
-                  ),
-                ),
-          SizedBox(
-            width: double.infinity,
-            height: deviceSize.height * 0.1,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
-              child: ElevatedButton(
-                  onPressed: _sendRegisterData,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      (Colors.black12),
-                    ),
-                  ),
-                  child: Text(
-                    'Registrieren',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  )),
-            ),
-          )
+          _submitButton(deviceSize)
         ],
+      ),
+    );
+  }
+
+  SizedBox _submitButton(Size deviceSize) {
+    return SizedBox(
+      width: double.infinity,
+      height: deviceSize.height * 0.1,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
+        child: ElevatedButton(
+            onPressed: _sendRegisterData,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                (Colors.black12),
+              ),
+            ),
+            child: Text(
+              'Registrieren',
+              style: TextStyle(
+                fontSize: 30,
+              ),
+            )),
       ),
     );
   }

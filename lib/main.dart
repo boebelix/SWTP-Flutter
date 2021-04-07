@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/widgets/register.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         '/': (ctx) => LoginScreen(),
         TabScreen.routeName: (ctx) => TabScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
+        Register.routeName: (ctx) => Register(),
       },
     );
   }

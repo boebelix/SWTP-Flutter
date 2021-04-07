@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/widgets/register.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -90,7 +91,7 @@ class _LoginState extends State<LoginScreen> {
                 padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.popAndPushNamed(context, TabScreen.routeName);
+                      Navigator.pushNamed(context, Register.routeName);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
