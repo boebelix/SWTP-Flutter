@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:swtp_app/generated/l10n.dart';
@@ -29,7 +29,6 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
-
   void _sendRegisterData() {
     try {
       UserService userService = UserService();
@@ -47,8 +46,10 @@ class _RegisterStage extends State<Register> {
             city.text,
           ),
         );
-        // TODO Hier sollte man sich überlegen was danach passieren soll. Möglicherweise eine Anmeldung über Endpoint und dann zum TabScreen
-        Navigator.pop(context);
+
+        // TODO Muss umgebaut werden wenn der Endpoint oder Serviceklasse richtig Fehler wirft
+        // userService.logIn(LoginCredentials(username.text, password.text));
+        // Navigator.pushNamed(context, TabScreen.routeName);
       }
     } catch (error) {
       print(error);
@@ -87,48 +88,18 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).first_name,
+              labelText: S.of(context).firstname,
               icon: Icon(Icons.account_circle),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).warning_firstname_NN;
-              }
-
-              RegExp regexFirstname = RegExp(
-                r"^[A-ZÄÖÜ][a-zäöü]+\b",
-                multiLine: false,
-              );
-
-              if (!regexFirstname.hasMatch(value)) {
-                return S.of(context).warning_firstname_UpperThenLower;
-              }
-
-              return null;
-            },
+            validator: _validatorFirstname,
             controller: firstname,
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).last_name,
+              labelText: S.of(context).lastname,
               icon: Icon(Icons.account_circle),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).warning_lastname_NN;
-              }
-
-              RegExp regexLastname = RegExp(
-                r"^[A-ZÄÖÜ][a-zäöü]+\b",
-                multiLine: false,
-              );
-
-              if (!regexLastname.hasMatch(value)) {
-                return S.of(context).warning_lastname_UpperThenLower;
-              }
-
-              return null;
-            },
+            validator: _validatorLastname,
             controller: lastname,
           ),
           Row(
@@ -140,22 +111,7 @@ class _RegisterStage extends State<Register> {
                     labelText: S.of(context).street,
                     icon: Icon(Icons.location_city),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context).warning_street_NN;
-                    }
-
-                    RegExp regexLastname = RegExp(
-                      r"^[A-ZÄÖÜ][a-zäöü]+\b",
-                      multiLine: false,
-                    );
-
-                    if (!regexLastname.hasMatch(value)) {
-                      return S.of(context).warning_street_UpperThenLower;
-                    }
-
-                    return null;
-                  },
+                  validator: _validatorStreet,
                   controller: street,
                 ),
               ),
@@ -168,22 +124,7 @@ class _RegisterStage extends State<Register> {
                   decoration: InputDecoration(
                     labelText: S.of(context).house_number,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context).warning_house_number_NN;
-                    }
-
-                    RegExp regexStreetNr = RegExp(
-                      r"^[1-9]([0-9]?)([a-zA-Z]?)$",
-                      multiLine: false,
-                    );
-
-                    if (!regexStreetNr.hasMatch(value)) {
-                      return S.of(context).warning_house_number_UperThenLower;
-                    }
-
-                    return null;
-                  },
+                  validator: _validatorHouseNumber,
                   controller: streetNr,
                 ),
               ),
@@ -197,22 +138,7 @@ class _RegisterStage extends State<Register> {
                   decoration: InputDecoration(
                       labelText: S.of(context).postcode,
                       icon: Icon(Icons.location_city)),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context).warning_postcode_NN;
-                    }
-
-                    RegExp regexZipCode = RegExp(
-                      r"^\d{5}$",
-                      multiLine: false,
-                    );
-
-                    if (!regexZipCode.hasMatch(value)) {
-                      return S.of(context).warning_postcode_5_Figures;
-                    }
-
-                    return null;
-                  },
+                  validator: _validatorPostcode,
                   controller: zip,
                 ),
               ),
@@ -225,22 +151,7 @@ class _RegisterStage extends State<Register> {
                   decoration: InputDecoration(
                     labelText: S.of(context).city,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context).warning_city_NN;
-                    }
-
-                    RegExp regexCity = RegExp(
-                      r"^[A-ZÄÖÜ][a-zäöü-]+\b",
-                      multiLine: false,
-                    );
-
-                    if (!regexCity.hasMatch(value)) {
-                      return S.of(context).warning_city_UpperThenLower;
-                    }
-
-                    return null;
-                  },
+                  validator: _validatorCity,
                   controller: city,
                 ),
               ),
@@ -258,13 +169,7 @@ class _RegisterStage extends State<Register> {
               labelText: S.of(context).user_name,
               icon: Icon(Icons.account_circle),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).warning_user_name_NN;
-              }
-
-              return null;
-            },
+            validator: _validatorUsername,
             controller: username,
           ),
           TextFormField(
@@ -273,22 +178,7 @@ class _RegisterStage extends State<Register> {
               icon: Icon(Icons.email),
             ),
             keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).warning_email_NN;
-              }
-
-              RegExp regexEmail = RegExp(
-                r"^\w{4}\d{4,}@stud\.(hs-kl|fh-kl)\.de$",
-                multiLine: false,
-              );
-
-              if (!regexEmail.hasMatch(value)) {
-                return S.of(context).warning_email_not_hskl;
-              }
-
-              return null;
-            },
+            validator: _validatorEmail,
             controller: email,
           ),
           TextFormField(
@@ -296,65 +186,7 @@ class _RegisterStage extends State<Register> {
               labelText: S.of(context).password,
               icon: Icon(Icons.vpn_key),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).warning_password;
-              }
-
-              int passwordLength = value.length;
-              RegExp regexHasNumber = RegExp(
-                r"\d",
-                multiLine: false,
-              );
-              RegExp regexHasSpecialSign = RegExp(
-                r"[!§$&?]",
-                multiLine: false,
-              );
-              RegExp regexUpperAndLowerCase = RegExp(
-                r"([A-Z])(?=.*[a-z])|([a-z])(?=.*[A-Z])",
-                multiLine: false,
-              );
-
-              bool hasMinLen = passwordLength > 5;
-              bool hasLenBigger7 = passwordLength > 7;
-              bool hasNumber = regexHasNumber.hasMatch(value);
-              bool hasSpecialSign = regexHasSpecialSign.hasMatch(value);
-              bool hasUpperAndLowerCase =
-                  regexUpperAndLowerCase.hasMatch(value);
-
-              if (hasMinLen &&
-                  hasUpperAndLowerCase &&
-                  hasNumber &&
-                  hasSpecialSign &&
-                  hasLenBigger7) {
-                // TODO Passwortstärke Visual darstellen siehe SWTP Projekt
-                // sehr sicher
-
-                return null;
-              } else if (hasMinLen &&
-                  hasUpperAndLowerCase &&
-                  hasNumber &&
-                  hasSpecialSign) {
-                // TODO siehe oben
-                // sicher
-
-                return null;
-              } else if (hasMinLen && hasUpperAndLowerCase) {
-                // TODO siehe oben
-                // mittel sicher
-
-                return null;
-              } else if (hasMinLen) {
-                // TODO siehe oben
-                // akzeptabel
-
-                return null;
-              } else {
-                // nicht sicher
-
-                return S.of(context).password_level_not_save;
-              }
-            },
+            validator: _validatorPassword,
             controller: password,
             obscureText: true,
           ),
@@ -363,15 +195,7 @@ class _RegisterStage extends State<Register> {
               labelText: S.of(context).password_repeat,
               icon: Icon(Icons.vpn_key),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).password_empty;
-              }
-              if (value != password.text) {
-                return S.of(context).warning_password_not_same;
-              }
-              return null;
-            },
+            validator: _validatorRepeatPassword,
             controller: repeatPassword,
             obscureText: true,
           ),
@@ -379,6 +203,202 @@ class _RegisterStage extends State<Register> {
         ],
       ),
     );
+  }
+
+  String _validatorFirstname(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_firstname_NN;
+    }
+
+    RegExp regexFirstname = RegExp(
+      r"^[A-ZÄÖÜ][a-zäöü]+\b",
+      multiLine: false,
+    );
+
+    if (!regexFirstname.hasMatch(value)) {
+      return S.of(context).warning_firstname_UpperThenLower;
+    }
+
+    return null;
+  }
+
+  String _validatorLastname(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_lastname_NN;
+    }
+
+    RegExp regexLastname = RegExp(
+      r"^[A-ZÄÖÜ][a-zäöü]+\b",
+      multiLine: false,
+    );
+
+    if (!regexLastname.hasMatch(value)) {
+      return S.of(context).warning_lastname_UpperThenLower;
+    }
+
+    return null;
+  }
+
+  String _validatorStreet(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_street_NN;
+    }
+
+    RegExp regexLastname = RegExp(
+      r"^[A-ZÄÖÜ][a-zäöü]+\b",
+      multiLine: false,
+    );
+
+    if (!regexLastname.hasMatch(value)) {
+      return S.of(context).warning_street_UpperThenLower;
+    }
+
+    return null;
+  }
+
+  String _validatorHouseNumber(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_house_number_NN;
+    }
+
+    RegExp regexStreetNr = RegExp(
+      r"^[1-9]([0-9]?)([a-zA-Z]?)$",
+      multiLine: false,
+    );
+
+    if (!regexStreetNr.hasMatch(value)) {
+      return S.of(context).warning_house_number_UperThenLower;
+    }
+
+    return null;
+  }
+
+  String _validatorPostcode(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_postcode_NN;
+    }
+
+    RegExp regexZipCode = RegExp(
+      r"^\d{5}$",
+      multiLine: false,
+    );
+
+    if (!regexZipCode.hasMatch(value)) {
+      return S.of(context).warning_postcode_5_Figures;
+    }
+
+    return null;
+  }
+
+  String _validatorCity(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_city_NN;
+    }
+
+    RegExp regexCity = RegExp(
+      r"^[A-ZÄÖÜ][a-zäöü-]+\b",
+      multiLine: false,
+    );
+
+    if (!regexCity.hasMatch(value)) {
+      return S.of(context).warning_city_UpperThenLower;
+    }
+
+    return null;
+  }
+
+  String _validatorUsername(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_user_name_NN;
+    }
+
+    return null;
+  }
+
+  String _validatorEmail(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_email_NN;
+    }
+
+    RegExp regexEmail = RegExp(
+      r"^\w{4}\d{4,}@stud\.(hs-kl|fh-kl)\.de$",
+      multiLine: false,
+    );
+
+    if (!regexEmail.hasMatch(value)) {
+      return S.of(context).warning_email_not_hskl;
+    }
+
+    return null;
+  }
+
+  String _validatorPassword(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_password;
+    }
+
+    int passwordLength = value.length;
+    RegExp regexHasNumber = RegExp(
+      r"\d",
+      multiLine: false,
+    );
+    RegExp regexHasSpecialSign = RegExp(
+      r"[!§$&?]",
+      multiLine: false,
+    );
+    RegExp regexUpperAndLowerCase = RegExp(
+      r"([A-Z])(?=.*[a-z])|([a-z])(?=.*[A-Z])",
+      multiLine: false,
+    );
+
+    bool hasMinLen = passwordLength > 5;
+    bool hasLenBigger7 = passwordLength > 7;
+    bool hasNumber = regexHasNumber.hasMatch(value);
+    bool hasSpecialSign = regexHasSpecialSign.hasMatch(value);
+    bool hasUpperAndLowerCase = regexUpperAndLowerCase.hasMatch(value);
+
+    if (hasMinLen &&
+        hasUpperAndLowerCase &&
+        hasNumber &&
+        hasSpecialSign &&
+        hasLenBigger7) {
+      // TODO Passwortstärke Visual darstellen siehe SWTP Projekt
+      // sehr sicher
+
+      return null;
+    } else if (hasMinLen &&
+        hasUpperAndLowerCase &&
+        hasNumber &&
+        hasSpecialSign) {
+      // TODO siehe oben
+      // sicher
+
+      return null;
+    } else if (hasMinLen && hasUpperAndLowerCase) {
+      // TODO siehe oben
+      // mittel sicher
+
+      return null;
+    } else if (hasMinLen) {
+      // TODO siehe oben
+      // akzeptabel
+
+      return null;
+    } else {
+      // nicht sicher
+
+      return S.of(context).password_level_not_save;
+    }
+  }
+
+  String _validatorRepeatPassword(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).password_empty;
+    }
+    if (value != password.text) {
+      return S.of(context).warning_password_not_same;
+    }
+    return null;
   }
 
   SizedBox _submitButton(Size deviceSize) {
