@@ -10,7 +10,7 @@ class LogInEndpoint {
     print(data.toJson());
     print(jsonEncode(data.toJson()));
     return await http
-        .post(Uri.http("boebelix.ddns.net", "/api/authentication"),
+        .post(Uri.http("10.0.2.2:9080", "/api/authentication"),
             headers: {
               "content-type": "application/json",
               "accept": "application/json",
