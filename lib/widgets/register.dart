@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
 
@@ -28,6 +29,7 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
+  // TODO Delete after Debug
   @override
   void initState() {
     username.text = "username";
@@ -72,7 +74,7 @@ class _RegisterStage extends State<Register> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(S.of(context).register),
       ),
       body: Padding(
         padding: EdgeInsets.all(5),
@@ -99,7 +101,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Vorname',
+              labelText: S.of(context).first_name,
               icon: Icon(Icons.account_circle),
             ),
             validator: (value) {
@@ -122,7 +124,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Nachname',
+              labelText: S.of(context).last_name,
               icon: Icon(Icons.account_circle),
             ),
             validator: (value) {
@@ -149,7 +151,7 @@ class _RegisterStage extends State<Register> {
                 flex: 10,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Straße',
+                    labelText: S.of(context).street,
                     icon: Icon(Icons.location_city),
                   ),
                   validator: (value) {
@@ -178,7 +180,7 @@ class _RegisterStage extends State<Register> {
                 flex: 2,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Nr.',
+                    labelText: S.of(context).house_number,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -207,7 +209,7 @@ class _RegisterStage extends State<Register> {
                 flex: 5,
                 child: TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'Postleitzahl',
+                      labelText: S.of(context).postcode,
                       icon: Icon(Icons.location_city)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -235,7 +237,7 @@ class _RegisterStage extends State<Register> {
                 flex: 7,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Stadt',
+                    labelText: S.of(context).town,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -267,7 +269,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Nutzername',
+              labelText: S.of(context).user_name,
               icon: Icon(Icons.account_circle),
             ),
             validator: (value) {
@@ -281,7 +283,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Email Adresse',
+              labelText: S.of(context).email,
               icon: Icon(Icons.email),
             ),
             keyboardType: TextInputType.emailAddress,
@@ -305,7 +307,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Passwort',
+              labelText: S.of(context).password,
               icon: Icon(Icons.vpn_key),
             ),
             validator: (value) {
@@ -407,7 +409,7 @@ class _RegisterStage extends State<Register> {
               ),
             ),
             child: Text(
-              'Registrieren',
+              S.of(context).register,
               style: TextStyle(
                 fontSize: 30,
               ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/screens/groups_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
@@ -21,15 +23,18 @@ class _TabScreenState extends State<TabScreen> {
     _pages = [
       {
         'page': MapScreen(),
-        'title': 'Karte',
+        'title_de': 'Karte',
+        'title_en': 'Map',
       },
       {
         'page': GroupsScreen(),
-        'title': 'Gruppen',
+        'title_de': 'Gruppen',
+        'title_en': 'Groups',
       },
       {
         'page': ProfileScreen(),
-        'title': 'Profil',
+        'title_de': 'Profil',
+        'title_en': 'Profile',
       },
     ];
     super.initState();
@@ -45,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_pages[_selectedPageIndex]['title']),
+        title: Text(_pages[_selectedPageIndex]['title_' + Intl.defaultLocale]),
         actions: [
           IconButton(
               icon: Icon(Icons.logout),
@@ -67,17 +72,17 @@ class _TabScreenState extends State<TabScreen> {
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.map),
-            label: 'Karte',
+            label: S.of(context).map,
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.group),
-            label: 'Gruppe',
+            label: S.of(context).groups,
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.account_circle),
-            label: 'Profil',
+            label: S.of(context).profile,
           ),
         ],
       ),

@@ -14,7 +14,7 @@ class UserService {
   User _user;
   String _token;
 
-  void logIn(Credentials credentials) async {
+  void logIn(LoginCredentials credentials) async {
     Map<String, dynamic> responseData =
         await LogInEndpoint().signIn(credentials);
     _user = User.fromJSON(responseData['user']);

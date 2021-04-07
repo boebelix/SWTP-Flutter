@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
@@ -23,7 +24,7 @@ class _LoginState extends State<LoginScreen> {
       UserService userService = UserService();
       print(username.text);
       print(password.text);
-      userService.logIn(Credentials(username.text, password.text));
+      userService.logIn(LoginCredentials(username.text, password.text));
       if (userService.isSignedIn()) {
         Navigator.popAndPushNamed(context, TabScreen.routeName);
       }
@@ -39,21 +40,44 @@ class _LoginState extends State<LoginScreen> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(S.of(context).login),
       ),
       body: Container(
         margin: EdgeInsets.all(deviceSize.width * 0.1),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      S.load(Locale('en'));
+                    });
+                  },
+                  icon: Image.asset('icons/flags/png/gb.png',
+                      package: 'country_icons'),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      S.load(Locale('de'));
+                    });
+                  },
+                  icon: Image.asset('icons/flags/png/de.png',
+                      package: 'country_icons'), //Text(S.of(context).german)),
+                )
+              ],
+            ),
             TextFormField(
               decoration: InputDecoration(
-                labelText: 'Nutzername',
+                labelText: S.of(context).user_name,
               ),
               controller: username,
             ),
             TextFormField(
               decoration: InputDecoration(
-                labelText: 'Passwort',
+                labelText: S.of(context).password,
               ),
               controller: password,
               obscureText: true,
@@ -77,7 +101,7 @@ class _LoginState extends State<LoginScreen> {
                       ),
                     ),
                     child: Text(
-                      'Einloggen',
+                      S.of(context).login,
                       style: TextStyle(
                         fontSize: 30,
                       ),
@@ -99,7 +123,7 @@ class _LoginState extends State<LoginScreen> {
                       ),
                     ),
                     child: Text(
-                      'Registrieren',
+                      S.of(context).register,
                       style: TextStyle(
                         fontSize: 30,
                       ),
