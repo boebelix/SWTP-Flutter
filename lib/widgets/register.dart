@@ -62,6 +62,7 @@ class _RegisterStage extends State<Register> {
             city.text,
           ),
         );
+        // TODO Hier sollte man sich überlegen was danach passieren soll. Möglicherweise eine Anmeldung über Endpoint und dann zum TabScreen
         Navigator.pop(context);
       }
     } catch (error) {
@@ -96,7 +97,7 @@ class _RegisterStage extends State<Register> {
         padding: EdgeInsets.all(5),
         children: [
           Text(
-            'Persönliche Daten',
+            S.of(context).personal_data,
             style: TextStyle(fontSize: 18),
           ),
           TextFormField(
@@ -106,7 +107,7 @@ class _RegisterStage extends State<Register> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Bitte geben Sie einen Vornamen ein";
+                return S.of(context).warning_firstname_NN;
               }
 
               RegExp regexFirstname = RegExp(
@@ -115,7 +116,7 @@ class _RegisterStage extends State<Register> {
               );
 
               if (!regexFirstname.hasMatch(value)) {
-                return "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+                return S.of(context).warning_firstname_UpperThenLower;
               }
 
               return null;
@@ -129,7 +130,7 @@ class _RegisterStage extends State<Register> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Bitte geben Sie einen Nachnamen ein";
+                return S.of(context).warning_lastname_NN;
               }
 
               RegExp regexLastname = RegExp(
@@ -138,7 +139,7 @@ class _RegisterStage extends State<Register> {
               );
 
               if (!regexLastname.hasMatch(value)) {
-                return "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+                return S.of(context).warning_lastname_UpperThenLower;
               }
 
               return null;
@@ -156,7 +157,7 @@ class _RegisterStage extends State<Register> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Bitte geben Sie Ihre Straße ein";
+                      return S.of(context).warning_street_NN;
                     }
 
                     RegExp regexLastname = RegExp(
@@ -165,7 +166,7 @@ class _RegisterStage extends State<Register> {
                     );
 
                     if (!regexLastname.hasMatch(value)) {
-                      return "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+                      return S.of(context).warning_street_UpperThenLower;
                     }
 
                     return null;
@@ -184,7 +185,7 @@ class _RegisterStage extends State<Register> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Bitte geben Sie Ihre Hausnummer ein";
+                      return S.of(context).warning_house_number_NN;
                     }
 
                     RegExp regexStreetNr = RegExp(
@@ -193,7 +194,7 @@ class _RegisterStage extends State<Register> {
                     );
 
                     if (!regexStreetNr.hasMatch(value)) {
-                      return "Die Hausnummer beginnt mit Zahlen und kann mit einem Buchstaben enden";
+                      return S.of(context).warning_house_number_UperThenLower;
                     }
 
                     return null;
@@ -213,7 +214,7 @@ class _RegisterStage extends State<Register> {
                       icon: Icon(Icons.location_city)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Bitte geben Sie Ihre Postleitzahl ein";
+                      return S.of(context).warning_postcode_NN;
                     }
 
                     RegExp regexZipCode = RegExp(
@@ -222,7 +223,7 @@ class _RegisterStage extends State<Register> {
                     );
 
                     if (!regexZipCode.hasMatch(value)) {
-                      return "Die Postleitzahl besteht aus 5 Zahlen";
+                      return S.of(context).warning_postcode_5_Figures;
                     }
 
                     return null;
@@ -237,11 +238,11 @@ class _RegisterStage extends State<Register> {
                 flex: 7,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: S.of(context).town,
+                    labelText: S.of(context).city,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Bitte geben Sie Ihre Stadt ein";
+                      return S.of(context).warning_city_NN;
                     }
 
                     RegExp regexCity = RegExp(
@@ -250,7 +251,7 @@ class _RegisterStage extends State<Register> {
                     );
 
                     if (!regexCity.hasMatch(value)) {
-                      return "Der Stadt muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben";
+                      return S.of(context).warning_city_UpperThenLower;
                     }
 
                     return null;
@@ -263,7 +264,7 @@ class _RegisterStage extends State<Register> {
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 5.0),
             child: Text(
-              'Login Daten',
+              S.of(context).login_data,
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -274,7 +275,7 @@ class _RegisterStage extends State<Register> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Bitte geben wählen Sie einen Nutzernamen";
+                return S.of(context).warning_user_name_NN;
               }
 
               return null;
@@ -289,7 +290,7 @@ class _RegisterStage extends State<Register> {
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Bitte geben Sie Ihre E-Mailadresse ein";
+                return S.of(context).warning_email_NN;
               }
 
               RegExp regexEmail = RegExp(
@@ -298,7 +299,7 @@ class _RegisterStage extends State<Register> {
               );
 
               if (!regexEmail.hasMatch(value)) {
-                return "Es handelt sich um keine gültige Hochschule E-Mailadresse";
+                return S.of(context).warning_email_not_hskl;
               }
 
               return null;
@@ -312,7 +313,7 @@ class _RegisterStage extends State<Register> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Sie müssen ein Passwort wählen";
+                return S.of(context).warning_password;
               }
 
               int passwordLength = value.length;
@@ -366,7 +367,7 @@ class _RegisterStage extends State<Register> {
               } else {
                 // nicht sicher
 
-                return "Passwort nicht sicher";
+                return S.of(context).password_level_not_save;
               }
             },
             controller: password,
@@ -374,15 +375,15 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Passwort wiederholen',
+              labelText: S.of(context).password_repeat,
               icon: Icon(Icons.vpn_key),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Bitte wiederholen Sie die Passworteingabe";
+                return S.of(context).password_empty;
               }
               if (value != password.text) {
-                return "Die Eingabe stimmt nicht mit dem Passwort überein";
+                return S.of(context).warning_password_not_same;
               }
               return null;
             },
