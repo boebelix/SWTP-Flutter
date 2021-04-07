@@ -14,7 +14,7 @@ class Register extends StatefulWidget {
 
 class _RegisterStage extends State<Register> {
   /*
-   * TODO: Wird für die späteren Validatoren gebraucht
+   * Hinweis zu Validatoren
    * https://flutter.dev/docs/cookbook/forms/validation
    * */
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -29,21 +29,6 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
-  // TODO Delete after Debug
-  @override
-  void initState() {
-    username.text = "username";
-    password.text = "1234";
-    repeatPassword.text = "12345";
-    email.text = "abcd1234@stud.hs-kl.de";
-    firstname.text = "firstname";
-    lastname.text = "Lastname";
-    street.text = "Street";
-    streetNr.text = "42a";
-    zip.text = "11111";
-    city.text = "City";
-    super.initState();
-  }
 
   void _sendRegisterData() {
     try {
