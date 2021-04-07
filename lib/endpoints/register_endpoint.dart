@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/models/register_credentials.dart';
-import 'package:swtp_app/endpoints/properties.dart';
+import 'package:swtp_app/properties/properties.dart';
 
 class RegisterEndpoint {
   var url = Properties.url;
