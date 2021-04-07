@@ -5,7 +5,7 @@ import 'package:swtp_app/models/login_credentials.dart';
 import 'package:http/http.dart' as http;
 
 class LogInEndpoint {
-  Future<Map<String, dynamic>> signIn(Credentials data) async {
+  Future<Map<String, dynamic>> signIn(LoginCredentials data) async {
     print("in Methode");
     print(data.toJson());
     print(jsonEncode(data.toJson()));
