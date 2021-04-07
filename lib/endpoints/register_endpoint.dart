@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/models/register_credentials.dart';
+import 'package:swtp_app/endpoints/properties.dart';
 
 class RegisterEndpoint {
+  var url = Properties.url;
+
   Future<Map<String, dynamic>> register(RegisterCredentials credentials) async {
     print(credentials.toJson());
     return await http
-        .post(Uri.http("10.0.2.2:9080", "/api/users"),
+        .post(Uri.http(url, "/api/users"),
             headers: {
               "content-type": "application/json",
               "accept": "application/json",
