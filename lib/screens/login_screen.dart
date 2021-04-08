@@ -19,20 +19,16 @@ class _LoginState extends State<LoginScreen> {
   final TextEditingController password = TextEditingController();
 
   void _sendLoginData() async {
-    print(username.text);
-    print(password.text);
-
+    // TODO Change to validators
     if (username.text.isNotEmpty && password.text.isNotEmpty) {
       Provider.of<UserService>(context, listen: false)
           .logIn(LoginCredentials(username.text, password.text));
       username.clear();
       password.clear();
-      print('Login beendet');
-    } else {
-      print('Keine Login Daten');
-    }
+    } else {}
   }
 
+  // TODO Delete before merge
   @override
   void initState() {
     username.text = 'test';

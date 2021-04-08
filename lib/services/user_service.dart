@@ -67,7 +67,6 @@ class UserService extends ChangeNotifier {
   }
 
   void logOut() {
-    print('userService: logOut');
     _user = null;
     _token = null;
     _userService = null;
