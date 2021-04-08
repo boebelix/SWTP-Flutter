@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/properties/properties.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 
 class GroupsEndpoint {
   var url = Properties.url;
-  UserService userService = UserService();
+  AuthService userService = AuthService();
 
   Future<Map<String, dynamic>> getGroupById(int groupNumber) async {
     return await http.get(Uri.http(url, "/api/groups/$groupNumber"), headers: {

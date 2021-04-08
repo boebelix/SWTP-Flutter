@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/register_credentials.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 
 class Register extends StatefulWidget {
   static const routeName = "/register";
@@ -31,7 +31,7 @@ class _RegisterStage extends State<Register> {
 
   void _sendRegisterData() {
     try {
-      UserService userService = UserService();
+      AuthService userService = AuthService();
       if (_formKey.currentState.validate()) {
         userService.registerUser(
           credentials: RegisterCredentials(

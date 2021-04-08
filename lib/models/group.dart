@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:swtp_app/models/member.dart';
+import 'package:swtp_app/models/user_memberships.dart';
 import 'package:swtp_app/models/user.dart';
 
 class Group {
@@ -12,17 +12,17 @@ class Group {
   @required
   String groupName;
 
-  List<Member> memberships;
+  List<User> memberships;
 
   Group({this.admin, this.groupId, this.groupName, this.memberships});
 
   factory Group.fromJSON(Map<String, dynamic> json) => Group(
-        admin: json['admin'],
+        admin: User.fromJSON(json['admin']),
         groupId: json['groupId'],
         groupName: json['groupName'],
         memberships: json['memberships']
             .cast<List>()
-            .map((i) => Member.fromJSON(i))
+            .map((i) => User.fromJSON(i))
             .toList(),
       );
 

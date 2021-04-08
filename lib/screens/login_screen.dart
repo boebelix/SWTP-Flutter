@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _LoginState extends State<LoginScreen> {
 
   void _sendLoginData() {
     try {
-      UserService userService = UserService();
+      AuthService userService = AuthService();
       print(username.text);
       print(password.text);
       userService.logIn(LoginCredentials(username.text, password.text));

@@ -5,7 +5,8 @@ import 'package:swtp_app/screens/groups_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
+import 'package:swtp_app/services/group_service.dart';
 
 class TabScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -17,7 +18,7 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   List<Map<String, Object>> _pages;
   int _selectedPageIndex = 0;
-
+  GroupService service=GroupService();
   @override
   void initState() {
     _pages = [
@@ -55,8 +56,9 @@ class _TabScreenState extends State<TabScreen> {
           IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                UserService().logOut();
-                Navigator.popAndPushNamed(context, LoginScreen.routeName);
+                //AuthService().logOut();
+                service.loadGroups();
+                //Navigator.popAndPushNamed(context, LoginScreen.routeName);
               }),
         ],
       ),
