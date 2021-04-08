@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class User {
   int userId;
   String userName;
@@ -38,15 +36,16 @@ class User {
   String toString() {
     return 'User{userId: $userId, userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, city: $city, street: $street, streetNr: $streetNr, zip: $zip}';
   }
-/*
-  Map<String, dynamic> toJSON() =>{
-    "username":userName,
-    "firstname": firstName,
-    "lastname": lastName,
-    "email": email,
 
-  }
-
- */
-
+  Map<String, dynamic> toJSON() => {
+        "userId": userId,
+        "userName": userName,
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "city": city,
+        "street": street,
+        "streetNr": streetNr,
+        "zip": zip,
+      };
 }
