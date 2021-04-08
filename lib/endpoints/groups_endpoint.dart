@@ -3,16 +3,17 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/properties/properties.dart';
+import 'package:swtp_app/services/user_service.dart';
 
 class GroupsEndpoint {
   var url = Properties.url;
+  UserService userService = UserService();
 
-  Future<Map<String, dynamic>> getGroup(int groupNumber, String token) async {
-    return await http
-        .get(Uri.http(url, "/api/groups/$groupNumber"), headers: {
+  Future<Map<String, dynamic>> getGroupById(int groupNumber) async {
+    return await http.get(Uri.http(url, "/api/groups/$groupNumber"), headers: {
       "content-type": "application/json",
       "accept": "application/json",
-      "Authorization": "Bearer $token"
+      "Authorization": "Bearer ${userService.token}"
     }).then((response) {
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -28,11 +29,11 @@ class GroupsEndpoint {
   }
 
   Future<Map<String, dynamic>> createGroup(
-      int adminId, String groupName, String token) async {
-    return await http.post(Uri.http("10.0.2.2:9080", "/api/groups/"), headers: {
+      int adminId, String groupName) async {
+    return await http.post(Uri.http(url, "/api/groups/"), headers: {
       "content-type": "application/json",
       "accept": "application/json",
-      "Authorization": "Bearer $token"
+      "Authorization": "Bearer ${userService.token}"
     }, body: {
       "adminId": "$adminId",
       "groupName": "$groupName"
@@ -49,17 +50,15 @@ class GroupsEndpoint {
   }
 
   Future<Map<String, dynamic>> inviteUserToGroup(
-      int groupId, int userId, String token) async {
-    return await http.post(
-        Uri.http("10.0.2.2:9080", "/api/groups/$groupId/members"),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": "Bearer $token"
-        },
-        body: {
-          "userId": "$userId"
-        }).then((response) {
+      int groupId, int userId) async {
+    return await http
+        .post(Uri.http(url, "/api/groups/$groupId/members"), headers: {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "Authorization": "Bearer ${userService.token}"
+    }, body: {
+      "userId": "$userId"
+    }).then((response) {
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData;
@@ -72,13 +71,13 @@ class GroupsEndpoint {
   }
 
   Future<Map<String, dynamic>> removeUserFromGroup(
-      int groupId, int userId, String token) async {
+      int groupId, int userId) async {
     return await http.delete(
-        Uri.http("10.0.2.2:9080", "/api/groups/$groupId/members/$userId"),
+        Uri.http(url, "/api/groups/$groupId/members/$userId"),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
-          "Authorization": "Bearer $token"
+          "Authorization": "Bearer ${userService.token}"
         }).then((response) {
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -92,17 +91,15 @@ class GroupsEndpoint {
   }
 
   Future<Map<String, dynamic>> acceptGroupInvitation(
-      int groupId, int userId, String token) async {
-    return await http.put(
-        Uri.http("10.0.2.2:9080", "/api/groups/$groupId/members/$userId"),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": "Bearer $token"
-        },
-        body: {
-          "invitationPending": "false"
-        }).then((response) {
+      int groupId, int userId) async {
+    return await http
+        .put(Uri.http(url, "/api/groups/$groupId/members/$userId"), headers: {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "Authorization": "Bearer ${userService.token}"
+    }, body: {
+      "invitationPending": "false"
+    }).then((response) {
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData;

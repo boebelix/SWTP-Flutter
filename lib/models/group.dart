@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:swtp_app/models/member.dart';
 import 'package:swtp_app/models/user.dart';
 
 class Group {
@@ -11,7 +12,7 @@ class Group {
   @required
   String groupName;
 
-  List<User> memberships;
+  List<Member> memberships;
 
   Group({this.admin, this.groupId, this.groupName, this.memberships});
 
@@ -21,7 +22,7 @@ class Group {
         groupName: json['groupName'],
         memberships: json['memberships']
             .cast<List>()
-            .map((e) => User.fromJSON(e))
+            .map((i) => Member.fromJSON(i))
             .toList(),
       );
 
@@ -37,6 +38,6 @@ class Group {
         "admin": admin,
         "groupId": groupId,
         "groupName": groupName,
-        "memberships": memberships.map((e) => e.toJSON()).toList(),
+        "memberships": memberships.map((i) => i.toJSON()).toList(),
       };
 }
