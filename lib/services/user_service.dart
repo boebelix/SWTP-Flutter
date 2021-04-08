@@ -36,5 +36,6 @@ class UserService {
     _user = User.fromJSON(responseData);
   }
 
+  String get token=> _token;
   User get user => _user;
 }
