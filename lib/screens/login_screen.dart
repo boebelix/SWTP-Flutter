@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
@@ -81,26 +79,43 @@ class _LoginState extends State<LoginScreen> {
           ),
           Consumer<UserService>(
             builder: (_, notifier, __) {
-              if (notifier.state == NotifierState.initial) {
-                return Container();
-              } else if (notifier.state == NotifierState.loading) {
-                return _loadingIndicator(context);
-              } else {
-                return notifier.authResponse.fold(
-                  (failure) => buildContainer(notifier, failure),
-                  (_) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.popAndPushNamed(context, TabScreen.routeName);
-                    });
+              switch (notifier.state) {
+                case NotifierState.initial:
+                  {
                     return Container();
-                  },
-                );
+                  }
+                  break;
+
+                case NotifierState.loading:
+                  {
+                    return _loadingIndicator(context);
+                  }
+                  break;
+
+                default:
+                  {
+                    return notifier.userService.fold(
+                      //Fehlerfall
+                      (failure) => buildContainer(notifier, failure),
+                      // Alles in Ordung
+                      (userService) {
+                        _loginSuccesChangeScreen(context);
+                        return Container();
+                      },
+                    );
+                  }
               }
             },
           )
         ],
       ),
     );
+  }
+
+  void _loginSuccesChangeScreen(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.popAndPushNamed(context, TabScreen.routeName);
+    });
   }
 
   Container buildContainer(UserService userService, Failure failure) {
@@ -128,7 +143,7 @@ class _LoginState extends State<LoginScreen> {
         },
       );
     });
-    userService.reset();
+    userService.resetState();
     return Container();
   }
 

@@ -23,17 +23,18 @@ class UserService extends ChangeNotifier {
 
   NotifierState _state = NotifierState.initial;
 
-  Either<Failure, AuthResponse> _authResponse;
+  Either<Failure, AuthResponse> _userService;
 
   // ----------------------------------------------------
 
   NotifierState get state => _state;
 
-  Either<Failure, AuthResponse> get authResponse => _authResponse;
+  Either<Failure, AuthResponse> get userService => _userService;
 
   User get user => _user;
 
-  void reset() {
+  /// Stellt den initialen Zustand wieder her. Sollte nach jedem Fehler Handling zurückgesetz werden
+  void resetState() {
     _state = NotifierState.initial;
     notifyListeners();
   }
@@ -43,13 +44,13 @@ class UserService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setAuthResponse(Either<Failure, AuthResponse> authResponse) {
+  void _parseAuthResponse(Either<Failure, AuthResponse> authResponse) {
     if (authResponse.isRight()) {
       final tmp = authResponse.getOrElse(null);
       _user = tmp.user;
       _token = tmp.token;
     }
-    _authResponse = authResponse;
+    _userService = authResponse;
     notifyListeners();
   }
 
@@ -60,7 +61,7 @@ class UserService extends ChangeNotifier {
         .attempt()
         .mapLeftToFailure()
         .run()
-        .then((value) => _setAuthResponse(value));
+        .then((value) => _parseAuthResponse(value));
 
     _setState(NotifierState.loaded);
   }
@@ -69,8 +70,8 @@ class UserService extends ChangeNotifier {
     print('userService: logOut');
     _user = null;
     _token = null;
-    _authResponse = null;
-    _setState(NotifierState.initial);
+    _userService = null;
+    resetState();
     notifyListeners();
   }
 
