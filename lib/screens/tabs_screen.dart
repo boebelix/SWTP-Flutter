@@ -56,6 +56,7 @@ class _TabScreenState extends State<TabScreen> {
               icon: Icon(Icons.logout),
               onPressed: () {
                 UserService().logOut();
+                print('After Logout');
                 Navigator.popAndPushNamed(context, LoginScreen.routeName);
               }),
         ],
