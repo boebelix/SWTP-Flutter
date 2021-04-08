@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:swtp_app/models/login_credentials.dart';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/user_service.dart';
@@ -47,6 +46,7 @@ class LogInEndpoint {
       }
     });
   }
+
   Future<Map<String, dynamic>> getMemberships(int userId) async {
     return await http.get(Uri.http(url, "/api/users/$userId/member"), headers: {
       "content-type": "application/json",
@@ -67,7 +67,8 @@ class LogInEndpoint {
   }
 
   Future<Map<String, dynamic>> getCommentsByUserId(int userId) async {
-    return await http.get(Uri.http(url, "/api/users/$userId/comments"), headers: {
+    return await http
+        .get(Uri.http(url, "/api/users/$userId/comments"), headers: {
       "content-type": "application/json",
       "accept": "application/json",
       "Authorization": "Bearer ${userService.token}"
