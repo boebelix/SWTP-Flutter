@@ -1,7 +1,6 @@
 import 'package:swtp_app/models/group.dart';
 
-class GroupService
-{
+class GroupService {
   static final GroupService _instance = GroupService._internal();
 
   factory GroupService() => _instance;
@@ -11,8 +10,5 @@ class GroupService
   List<Group> _groups;
   Group _ownGroup;
 
-  List<Group> loadGroups(){
-
-    
-  }
+  //List<Group> loadGroups() {}
 }
