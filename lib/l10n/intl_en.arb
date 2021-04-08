@@ -10,7 +10,7 @@
   "firstname": "First name",
   "lastname": "Last name",
   "street": "Street",
-  "house_number": "Number",
+  "house_number": "Nr.",
   "postcode": "Postcode",
   "city": "City",
   "profile": "Profile",
