@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/services/user_service.dart';
 
@@ -48,7 +49,7 @@ class _RegisterStage extends State<Register> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(S.of(context).register),
       ),
       body: Container(
         margin: EdgeInsets.all(deviceSize.width * 0.1),
@@ -57,56 +58,56 @@ class _RegisterStage extends State<Register> {
             children: [
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Nutzername',
+                  labelText: S.of(context).user_name,
                 ),
                 controller: username,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Passwort',
+                  labelText: S.of(context).password,
                 ),
                 controller: password,
                 obscureText: true,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Email Adresse',
+                  labelText: S.of(context).email,
                 ),
                 controller: email,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Vorname',
+                  labelText: S.of(context).first_name,
                 ),
                 controller: firstname,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Nachname',
+                  labelText: S.of(context).last_name,
                 ),
                 controller: lastname,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Straße',
+                  labelText: S.of(context).street,
                 ),
                 controller: street,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Hausnummer',
+                  labelText: S.of(context).house_number,
                 ),
                 controller: streetNr,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Postleitzahl',
+                  labelText: S.of(context).postcode,
                 ),
                 controller: zip,
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Stadt',
+                  labelText: S.of(context).town,
                 ),
                 controller: city,
               ),
@@ -130,7 +131,7 @@ class _RegisterStage extends State<Register> {
                         ),
                       ),
                       child: Text(
-                        'Registrieren',
+                        S.of(context).register,
                         style: TextStyle(
                           fontSize: 30,
                         ),
