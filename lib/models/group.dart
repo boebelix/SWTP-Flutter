@@ -26,14 +26,6 @@ class Group {
             .toList(),
       );
 
-  @override
-  String toString() {
-    String toReturn =
-        'Group{ admin : $admin , groupId: $groupId, groupName: $groupName, memberships: $memberships';
-
-    toReturn += '}';
-  }
-
   Map<String, dynamic> toJson() => {
         "admin": admin,
         "groupId": groupId,
