@@ -115,9 +115,7 @@ class _RegisterStage extends State<Register> {
                   controller: street,
                 ),
               ),
-              Expanded(
-                child: Container(),
-              ),
+              Spacer(),
               Flexible(
                 flex: 2,
                 child: TextFormField(
@@ -142,9 +140,7 @@ class _RegisterStage extends State<Register> {
                   controller: zip,
                 ),
               ),
-              Expanded(
-                child: Container(),
-              ),
+              Spacer(),
               Flexible(
                 flex: 7,
                 child: TextFormField(
