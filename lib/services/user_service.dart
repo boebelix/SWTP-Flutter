@@ -97,4 +97,6 @@ extension TaskX<T extends Either<Object, U>, U> on Task<T> {
       }),
     );
   }
+  String get token=> _token;
+  User get user => _user;
 }
