@@ -33,6 +33,11 @@ class UserService extends ChangeNotifier {
 
   User get user => _user;
 
+  void reset() {
+    _state = NotifierState.initial;
+    notifyListeners();
+  }
+
   void _setState(NotifierState state) {
     _state = state;
     notifyListeners();

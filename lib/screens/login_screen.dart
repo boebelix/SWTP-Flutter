@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
@@ -35,51 +36,61 @@ class _LoginState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    username.text = 'test';
+    password.text = 'test';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).login),
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          _selectLanguage(),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: S.of(context).user_name,
-            ),
-            controller: username,
+          ListView(
+            children: [
+              _selectLanguage(),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: S.of(context).user_name,
+                ),
+                controller: username,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: S.of(context).password,
+                ),
+                controller: password,
+                obscureText: true,
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: deviceSize.height * 0.1,
+                child: Padding(
+                  padding:
+                      EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
+                  child: _buttonLogin(context),
+                ),
+              ),
+              _buttonRegistration(deviceSize, context),
+            ],
           ),
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: S.of(context).password,
-            ),
-            controller: password,
-            obscureText: true,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: deviceSize.height * 0.1,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
-              child: _buttonLogin(context),
-            ),
-          ),
-          _buttonRegistration(deviceSize, context),
           Consumer<UserService>(
             builder: (_, notifier, __) {
               if (notifier.state == NotifierState.initial) {
-                return StyledText('Press the button 👇');
+                return Container();
               } else if (notifier.state == NotifierState.loading) {
-                return CircularProgressIndicator();
+                return _loadingIndicator(context);
               } else {
                 return notifier.authResponse.fold(
-                  (failure) => StyledText(failure.toString()),
+                  (failure) => buildContainer(notifier, failure),
                   (_) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      print('Login Screen: Before popAndPushNamed');
                       Navigator.popAndPushNamed(context, TabScreen.routeName);
-                      print('Login Screen: After popAndPushNamed');
                     });
                     return Container();
                   },
@@ -88,6 +99,48 @@ class _LoginState extends State<LoginScreen> {
             },
           )
         ],
+      ),
+    );
+  }
+
+  Container buildContainer(UserService userService, Failure failure) {
+    BuildContext dialogContext;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+          dialogContext = context;
+          return Container(
+            child: AlertDialog(
+              title: Text('Hinweis'),
+              content: Text(failure.message),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    });
+    userService.reset();
+    return Container();
+  }
+
+  Widget _loadingIndicator(BuildContext context) {
+    final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.7;
+    return Center(
+      child: SizedBox(
+        height: sizeLoadingIndicator,
+        width: sizeLoadingIndicator,
+        child: CircularProgressIndicator(
+          strokeWidth: 10,
+        ),
       ),
     );
   }
@@ -156,24 +209,6 @@ class _LoginState extends State<LoginScreen> {
               package: 'country_icons'), //Text(S.of(context).german)),
         )
       ],
-    );
-  }
-}
-
-class StyledText extends StatelessWidget {
-  const StyledText(
-    this.text, {
-    Key key,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 40),
     );
   }
 }
