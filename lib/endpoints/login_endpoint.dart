@@ -3,14 +3,17 @@ import 'dart:io';
 
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:http/http.dart' as http;
+import 'package:swtp_app/properties/properties.dart';
 
 class LogInEndpoint {
+  var url = Properties.url;
+
   Future<Map<String, dynamic>> signIn(LoginCredentials data) async {
     print("in Methode");
     print(data.toJson());
     print(jsonEncode(data.toJson()));
     return await http
-        .post(Uri.http("10.0.2.2:9080", "/api/authentication"),
+        .post(Uri.http(url, "/api/authentication"),
             headers: {
               "content-type": "application/json",
               "accept": "application/json",

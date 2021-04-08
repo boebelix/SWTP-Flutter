@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:country_icons/country_icons.dart';
+import 'package:swtp_app/widgets/register.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,14 +24,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         accentColor: Colors.amber,
-        canvasColor: Color.fromRGBO(255, 254, 229, 1),
+        canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
       ),
       routes: {
         '/': (ctx) => LoginScreen(),
         TabScreen.routeName: (ctx) => TabScreen(),
         LoginScreen.routeName: (ctx) => LoginScreen(),
+        Register.routeName: (ctx) => Register(),
       },
     );
   }
 }
-
