@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
 
 class UserEndpoint {
-
   var url = Properties.url;
   AuthService userService = AuthService();
 
@@ -48,7 +48,8 @@ class UserEndpoint {
   }
 
   Future<String> getMemberships(int userId) async {
-    return await http.get(Uri.http(url, "/api/users/$userId/memberships"), headers: {
+    return await http
+        .get(Uri.http(url, "/api/users/$userId/memberships"), headers: {
       "content-type": "application/json",
       "accept": "application/json",
       "Authorization": "Bearer ${userService.token}"

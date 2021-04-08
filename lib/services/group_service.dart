@@ -13,26 +13,24 @@ class GroupService {
 
   GroupService._internal();
 
-
-
-  List<UserMemberships> _memberships=List<UserMemberships>();
-  List<Group> _groups =List<Group>();
+  List<UserMemberships> _memberships = List<UserMemberships>();
+  List<Group> _groups = List<Group>();
   Group _ownGroup;
-  GroupsEndpoint _groupsEndpoint=GroupsEndpoint();
+  GroupsEndpoint _groupsEndpoint = GroupsEndpoint();
 
-  AuthService authService=AuthService();
+  AuthService authService = AuthService();
 
-  UserEndpoint _userEndpoint=UserEndpoint();
+  UserEndpoint _userEndpoint = UserEndpoint();
 
   void loadGroupMemberships() async {
     _memberships.clear();
-    String response=await _userEndpoint.getMemberships(authService.user.userId);
-    int i=0;
-    for(dynamic e in jsonDecode(response))
-      {
-        print(i++);
-        print(e);
-        _memberships.add(UserMemberships.fromJSON(e));
-      }
+    String response =
+        await _userEndpoint.getMemberships(authService.user.userId);
+    int i = 0;
+    for (dynamic e in jsonDecode(response)) {
+      print(i++);
+      print(e);
+      _memberships.add(UserMemberships.fromJSON(e));
+    }
   }
 }
