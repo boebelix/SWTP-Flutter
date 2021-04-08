@@ -5,34 +5,43 @@ import 'package:latlong/latlong.dart';
 class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new FlutterMap(
-      options: new MapOptions(
-        center: new LatLng(51.5,-0.09),
+    return FlutterMap(
+      options: MapOptions(
+        center: LatLng(49.260152, 7.360296),
         zoom: 13.0,
+        maxZoom: 18,
+        minZoom: 5,
       ),
       layers: [
-        new TileLayerOptions(
+        TileLayerOptions(
           urlTemplate: "https://tile.openstreetmap.de/{z}/{x}/{y}.png",
           additionalOptions: {
             'id': 'mapbox.streets',
           },
         ),
-        new MarkerLayerOptions(
+        MarkerLayerOptions(
           markers: [
-            new Marker(
+            Marker(
               width: 80.0,
               height: 80.0,
-              point: new LatLng(51.5, -0.09),
-              builder: (ctx) =>
-              new Container(
-                child: new FlutterLogo(),
+              point: LatLng(49.260152, 7.360296),
+              builder: (ctx) => Container(
+                child: GestureDetector(
+                  child: Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).primaryColor,
+                    size: 50,
+                  ),
+                  onTap: (){
+                    print('test}');
+                  },
+                ),
               ),
             ),
           ],
         ),
       ],
-    );;
+    );
+    ;
   }
 }
-
-
