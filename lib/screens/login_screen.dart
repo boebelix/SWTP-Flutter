@@ -45,33 +45,36 @@ class _LoginState extends State<LoginScreen> {
       ),
       body: Stack(
         children: [
-          ListView(
-            children: [
-              _selectLanguage(),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: S.of(context).user_name,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListView(
+              children: [
+                _selectLanguage(),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: S.of(context).user_name,
+                  ),
+                  controller: username,
                 ),
-                controller: username,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: S.of(context).password,
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: S.of(context).password,
+                  ),
+                  controller: password,
+                  obscureText: true,
                 ),
-                controller: password,
-                obscureText: true,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: deviceSize.height * 0.1,
-                child: Padding(
-                  padding:
-                      EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
-                  child: _buttonLogin(context),
+                SizedBox(
+                  width: double.infinity,
+                  height: deviceSize.height * 0.1,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
+                    child: _buttonLogin(context),
+                  ),
                 ),
-              ),
-              _buttonRegistration(deviceSize, context),
-            ],
+                _buttonRegistration(deviceSize, context),
+              ],
+            ),
           ),
           Consumer<UserService>(
             builder: (_, notifier, __) {
