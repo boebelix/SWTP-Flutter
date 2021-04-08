@@ -33,6 +33,8 @@ class UserService extends ChangeNotifier {
 
   User get user => _user;
 
+  String get token => _token;
+
   /// Stellt den initialen Zustand wieder her. Sollte nach jedem Fehler Handling zurückgesetz werden
   void resetState() {
     _state = NotifierState.initial;
@@ -97,6 +99,4 @@ extension TaskX<T extends Either<Object, U>, U> on Task<T> {
       }),
     );
   }
-  String get token=> _token;
-  User get user => _user;
 }
