@@ -5,6 +5,7 @@ import 'package:swtp_app/screens/groups_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
+import 'package:swtp_app/services/poi_service.dart';
 import 'package:swtp_app/services/user_service.dart';
 
 class TabScreen extends StatefulWidget {
