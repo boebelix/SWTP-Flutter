@@ -19,8 +19,6 @@ class _TabScreenState extends State<TabScreen> {
   List<Map<String, Object>> _pages;
   int _selectedPageIndex = 0;
 
-  PoiService _poiService=PoiService();
-
   @override
   void initState() {
     _pages = [
@@ -58,11 +56,8 @@ class _TabScreenState extends State<TabScreen> {
           IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                List<int> Poitest=List<int>();
-                Poitest.add(1);
-                _poiService.getAllVisiblePois(Poitest);
-                //UserService().logOut();
-                //Navigator.popAndPushNamed(context, LoginScreen.routeName);
+                UserService().logOut();
+                Navigator.popAndPushNamed(context, LoginScreen.routeName);
               }),
         ],
       ),

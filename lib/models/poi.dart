@@ -21,11 +21,17 @@ class Poi {
       this.title});
 
   factory Poi.fromJSON(Map<String, dynamic> json) => Poi(
-      author: User.fromJSON(json['author']),
-      category: Category.fromJSON(json['category']),
-      createDate: json['createDate'],
-      description: json['description'],
-      poiId: json['poiId'],
-      position: Position.fromJSON(json['position']),
-      title: json['title']);
+        author: User.fromJSON(json['author']),
+        category: Category.fromJSON(json['category']),
+        createDate: json['createDate'],
+        description: json['description'],
+        poiId: json['poiId'],
+        position: Position.fromJSON(json['position']),
+        title: json['title'],
+      );
+
+  @override
+  String toString() {
+    return 'Poi{author: ${author.toString()}, category: ${category.toString()}, createDate: $createDate, description: $description, poiId: $poiId, position: ${position.toString()}, title: $title}';
+  }
 }
