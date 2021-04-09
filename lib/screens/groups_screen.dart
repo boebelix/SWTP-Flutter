@@ -14,7 +14,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   @override
   void initState() {
-    _groupService.loadGroups();
   }
 
   @override
@@ -31,6 +30,26 @@ class _GroupsScreenState extends State<GroupsScreen> {
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       )),
+                  Expanded(
+                    flex: 18,
+                    child: ListView.builder(
+                    padding:
+                    const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
+                    itemCount: _groupService.groups.length,
+                    itemBuilder: (context, index) => Dismissible(
+                    onDismissed: (direction) => {
+                    setState(() {
+                    context.read<Cart>().remove(index);
+                    })
+                    },
+                    key: UniqueKey(),
+                    child: PizzaCartSummary(
+                    pizza: pizzas[index],
+                    ),
+                    ),
+                    shrinkWrap: true,
+                    ),
+                  )
                 ],
               ))
         ]);
