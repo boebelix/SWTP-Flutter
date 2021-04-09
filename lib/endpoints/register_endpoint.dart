@@ -23,7 +23,6 @@ class RegisterEndpoint {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData;
       } else {
-        print('throws');
         throw HttpException('Unauthorized');
       }
     });
