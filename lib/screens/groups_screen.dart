@@ -35,18 +35,13 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     child: ListView.builder(
                     padding:
                     const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
-                    itemCount: _groupService.groups.length,
+                    itemCount: _groupService.acceptedGroups.length,
                     itemBuilder: (context, index) => Dismissible(
-                    onDismissed: (direction) => {
-                    setState(() {
-                    context.read<Cart>().remove(index);
-                    })
-                    },
-                    key: UniqueKey(),
-                    child: PizzaCartSummary(
-                    pizza: pizzas[index],
-                    ),
-                    ),
+                    onDismissed: (direction) =>
+                    {
+                      setState(() {}
+                      ),
+                    }),
                     shrinkWrap: true,
                     ),
                   )
