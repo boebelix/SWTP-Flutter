@@ -4,6 +4,7 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/register.dart';
 
@@ -66,7 +67,7 @@ class _LoginState extends State<LoginScreen> {
 
   void _sendLoginData() async {
     if (_formKey.currentState.validate()) {
-      Provider.of<AuthEndpointProvider>(context, listen: false)
+      await Provider.of<AuthEndpointProvider>(context, listen: false)
           .logIn(LoginCredentials(username.text, password.text));
       username.clear();
       password.clear();
