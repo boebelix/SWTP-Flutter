@@ -14,6 +14,16 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   @override
   void initState() {
+    loadInitial();
+    print('initState done');
+  }
+
+  void loadInitial() async
+  {
+    await _groupService.loadGroupMembershipsOfOwnUserOnly();
+    await _groupService.loadOwnGroup();
+    await _groupService.loadAcceptedGroups();
+    await _groupService.loadGroupInvitations();
   }
 
   @override
@@ -24,29 +34,19 @@ class _GroupsScreenState extends State<GroupsScreen> {
           SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
-                children: [
-                  Text(S.of(context).groups,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Expanded(
-                    flex: 18,
-                    child: ListView.builder(
-                    padding:
-                    const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
-                    itemCount: _groupService.acceptedGroups.length,
-                    itemBuilder: (context, index) => Dismissible(
-                    onDismissed: (direction) =>
-                    {
-                      setState(() {}
-                      ),
-                    }),
-                    shrinkWrap: true,
-                    ),
-                  )
-                ],
-              ))
-        ]);
+
+                  children: [
+                    Text(S
+                        .of(context)
+                        .groups,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ))
+                  ]
+              )
+          )
+        ]
+    );
   }
 }

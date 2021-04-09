@@ -24,19 +24,17 @@ class GroupService {
   AuthService authService = AuthService();
 
   void loadOwnGroup() async {
-    _acceptedGroups.clear();
+
+    print('loadOwnGroup');
 
     Map<String, dynamic> response =
         await _groupsEndpoint.getGroupById(authService.user.userId);
     _ownGroup = _readGroupfromJson(response);
 
-    for (GroupMembership membership in _memberships) {
-      _acceptedGroups.add(_readGroupfromJson(
-          await _groupsEndpoint.getGroupById(membership.id.groupId)));
-    }
   }
 
   void loadGroupInvitations() async {
+    print('loadGroupInvitations');
     _invitetInto.clear();
     for (GroupMembership m in _memberships) {
       if (m.invitationPending)
@@ -46,6 +44,7 @@ class GroupService {
   }
 
   void loadGroupMembershipsOfOwnUserOnly() async {
+    print('loadGroupMembershipsOfOwnUserOnly');
     _memberships.clear();
     String response =
         await _userEndpoint.getMemberships(authService.user.userId);
@@ -56,6 +55,8 @@ class GroupService {
   }
 
   void loadAcceptedGroups() async {
+    _acceptedGroups.clear();
+    print('loadAcceptedGroups');
     if (_memberships.isEmpty) loadGroupMembershipsOfOwnUserOnly();
 
     for (GroupMembership membership in _memberships) {
