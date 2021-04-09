@@ -19,12 +19,12 @@ class _LoginState extends State<LoginScreen> {
   final TextEditingController password = TextEditingController();
   String _errorMsg;
 
-  void _sendLoginData() {
+  void _sendLoginData() async{
     try {
       UserService userService = UserService();
       print(username.text);
       print(password.text);
-      userService.logIn(LoginCredentials(username.text, password.text));
+      await userService.logIn(LoginCredentials(username.text, password.text));
       if (userService.isSignedIn()) {
         Navigator.popAndPushNamed(context, TabScreen.routeName);
       }
