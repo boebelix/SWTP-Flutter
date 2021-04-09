@@ -17,8 +17,8 @@ class PoiService {
     pois.clear();
     for (int i in userIds) {
       String response = await _poiEndpoint.getPoiForUser(i);
-      for (dynamic e in jsonDecode(response)) {
-        pois.add(Poi.fromJSON(e));
+      for (dynamic content in jsonDecode(response)) {
+        pois.add(Poi.fromJSON(content));
       }
     }
   }
