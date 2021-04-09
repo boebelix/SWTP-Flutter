@@ -6,7 +6,7 @@ import 'package:swtp_app/models/login_credentials.dart';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/properties/properties.dart';
 
-class LogInEndpoint {
+class AuthEndpoint {
   var url = Properties.url;
 
   Future<AuthResponse> signIn(LoginCredentials data) async {
@@ -26,10 +26,11 @@ class LogInEndpoint {
         throw Failure('Authentifizierung Fehlgeschlagen');
       }
 
-      await Future.delayed(Duration(milliseconds: 2000));
+      await Future.delayed(Duration(milliseconds: 3000));
+
       return AuthResponse.fromJSON(jsonDecode(response.body));
     } on SocketException {
-      throw Failure('No Internet connection 😑');
+      throw Failure('Kein Verbindung zum Server 😑');
     } on HttpException {
       throw Failure("Couldn't find the post 😱");
     } on FormatException {

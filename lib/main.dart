@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/user_service.dart';
 import 'package:swtp_app/widgets/register.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => UserService(),
+      create: (_) => AuthEndpointProvider(),
       child: MaterialApp(
         title: 'SWTP',
         localizationsDelegates: [

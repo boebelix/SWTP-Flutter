@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/user_service.dart';
 import 'package:swtp_app/widgets/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,7 +21,7 @@ class _LoginState extends State<LoginScreen> {
   void _sendLoginData() async {
     // TODO Change to validators
     if (username.text.isNotEmpty && password.text.isNotEmpty) {
-      Provider.of<UserService>(context, listen: false)
+      Provider.of<AuthEndpointProvider>(context, listen: false)
           .logIn(LoginCredentials(username.text, password.text));
       username.clear();
       password.clear();
@@ -78,7 +76,7 @@ class _LoginState extends State<LoginScreen> {
               ],
             ),
           ),
-          Consumer<UserService>(
+          Consumer<AuthEndpointProvider>(
             builder: (_, notifier, __) {
               switch (notifier.state) {
                 case NotifierState.initial:
@@ -95,12 +93,12 @@ class _LoginState extends State<LoginScreen> {
 
                 default:
                   {
-                    return notifier.userService.fold(
+                    return notifier.authResponse.fold(
                       //Fehlerfall
                       (failure) => buildContainer(notifier, failure),
                       // Alles in Ordung
                       (userService) {
-                        _loginSuccesChangeScreen(context);
+                        _loginSuccessChangeScreen(context);
                         return Container();
                       },
                     );
@@ -113,13 +111,14 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
-  void _loginSuccesChangeScreen(BuildContext context) {
+  void _loginSuccessChangeScreen(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.popAndPushNamed(context, TabScreen.routeName);
     });
   }
 
-  Container buildContainer(UserService userService, Failure failure) {
+  Container buildContainer(
+      AuthEndpointProvider authServiceProvider, Failure failure) {
     BuildContext dialogContext;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
@@ -143,7 +142,7 @@ class _LoginState extends State<LoginScreen> {
           );
         },
       );
-      userService.resetState();
+      authServiceProvider.resetState();
     });
 
     return Container();

@@ -89,7 +89,7 @@ class _TabScreenState extends State<TabScreen> {
     return IconButton(
         icon: Icon(Icons.logout),
         onPressed: () {
-          UserService().logOut();
+          UserService().logOut(context);
           Navigator.popAndPushNamed(context, LoginScreen.routeName);
         });
   }
