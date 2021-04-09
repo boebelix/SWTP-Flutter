@@ -18,6 +18,7 @@ class RegisterEndpoint {
             },
             body: jsonEncode(credentials.toJson()))
         .then((response) {
+      print(response.body);
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData;

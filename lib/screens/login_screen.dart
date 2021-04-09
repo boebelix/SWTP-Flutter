@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
-import 'package:swtp_app/widgets/warning_dialog.dart';
+import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -16,26 +15,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
-
-  void _sendLoginData() async {
-    // TODO Change to validators
-    if (username.text.isNotEmpty && password.text.isNotEmpty) {
-      Provider.of<AuthEndpointProvider>(context, listen: false)
-          .logIn(LoginCredentials(username.text, password.text));
-      username.clear();
-      password.clear();
-    } else {}
-  }
-
-  // TODO Delete before merge
-  @override
-  void initState() {
-    username.text = 'test';
-    password.text = 'test';
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,73 +30,47 @@ class _LoginState extends State<LoginScreen> {
         padding: const EdgeInsets.all(12.0),
         child: Stack(
           children: [
-            ListView(
-              children: [
-                _selectLanguage(),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: S.of(context).user_name,
+            Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  _selectLanguage(),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: S.of(context).user_name,
+                    ),
+                    controller: username,
+                    validator: _validatorUsernameIsNotEmpty,
                   ),
-                  controller: username,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: S.of(context).password,
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: S.of(context).password,
+                    ),
+                    validator: _validatorPasswordIsNotEmpty,
+                    controller: password,
+                    obscureText: true,
                   ),
-                  controller: password,
-                  obscureText: true,
-                ),
-                _buttonLogin(deviceSize, context),
-                _buttonRegistration(deviceSize, context),
-              ],
+                  _buttonLogin(deviceSize, context),
+                  _buttonRegistration(deviceSize, context),
+                ],
+              ),
             ),
-            _authEndpointController(context),
+            AuthEndpointVisualisation(
+              destinationRouteBySuccess: TabScreen.routeName,
+            )
           ],
         ),
       ),
     );
   }
 
-  Consumer<AuthEndpointProvider> _authEndpointController(BuildContext context) {
-    return Consumer<AuthEndpointProvider>(
-      builder: (_, notifier, __) {
-        switch (notifier.state) {
-          case NotifierState.initial:
-            {
-              return Container();
-            }
-            break;
-
-          case NotifierState.loading:
-            {
-              return _loadingIndicator(context);
-            }
-            break;
-
-          default:
-            {
-              return notifier.authResponse.fold(
-                //Fehlerfall
-                (failure) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    notifier.resetState();
-                  });
-
-                  return PopUpWarningDialog(
-                    context: context,
-                    failure: failure,
-                  );
-                },
-                // Alles in Ordnung
-                (userService) {
-                  _loginSuccessChangeScreen(context);
-                  return Container();
-                },
-              );
-            }
-        }
-      },
-    );
+  void _sendLoginData() async {
+    if (_formKey.currentState.validate()) {
+      Provider.of<AuthEndpointProvider>(context, listen: false)
+          .logIn(LoginCredentials(username.text, password.text));
+      username.clear();
+      password.clear();
+    }
   }
 
   SizedBox _buttonLogin(Size deviceSize, BuildContext context) {
@@ -136,25 +92,6 @@ class _LoginState extends State<LoginScreen> {
               fontSize: 30,
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _loginSuccessChangeScreen(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.popAndPushNamed(context, TabScreen.routeName);
-    });
-  }
-
-  Widget _loadingIndicator(BuildContext context) {
-    final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.7;
-    return Center(
-      child: SizedBox(
-        height: sizeLoadingIndicator,
-        width: sizeLoadingIndicator,
-        child: CircularProgressIndicator(
-          strokeWidth: 10,
         ),
       ),
     );
@@ -208,5 +145,21 @@ class _LoginState extends State<LoginScreen> {
         )
       ],
     );
+  }
+
+  String _validatorUsernameIsNotEmpty(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).warning_user_name_NN;
+    }
+
+    return null;
+  }
+
+  String _validatorPasswordIsNotEmpty(value) {
+    if (value == null || value.isEmpty) {
+      return S.of(context).password_empty;
+    }
+
+    return null;
   }
 }
