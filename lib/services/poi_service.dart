@@ -11,16 +11,15 @@ class PoiService {
   PoiService._internal();
 
   PoiEndpoint _poiEndpoint = PoiEndpoint();
-  List<Poi> Pois = List<Poi>();
+  List<Poi> pois = List<Poi>();
 
   void getAllVisiblePois(List<int> userIds) async {
-    Pois.clear();
+    pois.clear();
     for (int i in userIds) {
       String response = await _poiEndpoint.getPoiForUser(i);
       for (dynamic e in jsonDecode(response)) {
-        Pois.add(Poi.fromJSON(e));
+        pois.add(Poi.fromJSON(e));
       }
     }
-    print(Pois.toString());
   }
 }
