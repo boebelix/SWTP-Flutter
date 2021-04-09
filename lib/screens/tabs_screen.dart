@@ -5,6 +5,7 @@ import 'package:swtp_app/screens/groups_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
+import 'package:swtp_app/services/poi_service.dart';
 import 'package:swtp_app/services/user_service.dart';
 
 class TabScreen extends StatefulWidget {
@@ -17,6 +18,8 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   List<Map<String, Object>> _pages;
   int _selectedPageIndex = 0;
+
+  PoiService _poiService=PoiService();
 
   @override
   void initState() {
@@ -55,8 +58,11 @@ class _TabScreenState extends State<TabScreen> {
           IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                UserService().logOut();
-                Navigator.popAndPushNamed(context, LoginScreen.routeName);
+                List<int> Poitest=List<int>();
+                Poitest.add(1);
+                _poiService.getAllVisiblePois(Poitest);
+                //UserService().logOut();
+                //Navigator.popAndPushNamed(context, LoginScreen.routeName);
               }),
         ],
       ),
