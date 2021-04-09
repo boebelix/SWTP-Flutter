@@ -11,31 +11,47 @@ class GroupService {
 
   factory GroupService() => _instance;
 
-  GroupService._internal();
-
   Group _ownGroup;
-  List<Group> _acceptedGroups = List<Group>();
-  List<GroupMembership> _memberships = List<GroupMembership>();
-  List<Group> _invitetInto = List<Group>();
+  List<Group> _acceptedGroups;
+  List<GroupMembership> _memberships;
+  List<Group> _invitetInto;
 
-  GroupsEndpoint _groupsEndpoint = GroupsEndpoint();
-  UserEndpoint _userEndpoint = UserEndpoint();
+  AuthService authService;
 
-  AuthService authService = AuthService();
+  GroupsEndpoint _groupsEndpoint;
 
-  void loadOwnGroup() async {
+  UserEndpoint _userEndpoint;
 
-    print('loadOwnGroup');
+  GroupService._internal() {
+    _acceptedGroups = List<Group>();
+    _memberships = List<GroupMembership>();
+    _invitetInto = List<Group>();
+    authService = AuthService();
+    _groupsEndpoint = GroupsEndpoint();
+    _userEndpoint = UserEndpoint();
 
-    Map<String, dynamic> response =
-        await _groupsEndpoint.getGroupById(authService.user.userId);
-    _ownGroup = _readGroupfromJson(response);
-
+    reloadAll();
   }
 
-  void loadGroupInvitations() async {
-    print('loadGroupInvitations');
+  void reloadAll() async {
+    await loadOwnGroup();
+    await loadGroupMembershipsOfOwnUserOnly();
+    await loadGroupInvitations();
+    await loadAcceptedGroups();
+  }
+
+  Future<void> loadOwnGroup() async {
+    Map<String, dynamic> response =
+        await _groupsEndpoint.getGroupById(authService.user.userId);
+
+    _ownGroup = _readGroupfromJson(response);
+  }
+
+  Future<void> loadGroupInvitations() async {
     _invitetInto.clear();
+
+    if (_memberships.isEmpty) await loadGroupMembershipsOfOwnUserOnly();
+
     for (GroupMembership m in _memberships) {
       if (m.invitationPending)
         _invitetInto.add(_readGroupfromJson(
@@ -43,21 +59,20 @@ class GroupService {
     }
   }
 
-  void loadGroupMembershipsOfOwnUserOnly() async {
-    print('loadGroupMembershipsOfOwnUserOnly');
+  Future<void> loadGroupMembershipsOfOwnUserOnly() async {
     _memberships.clear();
     String response =
         await _userEndpoint.getMemberships(authService.user.userId);
 
     for (dynamic e in jsonDecode(response)) {
       _memberships.add(GroupMembership.fromJSON(e));
+      print(_memberships.length);
     }
   }
 
-  void loadAcceptedGroups() async {
+  Future<void> loadAcceptedGroups() async {
     _acceptedGroups.clear();
-    print('loadAcceptedGroups');
-    if (_memberships.isEmpty) loadGroupMembershipsOfOwnUserOnly();
+    if (_memberships.isEmpty) await loadGroupMembershipsOfOwnUserOnly();
 
     for (GroupMembership membership in _memberships) {
       if (!membership.invitationPending)
@@ -90,6 +105,7 @@ class GroupService {
     Group gr = Group.fromJSON(json);
 
     List<GroupMembership> groupmemberships = List<GroupMembership>();
+
     for (dynamic e in json['memberships']) {
       groupmemberships.add(GroupMembership.fromJSON(e));
     }

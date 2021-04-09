@@ -13,18 +13,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   GroupService _groupService = GroupService();
 
   @override
-  void initState() {
-    loadInitial();
-    print('initState done');
-  }
-
-  void loadInitial() async
-  {
-    await _groupService.loadGroupMembershipsOfOwnUserOnly();
-    await _groupService.loadOwnGroup();
-    await _groupService.loadAcceptedGroups();
-    await _groupService.loadGroupInvitations();
-  }
+  void initState() {}
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +22,13 @@ class _GroupsScreenState extends State<GroupsScreen> {
         children: <Widget>[
           SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              child: Column(
-
-                  children: [
-                    Text(S
-                        .of(context)
-                        .groups,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ))
-                  ]
-              )
-          )
-        ]
-    );
+              child: Column(children: [
+                Text(S.of(context).groups,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ))
+              ]))
+        ]);
   }
 }

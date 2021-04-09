@@ -9,9 +9,6 @@ class LogInEndpoint {
   var url = Properties.url;
 
   Future<Map<String, dynamic>> signIn(LoginCredentials data) async {
-    print("in Methode");
-    print(data.toJson());
-    print(jsonEncode(data.toJson()));
     return await http
         .post(Uri.http(url, "/api/authentication"),
             headers: {
