@@ -1,9 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/register_credentials.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 
 class Register extends StatefulWidget {
   static const routeName = "/register";
@@ -29,11 +34,11 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
-  void _sendRegisterData() {
+  void _sendRegisterData() async {
     try {
       UserService userService = UserService();
       if (_formKey.currentState.validate()) {
-        userService.registerUser(
+        await userService.registerUser(
           credentials: RegisterCredentials(
             username.text,
             password.text,
@@ -47,9 +52,9 @@ class _RegisterStage extends State<Register> {
           ),
         );
 
-        // TODO Muss umgebaut werden wenn der Endpoint oder Serviceklasse richtig Fehler wirft
-        // userService.logIn(LoginCredentials(username.text, password.text));
-        // Navigator.pushNamed(context, TabScreen.routeName);
+        Provider.of<AuthEndpointProvider>(context, listen: false)
+            .logIn(LoginCredentials(username.text, password.text));
+        Navigator.pushNamed(context, TabScreen.routeName);
       }
     } catch (error) {
       print(error);
@@ -65,13 +70,18 @@ class _RegisterStage extends State<Register> {
       ),
       body: Padding(
         padding: EdgeInsets.all(5),
-        child: Card(
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+        child: Stack(children: [
+          Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: _formElements(deviceSize),
           ),
-          child: _formElements(deviceSize),
-        ),
+          AuthEndpointVisualisation(
+            destinationRouteBySuccess: TabScreen.routeName,
+          ),
+        ]),
       ),
     );
   }

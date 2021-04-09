@@ -53,12 +53,7 @@ class _TabScreenState extends State<TabScreen> {
       appBar: AppBar(
         title: Text(_pages[_selectedPageIndex]['title_' + Intl.defaultLocale]),
         actions: [
-          IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () {
-                UserService().logOut();
-                Navigator.popAndPushNamed(context, LoginScreen.routeName);
-              }),
+          _pressedLogoutButton(context),
         ],
       ),
       body: _pages[_selectedPageIndex]['page'],
@@ -88,5 +83,14 @@ class _TabScreenState extends State<TabScreen> {
         ],
       ),
     );
+  }
+
+  IconButton _pressedLogoutButton(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.logout),
+        onPressed: () {
+          UserService().logOut(context);
+          Navigator.popAndPushNamed(context, LoginScreen.routeName);
+        });
   }
 }

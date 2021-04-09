@@ -30,12 +30,14 @@
   "warning_postcode_5_Figures": "Die Postleitzahl besteht aus 5 Zahlen",
   "warning_city_NN": "Bitte geben Sie Ihre Stadt ein",
   "warning_city_UpperThenLower": "Die Stadt muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben",
-  "warning_user_name_NN": "Bitte geben wählen Sie einen Nutzernamen",
+  "warning_user_name_NN": "Bitte geben Sie Ihren Nutzernamen ein",
   "warning_email_NN": "Bitte geben Sie Ihre E-Mailadresse ein",
   "warning_email_not_hskl": "Die Hochschule E-Mail muss die Form abcd1234@stud.hs-kl.de haben",
   "warning_password": "Sie müssen ein Passwort wählen",
   "password_level_not_save": "Passwort nicht sicher",
   "password_repeat": "Passwort wiederholen",
   "password_empty": "Wiederholen Sie das Passwort",
-  "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein"
+  "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
+  "alert_dialog_title": "Hinweis",
+  "alert_dialog_button_text": "OK"
 }
