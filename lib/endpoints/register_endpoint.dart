@@ -9,7 +9,6 @@ class RegisterEndpoint {
   var url = Properties.url;
 
   Future<Map<String, dynamic>> register(RegisterCredentials credentials) async {
-    print(credentials.toJson());
     return await http
         .post(Uri.http(url, "/api/users"),
             headers: {

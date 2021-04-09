@@ -1,35 +1,30 @@
 import 'package:flutter/cupertino.dart';
-import 'package:swtp_app/models/member.dart';
+import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/user.dart';
 
 class Group {
   @required
-  int groupId;
+  User admin;
 
   @required
-  User admin;
+  int groupId;
 
   @required
   String groupName;
 
-  List<Member> memberships;
+  List<GroupMembership> memberships;
 
   Group({this.admin, this.groupId, this.groupName, this.memberships});
 
   factory Group.fromJSON(Map<String, dynamic> json) => Group(
-        admin: json['admin'],
-        groupId: json['groupId'],
-        groupName: json['groupName'],
-        memberships: json['memberships']
-            .cast<List>()
-            .map((i) => Member.fromJSON(i))
-            .toList(),
-      );
+      admin: User.fromJSON(json['admin']),
+      groupId: json['groupId'],
+      groupName: json['groupName'],
+      memberships: null);
 
   Map<String, dynamic> toJson() => {
         "admin": admin,
         "groupId": groupId,
         "groupName": groupName,
-        "memberships": memberships.map((i) => i.toJSON()).toList(),
       };
 }

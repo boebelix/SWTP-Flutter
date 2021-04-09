@@ -39,5 +39,8 @@
   "password_empty": "Wiederholen Sie das Passwort",
   "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
   "alert_dialog_title": "Hinweis",
-  "alert_dialog_button_text": "OK"
+  "alert_dialog_button_text": "OK",
+  "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
+  "groups": "Gruppen",
+  "invitations": "Einladungen"
 }

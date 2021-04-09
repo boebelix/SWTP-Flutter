@@ -4,7 +4,7 @@ import 'package:swtp_app/endpoints/auth_endpoint.dart';
 import 'package:swtp_app/models/auth_response.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 
 enum NotifierState { initial, loading, loaded }
 
@@ -16,7 +16,7 @@ class AuthEndpointProvider extends ChangeNotifier {
 
   AuthEndpointProvider._internal();
 
-  UserService _userService = UserService();
+  AuthService _userService = AuthService();
   AuthEndpoint _logInEndpoint = AuthEndpoint();
   NotifierState _state = NotifierState.initial;
   Either<Failure, AuthResponse> _authResponse;

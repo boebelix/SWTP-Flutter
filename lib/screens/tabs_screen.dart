@@ -5,8 +5,7 @@ import 'package:swtp_app/screens/groups_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
-import 'package:swtp_app/services/poi_service.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 
 class TabScreen extends StatefulWidget {
   static const routeName = '/tabScreen';
@@ -89,7 +88,7 @@ class _TabScreenState extends State<TabScreen> {
     return IconButton(
         icon: Icon(Icons.logout),
         onPressed: () {
-          UserService().logOut(context);
+          AuthService().logOut(context);
           Navigator.popAndPushNamed(context, LoginScreen.routeName);
         });
   }
