@@ -22,6 +22,11 @@ class LogInEndpoint {
         ),
       );
 
+      if (response.statusCode == HttpStatus.unauthorized) {
+        throw Failure('Authentifizierung Fehlgeschlagen');
+      }
+
+      await Future.delayed(Duration(milliseconds: 2000));
       return AuthResponse.fromJSON(jsonDecode(response.body));
     } on SocketException {
       throw Failure('No Internet connection 😑');

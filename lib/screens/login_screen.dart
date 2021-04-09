@@ -141,8 +141,9 @@ class _LoginState extends State<LoginScreen> {
           );
         },
       );
+      userService.resetState();
     });
-    userService.resetState();
+
     return Container();
   }
 
