@@ -38,6 +38,9 @@
   "password_repeat": "Repeat the password",
   "password_empty": "Please repeat the password",
   "warning_password_not_same": "The passwords do not match",
+  "alert_dialog_title": "Notice",
+  "alert_dialog_button_text": "OK"
+  "warning_password_not_same": "The passwords do not match",
   "groups": "Groups",
   "invitations": "Invitations"
 }
