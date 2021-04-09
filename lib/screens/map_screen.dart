@@ -32,7 +32,7 @@ class MapScreen extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                     size: 50,
                   ),
-                  onTap: (){
+                  onTap: () {
                     print('test}');
                   },
                 ),

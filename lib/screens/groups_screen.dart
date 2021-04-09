@@ -13,9 +13,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
   GroupService _groupService = GroupService();
 
   @override
-  void initState() {}
-
-  @override
   Widget build(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

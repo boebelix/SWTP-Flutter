@@ -14,7 +14,7 @@ class GroupService {
   Group _ownGroup;
   List<Group> _acceptedGroups;
   List<GroupMembership> _memberships;
-  List<Group> _invitetInto;
+  List<Group> _invitedIntoGroups;
 
   AuthService authService;
 
@@ -25,7 +25,7 @@ class GroupService {
   GroupService._internal() {
     _acceptedGroups = List<Group>();
     _memberships = List<GroupMembership>();
-    _invitetInto = List<Group>();
+    _invitedIntoGroups = List<Group>();
     authService = AuthService();
     _groupsEndpoint = GroupsEndpoint();
     _userEndpoint = UserEndpoint();
@@ -48,13 +48,13 @@ class GroupService {
   }
 
   Future<void> loadGroupInvitations() async {
-    _invitetInto.clear();
+    _invitedIntoGroups.clear();
 
     if (_memberships.isEmpty) await loadGroupMembershipsOfOwnUserOnly();
 
     for (GroupMembership m in _memberships) {
       if (m.invitationPending)
-        _invitetInto.add(_readGroupfromJson(
+        _invitedIntoGroups.add(_readGroupfromJson(
             await _groupsEndpoint.getGroupById(m.id.groupId)));
     }
   }
@@ -64,8 +64,8 @@ class GroupService {
     String response =
         await _userEndpoint.getMemberships(authService.user.userId);
 
-    for (dynamic e in jsonDecode(response)) {
-      _memberships.add(GroupMembership.fromJSON(e));
+    for (dynamic elem in jsonDecode(response)) {
+      _memberships.add(GroupMembership.fromJSON(elem));
       print(_memberships.length);
     }
   }
@@ -97,7 +97,7 @@ class GroupService {
 
   List<GroupMembership> get memberships => _memberships;
 
-  List<Group> get invitetInto => _invitetInto;
+  List<Group> get invitetIntoGroups => _invitedIntoGroups;
 
   List<Group> get acceptedGroups => _acceptedGroups;
 
@@ -106,8 +106,8 @@ class GroupService {
 
     List<GroupMembership> groupmemberships = List<GroupMembership>();
 
-    for (dynamic e in json['memberships']) {
-      groupmemberships.add(GroupMembership.fromJSON(e));
+    for (dynamic elem in json['memberships']) {
+      groupmemberships.add(GroupMembership.fromJSON(elem));
     }
     gr.memberships = groupmemberships;
 
