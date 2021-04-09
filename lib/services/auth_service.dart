@@ -1,8 +1,12 @@
-import 'package:swtp_app/endpoints/login_endpoint.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/endpoints/register_endpoint.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/models/register_credentials.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+
+enum NotifierState { initial, loading, loaded }
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
@@ -11,31 +15,24 @@ class AuthService {
 
   AuthService._internal();
 
-  User _user;
-  String _token;
+  User user;
+  String token;
 
-  void logIn(LoginCredentials credentials) async {
-    Map<String, dynamic> responseData =
-        await LogInEndpoint().signIn(credentials);
-    _user = User.fromJSON(responseData['user']);
-    _token = responseData['token'];
-  }
+  void logIn(LoginCredentials credentials) async {}
 
-  void logOut() {
-    _user = null;
-    _token = null;
+  void logOut(BuildContext context) {
+    user = null;
+    token = null;
+    Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
   }
 
   bool isSignedIn() {
-    return _token != null && _user != null;
+    return token.isNotEmpty && user != null;
   }
 
   void registerUser({RegisterCredentials credentials}) async {
     Map<String, dynamic> responseData =
         await RegisterEndpoint().register(credentials);
-    _user = User.fromJSON(responseData);
+    user = User.fromJSON(responseData);
   }
-
-  String get token=> _token;
-  User get user => _user;
 }

@@ -7,7 +7,7 @@ import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 
 class Register extends StatefulWidget {
@@ -36,7 +36,7 @@ class _RegisterStage extends State<Register> {
 
   void _sendRegisterData() async {
     try {
-      UserService userService = UserService();
+      AuthService userService = AuthService();
       if (_formKey.currentState.validate()) {
         await userService.registerUser(
           credentials: RegisterCredentials(
