@@ -37,5 +37,7 @@
   "password_level_not_save": "Passwort nicht sicher",
   "password_repeat": "Passwort wiederholen",
   "password_empty": "Wiederholen Sie das Passwort",
-  "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein"
+  "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
+  "groups": "Gruppen",
+  "invitations": "Einladungen"
 }
