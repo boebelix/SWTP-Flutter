@@ -37,5 +37,7 @@
   "password_level_not_save": "Password is not safe enough",
   "password_repeat": "Repeat the password",
   "password_empty": "Please repeat the password",
-  "warning_password_not_same": "The passwords do not match"
+  "warning_password_not_same": "The passwords do not match",
+  "alert_dialog_title": "Notice",
+  "alert_dialog_button_text": "OK"
 }

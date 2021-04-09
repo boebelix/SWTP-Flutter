@@ -23,14 +23,14 @@ class AuthEndpoint {
       );
 
       if (response.statusCode == HttpStatus.unauthorized) {
-        throw Failure('Authentifizierung Fehlgeschlagen');
+        throw Failure('Authentification failed');
       }
 
-      await Future.delayed(Duration(milliseconds: 3000));
+      await Future.delayed(Duration(milliseconds: 1000));
 
       return AuthResponse.fromJSON(jsonDecode(response.body));
     } on SocketException {
-      throw Failure('Kein Verbindung zum Server 😑');
+      throw Failure('No connection to server 😑');
     } on HttpException {
       throw Failure("Couldn't find the post 😱");
     } on FormatException {

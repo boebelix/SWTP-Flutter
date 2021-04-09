@@ -6,6 +6,7 @@ import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -43,11 +44,11 @@ class _LoginState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text(S.of(context).login),
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListView(
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Stack(
+          children: [
+            ListView(
               children: [
                 _selectLanguage(),
                 TextFormField(
@@ -63,50 +64,79 @@ class _LoginState extends State<LoginScreen> {
                   controller: password,
                   obscureText: true,
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: deviceSize.height * 0.1,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
-                    child: _buttonLogin(context),
-                  ),
-                ),
+                _buttonLogin(deviceSize, context),
                 _buttonRegistration(deviceSize, context),
               ],
             ),
+            _authEndpointController(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Consumer<AuthEndpointProvider> _authEndpointController(BuildContext context) {
+    return Consumer<AuthEndpointProvider>(
+      builder: (_, notifier, __) {
+        switch (notifier.state) {
+          case NotifierState.initial:
+            {
+              return Container();
+            }
+            break;
+
+          case NotifierState.loading:
+            {
+              return _loadingIndicator(context);
+            }
+            break;
+
+          default:
+            {
+              return notifier.authResponse.fold(
+                //Fehlerfall
+                (failure) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    notifier.resetState();
+                  });
+
+                  return PopUpWarningDialog(
+                    context: context,
+                    failure: failure,
+                  );
+                },
+                // Alles in Ordnung
+                (userService) {
+                  _loginSuccessChangeScreen(context);
+                  return Container();
+                },
+              );
+            }
+        }
+      },
+    );
+  }
+
+  SizedBox _buttonLogin(Size deviceSize, BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: deviceSize.height * 0.1,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0, deviceSize.height * 0.02, 0, 0),
+        child: ElevatedButton(
+          onPressed: _sendLoginData,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+              (Colors.black12),
+            ),
           ),
-          Consumer<AuthEndpointProvider>(
-            builder: (_, notifier, __) {
-              switch (notifier.state) {
-                case NotifierState.initial:
-                  {
-                    return Container();
-                  }
-                  break;
-
-                case NotifierState.loading:
-                  {
-                    return _loadingIndicator(context);
-                  }
-                  break;
-
-                default:
-                  {
-                    return notifier.authResponse.fold(
-                      //Fehlerfall
-                      (failure) => buildContainer(notifier, failure),
-                      // Alles in Ordung
-                      (userService) {
-                        _loginSuccessChangeScreen(context);
-                        return Container();
-                      },
-                    );
-                  }
-              }
-            },
-          )
-        ],
+          child: Text(
+            S.of(context).login,
+            style: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -117,37 +147,6 @@ class _LoginState extends State<LoginScreen> {
     });
   }
 
-  Container buildContainer(
-      AuthEndpointProvider authServiceProvider, Failure failure) {
-    BuildContext dialogContext;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        //barrierDismissible: false,
-        builder: (BuildContext context) {
-          dialogContext = context;
-          return Container(
-            child: AlertDialog(
-              title: Text('Hinweis'),
-              content: Text(failure.message),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext);
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-      authServiceProvider.resetState();
-    });
-
-    return Container();
-  }
-
   Widget _loadingIndicator(BuildContext context) {
     final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.7;
     return Center(
@@ -156,23 +155,6 @@ class _LoginState extends State<LoginScreen> {
         width: sizeLoadingIndicator,
         child: CircularProgressIndicator(
           strokeWidth: 10,
-        ),
-      ),
-    );
-  }
-
-  ElevatedButton _buttonLogin(BuildContext context) {
-    return ElevatedButton(
-      onPressed: _sendLoginData,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
-          (Colors.black12),
-        ),
-      ),
-      child: Text(
-        S.of(context).login,
-        style: TextStyle(
-          fontSize: 30,
         ),
       ),
     );
