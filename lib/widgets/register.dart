@@ -66,7 +66,7 @@ class _RegisterStage extends State<Register> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).register),
+        title: Text(Language.of(context).register),
       ),
       body: Padding(
         padding: EdgeInsets.all(5),
@@ -93,12 +93,12 @@ class _RegisterStage extends State<Register> {
         padding: EdgeInsets.all(5),
         children: [
           Text(
-            S.of(context).personal_data,
+            Language.of(context).personal_data,
             style: TextStyle(fontSize: 18),
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).firstname,
+              labelText: Language.of(context).firstname,
               icon: Icon(Icons.account_circle),
             ),
             validator: _validatorFirstname,
@@ -106,7 +106,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).lastname,
+              labelText: Language.of(context).lastname,
               icon: Icon(Icons.account_circle),
             ),
             validator: _validatorLastname,
@@ -118,7 +118,7 @@ class _RegisterStage extends State<Register> {
                 flex: 10,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: S.of(context).street,
+                    labelText: Language.of(context).street,
                     icon: Icon(Icons.location_city),
                   ),
                   validator: _validatorStreet,
@@ -130,7 +130,7 @@ class _RegisterStage extends State<Register> {
                 flex: 2,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: S.of(context).house_number,
+                    labelText: Language.of(context).house_number,
                   ),
                   validator: _validatorHouseNumber,
                   controller: streetNr,
@@ -144,7 +144,7 @@ class _RegisterStage extends State<Register> {
                 flex: 5,
                 child: TextFormField(
                   decoration: InputDecoration(
-                      labelText: S.of(context).postcode,
+                      labelText: Language.of(context).postcode,
                       icon: Icon(Icons.location_city)),
                   validator: _validatorPostcode,
                   controller: zip,
@@ -155,7 +155,7 @@ class _RegisterStage extends State<Register> {
                 flex: 7,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: S.of(context).city,
+                    labelText: Language.of(context).city,
                   ),
                   validator: _validatorCity,
                   controller: city,
@@ -166,13 +166,13 @@ class _RegisterStage extends State<Register> {
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 5.0),
             child: Text(
-              S.of(context).login_data,
+              Language.of(context).login_data,
               style: TextStyle(fontSize: 18),
             ),
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).user_name,
+              labelText: Language.of(context).user_name,
               icon: Icon(Icons.account_circle),
             ),
             validator: _validatorUsername,
@@ -180,7 +180,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).email,
+              labelText: Language.of(context).email,
               icon: Icon(Icons.email),
             ),
             keyboardType: TextInputType.emailAddress,
@@ -189,7 +189,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).password,
+              labelText: Language.of(context).password,
               icon: Icon(Icons.vpn_key),
             ),
             validator: _validatorPassword,
@@ -198,7 +198,7 @@ class _RegisterStage extends State<Register> {
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: S.of(context).password_repeat,
+              labelText: Language.of(context).password_repeat,
               icon: Icon(Icons.vpn_key),
             ),
             validator: _validatorRepeatPassword,
@@ -213,7 +213,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorFirstname(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_firstname_NN;
+      return Language.of(context).warning_firstname_NN;
     }
 
     RegExp regexFirstname = RegExp(
@@ -222,7 +222,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexFirstname.hasMatch(value)) {
-      return S.of(context).warning_firstname_UpperThenLower;
+      return Language.of(context).warning_firstname_UpperThenLower;
     }
 
     return null;
@@ -230,7 +230,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorLastname(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_lastname_NN;
+      return Language.of(context).warning_lastname_NN;
     }
 
     RegExp regexLastname = RegExp(
@@ -239,7 +239,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexLastname.hasMatch(value)) {
-      return S.of(context).warning_lastname_UpperThenLower;
+      return Language.of(context).warning_lastname_UpperThenLower;
     }
 
     return null;
@@ -247,7 +247,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorStreet(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_street_NN;
+      return Language.of(context).warning_street_NN;
     }
 
     RegExp regexLastname = RegExp(
@@ -256,7 +256,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexLastname.hasMatch(value)) {
-      return S.of(context).warning_street_UpperThenLower;
+      return Language.of(context).warning_street_UpperThenLower;
     }
 
     return null;
@@ -264,7 +264,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorHouseNumber(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_house_number_NN;
+      return Language.of(context).warning_house_number_NN;
     }
 
     RegExp regexStreetNr = RegExp(
@@ -273,7 +273,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexStreetNr.hasMatch(value)) {
-      return S.of(context).warning_house_number_UperThenLower;
+      return Language.of(context).warning_house_number_UperThenLower;
     }
 
     return null;
@@ -281,7 +281,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorPostcode(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_postcode_NN;
+      return Language.of(context).warning_postcode_NN;
     }
 
     RegExp regexZipCode = RegExp(
@@ -290,7 +290,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexZipCode.hasMatch(value)) {
-      return S.of(context).warning_postcode_5_Figures;
+      return Language.of(context).warning_postcode_5_Figures;
     }
 
     return null;
@@ -298,7 +298,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorCity(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_city_NN;
+      return Language.of(context).warning_city_NN;
     }
 
     RegExp regexCity = RegExp(
@@ -307,7 +307,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexCity.hasMatch(value)) {
-      return S.of(context).warning_city_UpperThenLower;
+      return Language.of(context).warning_city_UpperThenLower;
     }
 
     return null;
@@ -315,7 +315,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorUsername(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_user_name_NN;
+      return Language.of(context).warning_user_name_NN;
     }
 
     return null;
@@ -323,7 +323,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorEmail(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_email_NN;
+      return Language.of(context).warning_email_NN;
     }
 
     RegExp regexEmail = RegExp(
@@ -332,7 +332,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexEmail.hasMatch(value)) {
-      return S.of(context).warning_email_not_hskl;
+      return Language.of(context).warning_email_not_hskl;
     }
 
     return null;
@@ -340,7 +340,7 @@ class _RegisterStage extends State<Register> {
 
   String _validatorPassword(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_password;
+      return Language.of(context).warning_password;
     }
 
     int passwordLength = value.length;
@@ -393,16 +393,16 @@ class _RegisterStage extends State<Register> {
     } else {
       // nicht sicher
 
-      return S.of(context).password_level_not_save;
+      return Language.of(context).password_level_not_save;
     }
   }
 
   String _validatorRepeatPassword(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).password_empty;
+      return Language.of(context).password_empty;
     }
     if (value != password.text) {
-      return S.of(context).warning_password_not_same;
+      return Language.of(context).warning_password_not_same;
     }
     return null;
   }
@@ -421,7 +421,7 @@ class _RegisterStage extends State<Register> {
               ),
             ),
             child: Text(
-              S.of(context).register,
+              Language.of(context).register,
               style: TextStyle(
                 fontSize: 30,
               ),

@@ -19,12 +19,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'SWTP',
         localizationsDelegates: [
-          S.delegate,
+          Language.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: S.delegate.supportedLocales,
+        supportedLocales: Language.delegate.supportedLocales,
         theme: ThemeData(
           primarySwatch: Colors.blue,
           accentColor: Colors.amber,

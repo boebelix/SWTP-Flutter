@@ -14,14 +14,14 @@ Widget PopUpWarningDialog({BuildContext context, Failure failure}) {
           dialogContext = context;
           return Container(
             child: AlertDialog(
-              title: Text(S.of(context).alert_dialog_title),
+              title: Text(Language.of(context).alert_dialog_title),
               content: Text(failure.message),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
-                  child: Text(S.of(context).alert_dialog_button_text),
+                  child: Text(Language.of(context).alert_dialog_button_text),
                 ),
               ],
             ),

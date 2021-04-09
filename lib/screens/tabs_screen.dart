@@ -67,17 +67,17 @@ class _TabScreenState extends State<TabScreen> {
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.map),
-            label: S.of(context).map,
+            label: Language.of(context).map,
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.group),
-            label: S.of(context).groups,
+            label: Language.of(context).groups,
           ),
           BottomNavigationBarItem(
             backgroundColor: Theme.of(context).primaryColor,
             icon: Icon(Icons.account_circle),
-            label: S.of(context).profile,
+            label: Language.of(context).profile,
           ),
         ],
       ),

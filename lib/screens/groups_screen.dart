@@ -20,7 +20,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
           SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(children: [
-                Text(S.of(context).groups,
+                Text(Language.of(context).groups,
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,

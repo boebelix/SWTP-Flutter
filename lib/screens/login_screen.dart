@@ -24,7 +24,7 @@ class _LoginState extends State<LoginScreen> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).login),
+        title: Text(Language.of(context).login),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -37,14 +37,14 @@ class _LoginState extends State<LoginScreen> {
                   _selectLanguage(),
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: S.of(context).user_name,
+                      labelText: Language.of(context).user_name,
                     ),
                     controller: username,
                     validator: _validatorUsernameIsNotEmpty,
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: S.of(context).password,
+                      labelText: Language.of(context).password,
                     ),
                     validator: _validatorPasswordIsNotEmpty,
                     controller: password,
@@ -87,7 +87,7 @@ class _LoginState extends State<LoginScreen> {
             ),
           ),
           child: Text(
-            S.of(context).login,
+            Language.of(context).login,
             style: TextStyle(
               fontSize: 30,
             ),
@@ -113,7 +113,7 @@ class _LoginState extends State<LoginScreen> {
               ),
             ),
             child: Text(
-              S.of(context).register,
+              Language.of(context).register,
               style: TextStyle(
                 fontSize: 30,
               ),
@@ -129,7 +129,7 @@ class _LoginState extends State<LoginScreen> {
         IconButton(
           onPressed: () {
             setState(() {
-              S.load(Locale('en'));
+              Language.load(Locale('en'));
             });
           },
           icon: Image.asset('icons/flags/png/gb.png', package: 'country_icons'),
@@ -137,11 +137,11 @@ class _LoginState extends State<LoginScreen> {
         IconButton(
           onPressed: () {
             setState(() {
-              S.load(Locale('de'));
+              Language.load(Locale('de'));
             });
           },
           icon: Image.asset('icons/flags/png/de.png',
-              package: 'country_icons'), //Text(S.of(context).german)),
+              package: 'country_icons'), //Text(Language.of(context).german)),
         )
       ],
     );
@@ -149,7 +149,7 @@ class _LoginState extends State<LoginScreen> {
 
   String _validatorUsernameIsNotEmpty(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).warning_user_name_NN;
+      return Language.of(context).warning_user_name_NN;
     }
 
     return null;
@@ -157,7 +157,7 @@ class _LoginState extends State<LoginScreen> {
 
   String _validatorPasswordIsNotEmpty(value) {
     if (value == null || value.isEmpty) {
-      return S.of(context).password_empty;
+      return Language.of(context).password_empty;
     }
 
     return null;
