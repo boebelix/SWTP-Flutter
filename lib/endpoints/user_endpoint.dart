@@ -55,11 +55,6 @@ class UserEndpoint {
       "Authorization": "Bearer ${userService.token}"
     }).then((response) {
       if (response.statusCode == HttpStatus.ok) {
-        /*print( response.body);
-
-        print(jsonDecode(response.body)[0]);
-        print(jsonDecode(response.body));
-        Map<String,dynamic> responseData = jsonDecode(response.body)[0];*/
         return response.body;
       } else {
         if (response.statusCode == HttpStatus.notFound)
