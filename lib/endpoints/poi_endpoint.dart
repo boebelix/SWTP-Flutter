@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/properties/properties.dart';
-import 'package:swtp_app/services/user_service.dart';
+import 'package:swtp_app/services/auth_service.dart';
 
 class PoiEndpoint {
   var url = Properties.url;
-  UserService userService = UserService();
+  AuthService userService = AuthService();
 
   Future<String> getPoiForUser(int userId) async {
     return await http
