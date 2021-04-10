@@ -73,8 +73,6 @@ class GroupService {
 
   Future<void> denyInvitationOrLeaveGroup(int groupId) async {
     await _groupsEndpoint.removeUserFromGroup(groupId, authService.user.userId);
-    await loadGroupMembershipsOfOwnUserOnly();
-    await loadGroups();
   }
 
   Future<void> kickUserFromOwnGroup(int userId) async {
@@ -90,8 +88,6 @@ class GroupService {
   Future<void> acceptGroupInvitation(int groupId) async {
     await _groupsEndpoint.acceptGroupInvitation(
         groupId, authService.user.userId);
-    await loadGroupMembershipsOfOwnUserOnly();
-    await loadGroups();
   }
 
   Group get ownGroup => _ownGroup;

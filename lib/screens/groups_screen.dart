@@ -25,15 +25,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
       textAlign: TextAlign.center,
       child: FutureBuilder<void>(
         future: _groupService.reloadAll(),
-        // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           List<Widget> children;
           if (snapshot.connectionState == ConnectionState.done) {
             children = <Widget>[
               buildAcceptedGroupsText(context),
-              buildListViewAcceptedGroups(),
+              _buildListViewAcceptedGroups(),
               buildGroupInvitationsText(context),
-              buildListViewInvitedGroups()
+              _buildListViewInvitedGroups()
             ];
           } else if (snapshot.hasError) {
             children = <Widget>[
@@ -66,43 +65,49 @@ class _GroupsScreenState extends State<GroupsScreen> {
     );
   }
 
-  Text buildGroupInvitationsText(BuildContext context) {
-    return Text(Language.of(context).invitations,
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ));
+  Padding buildGroupInvitationsText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(Language.of(context).invitations,
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          )),
+    );
   }
 
-  Text buildAcceptedGroupsText(BuildContext context) {
-    return Text(Language.of(context).groups,
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ));
+  Padding buildAcceptedGroupsText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(Language.of(context).groups,
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          )),
+    );
   }
 
-  ListView buildListViewInvitedGroups() {
+  ListView _buildListViewInvitedGroups() {
     return ListView.builder(
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _groupService.invitetIntoGroups.length,
-        itemBuilder: (context, index) => createGroupCard(
+        itemBuilder: (context, index) => _createGroupCard(
             _groupService.invitetIntoGroups.elementAt(index), true));
   }
 
-  ListView buildListViewAcceptedGroups() {
+  ListView _buildListViewAcceptedGroups() {
     return ListView.builder(
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _groupService.acceptedGroups.length,
-        itemBuilder: (context, index) => createGroupCard(
+        itemBuilder: (context, index) => _createGroupCard(
             _groupService.acceptedGroups.elementAt(index), false));
   }
 
-  Card createGroupCard(Group group, bool isInvitet) {
+  Card _createGroupCard(Group group, bool isInvitet) {
     return Card(
         key: UniqueKey(),
         elevation: 8,
@@ -113,17 +118,26 @@ class _GroupsScreenState extends State<GroupsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(group.groupName,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    )),
-                Text("${group.admin.firstName} ${group.admin.firstName}",
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.normal,
-                    ))
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 16),
+                  child: Text(group.groupName,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                  child: Text(
+                      "${Language.of(context).founder}: ${group.admin.firstName} ${group.admin.firstName}",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.normal,
+                      )),
+                )
               ],
             ),
             Row(

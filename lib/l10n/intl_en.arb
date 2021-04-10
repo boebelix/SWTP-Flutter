@@ -42,5 +42,6 @@
   "alert_dialog_button_text": "OK",
   "warning_password_not_same": "The passwords do not match",
   "groups": "Groups",
-  "invitations": "Invitations"
+  "invitations": "Invitations",
+  "founder": "Founder"
 }

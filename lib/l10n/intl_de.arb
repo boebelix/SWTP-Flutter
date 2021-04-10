@@ -42,5 +42,6 @@
   "alert_dialog_button_text": "OK",
   "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
   "groups": "Gruppen",
-  "invitations": "Einladungen"
+  "invitations": "Einladungen",
+  "founder": "Gründer"
 }
