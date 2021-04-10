@@ -30,6 +30,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 padding: EdgeInsets.all(5),
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
+                itemCount: _groupService.acceptedGroups.length,
                 itemBuilder: (context, index) => createGroupCard(
                     _groupService.acceptedGroups.elementAt(index))),
             Text(Language.of(context).invitations,
@@ -41,6 +42,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 padding: EdgeInsets.all(5),
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
+                itemCount: _groupService.invitetIntoGroups.length,
                 itemBuilder: (context, index) => createGroupCard(
                     _groupService.invitetIntoGroups.elementAt(index))),
           ]),
