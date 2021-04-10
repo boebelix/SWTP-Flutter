@@ -29,7 +29,6 @@ class GroupService {
     authService = AuthService();
     _groupsEndpoint = GroupsEndpoint();
     _userEndpoint = UserEndpoint();
-
   }
 
   void reloadAll() async {
@@ -48,13 +47,13 @@ class GroupService {
   Future<void> loadGroups() async {
     _invitedIntoGroups.clear();
 
-    if(_memberships.isEmpty) await loadGroupMembershipsOfOwnUserOnly();
+    if (_memberships.isEmpty) await loadGroupMembershipsOfOwnUserOnly();
 
     for (GroupMembership m in _memberships) {
-      if (m.invitationPending){
+      if (m.invitationPending) {
         _invitedIntoGroups.add(_readGroupfromJson(
             await _groupsEndpoint.getGroupById(m.id.groupId)));
-      }else{
+      } else {
         _acceptedGroups.add(_readGroupfromJson(
             await _groupsEndpoint.getGroupById(m.id.groupId)));
       }
@@ -70,7 +69,6 @@ class GroupService {
       _memberships.add(GroupMembership.fromJSON(elem));
     }
   }
-
 
   void denyInvitationOrLeaveGroup(int groupId) {
     _groupsEndpoint.removeUserFromGroup(groupId, authService.user.userId);

@@ -75,7 +75,8 @@ class _LoginState extends State<LoginScreen> {
           .logIn(LoginCredentials(username.text, password.text));
       username.clear();
       password.clear();
-      InformationPreLoaderService poiLoaderService=InformationPreLoaderService();
+      InformationPreLoaderService poiLoaderService =
+          InformationPreLoaderService();
       await poiLoaderService.loadAllInformation();
       AuthEndpointProvider().setState(NotifierState.loaded);
     }

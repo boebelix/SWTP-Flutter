@@ -21,7 +21,7 @@ class PoiEndpoint {
         if (response.statusCode == HttpStatus.notFound) {
           throw HttpException("not found");
         }
-        if(response.statusCode== HttpStatus.forbidden){
+        if (response.statusCode == HttpStatus.forbidden) {
           throw HttpException("Access not allowed");
         }
         throw HttpException("User is not valid");

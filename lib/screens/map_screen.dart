@@ -10,6 +10,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   PoiService poiService = PoiService();
+
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
@@ -29,7 +30,7 @@ class _MapScreenState extends State<MapScreen> {
         MarkerLayerOptions(
           markers: [
             ...(poiService.pois).map((poi) {
-              return  Marker(
+              return Marker(
                 width: 80.0,
                 height: 80.0,
                 point: LatLng(poi.position.latitude, poi.position.longitude),
@@ -40,7 +41,7 @@ class _MapScreenState extends State<MapScreen> {
                       color: Theme.of(context).primaryColor,
                       size: 50,
                     ),
-                    onTap: (){
+                    onTap: () {
                       print(poi.poiId);
                     },
                   ),

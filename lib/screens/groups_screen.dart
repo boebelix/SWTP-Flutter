@@ -10,7 +10,6 @@ class GroupsScreen extends StatefulWidget {
 }
 
 class _GroupsScreenState extends State<GroupsScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
