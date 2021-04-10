@@ -30,17 +30,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
           List<Widget> children;
           if (snapshot.connectionState == ConnectionState.done) {
             children = <Widget>[
-              Text(Language.of(context).groups,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  )),
+              buildAcceptedGroupsText(context),
               buildListViewAcceptedGroups(),
-              Text(Language.of(context).invitations,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  )),
+              buildGroupInvitationsText(context),
               buildListViewInvitedGroups()
             ];
           } else if (snapshot.hasError) {
@@ -66,13 +58,28 @@ class _GroupsScreenState extends State<GroupsScreen> {
           }
           return Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: children,
             ),
           );
         },
       ),
     );
+  }
+
+  Text buildGroupInvitationsText(BuildContext context) {
+    return Text(Language.of(context).invitations,
+        style: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ));
+  }
+
+  Text buildAcceptedGroupsText(BuildContext context) {
+    return Text(Language.of(context).groups,
+        style: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ));
   }
 
   ListView buildListViewInvitedGroups() {
@@ -153,23 +160,3 @@ class _GroupsScreenState extends State<GroupsScreen> {
     await _groupService.denyInvitationOrLeaveGroup(group.groupId);
   }
 }
-
-/*ListView.builder(
-          itemBuilder: (context)=>
-            Text(Language
-                .of(context)
-                .groups,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                )),
-            buildListViewAcceptedGroups(),
-            Text(Language
-                .of(context)
-                .invitations,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                )),
-            buildListViewInvitedGroups(),
-          ])*/
