@@ -16,7 +16,7 @@ class AuthEndpointProvider extends ChangeNotifier {
 
   AuthEndpointProvider._internal();
 
-  AuthService _userService = AuthService();
+  AuthService _authService = AuthService();
   AuthEndpoint _logInEndpoint = AuthEndpoint();
   NotifierState _state = NotifierState.initial;
   Either<Failure, AuthResponse> _authResponse;
@@ -38,8 +38,9 @@ class AuthEndpointProvider extends ChangeNotifier {
   void _setAuthResponse(Either<Failure, AuthResponse> authResponse) {
     if (authResponse.isRight()) {
       final tmp = authResponse.getOrElse(null);
-      _userService.token = tmp.token;
-      _userService.user = tmp.user;
+
+      _authService.token = tmp.token;
+      _authService.user = tmp.user;
     }
 
     _authResponse = authResponse;
