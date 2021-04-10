@@ -10,7 +10,6 @@ class GroupsScreen extends StatefulWidget {
 }
 
 class _GroupsScreenState extends State<GroupsScreen> {
-  GroupService _groupService = GroupService();
 
   @override
   Widget build(BuildContext context) {

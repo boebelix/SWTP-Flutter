@@ -13,7 +13,7 @@ class PoiService {
   PoiEndpoint _poiEndpoint = PoiEndpoint();
   List<Poi> pois = List<Poi>();
 
-  void getAllVisiblePois(List<int> userIds) async {
+  Future<void> getAllVisiblePois(List<int> userIds) async {
     pois.clear();
     for (int i in userIds) {
       String response = await _poiEndpoint.getPoiForUser(i);

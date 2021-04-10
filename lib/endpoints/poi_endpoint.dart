@@ -15,6 +15,7 @@ class PoiEndpoint {
       "accept": "application/json",
       "Authorization": "Bearer ${userService.token}"
     }).then((response) {
+      print(response.statusCode);
       if (response.statusCode == HttpStatus.ok) {
         return response.body;
       } else {
