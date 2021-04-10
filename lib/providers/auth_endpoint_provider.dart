@@ -23,7 +23,7 @@ class AuthEndpointProvider extends ChangeNotifier {
 
   NotifierState get state => _state;
 
-  void _setState(NotifierState state) {
+  void setState(NotifierState state) {
     _state = state;
     notifyListeners();
   }
@@ -48,7 +48,7 @@ class AuthEndpointProvider extends ChangeNotifier {
   }
 
   void logIn(LoginCredentials credentials) async {
-    _setState(NotifierState.loading);
+    setState(NotifierState.loading);
 
     await Task(() => _logInEndpoint.signIn(credentials))
         .attempt()
@@ -56,7 +56,7 @@ class AuthEndpointProvider extends ChangeNotifier {
         .run()
         .then((value) => _setAuthResponse(value));
 
-    _setState(NotifierState.loaded);
+    //_setState(NotifierState.loaded);
   }
 }
 

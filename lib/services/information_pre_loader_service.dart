@@ -16,17 +16,7 @@ class InformationPreLoaderService{
     userIds.add(AuthService().user.userId);
     for(Group group in acceptedGroups){
       userIds.add(group.admin.userId);
-
-      //mega eigenartiges problem: man bekommt 403 forbidden vom Poi Endpoint sobald man auf POIs von gruppenmitgliedern zugreifen will die nicht der Admin oder man selbst ist!!!!
-      /*
-      for(GroupMembership groupMembership in group.memberships){
-        userIds.add(groupMembership.id.userId);
-      }
-
-       */
     }
-    List<int> allUserIds=userIds.toSet().toList();
-    print(allUserIds.toString());
-    await poiService.getAllVisiblePois(allUserIds);
+    await poiService.getAllVisiblePois(userIds);
   }
 }

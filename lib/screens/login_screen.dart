@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/services/information_pre_loader_service.dart';
 import 'package:swtp_app/services/poi_service.dart';
@@ -76,6 +77,7 @@ class _LoginState extends State<LoginScreen> {
       password.clear();
       InformationPreLoaderService poiLoaderService=InformationPreLoaderService();
       await poiLoaderService.loadAllInformation();
+      AuthEndpointProvider().setState(NotifierState.loaded);
     }
   }
 

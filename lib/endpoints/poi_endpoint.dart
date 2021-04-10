@@ -15,12 +15,14 @@ class PoiEndpoint {
       "accept": "application/json",
       "Authorization": "Bearer ${userService.token}"
     }).then((response) {
-      print(response.statusCode);
       if (response.statusCode == HttpStatus.ok) {
         return response.body;
       } else {
         if (response.statusCode == HttpStatus.notFound) {
           throw HttpException("not found");
+        }
+        if(response.statusCode== HttpStatus.forbidden){
+          throw HttpException("Access not allowed");
         }
         throw HttpException("User is not valid");
       }
