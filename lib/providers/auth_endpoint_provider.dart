@@ -55,8 +55,6 @@ class AuthEndpointProvider extends ChangeNotifier {
         .mapLeftToFailure()
         .run()
         .then((value) => _setAuthResponse(value));
-
-    //_setState(NotifierState.loaded);
   }
 }
 
