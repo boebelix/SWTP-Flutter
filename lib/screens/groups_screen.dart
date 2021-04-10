@@ -25,9 +25,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
           List<Widget> children;
           if (snapshot.connectionState == ConnectionState.done) {
             children = <Widget>[
-              buildAcceptedGroupsText(context),
+              _buildAcceptedGroupsText(context),
               _buildListViewAcceptedGroups(),
-              buildGroupInvitationsText(context),
+              _buildGroupInvitationsText(context),
               _buildListViewInvitedGroups()
             ];
           } else if (snapshot.hasError) {
@@ -61,7 +61,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
     );
   }
 
-  Padding buildGroupInvitationsText(BuildContext context) {
+  Padding _buildGroupInvitationsText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(Language.of(context).invitations,
@@ -72,7 +72,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
     );
   }
 
-  Padding buildAcceptedGroupsText(BuildContext context) {
+  Padding _buildAcceptedGroupsText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(Language.of(context).groups,
@@ -145,7 +145,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                       icon: Icon(Icons.add),
                       onPressed: () {
                         setState(() {
-                          acceptGroupInvitation(group);
+                          _acceptGroupInvitation(group);
                         });
                       }),
                 ),
@@ -153,7 +153,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       setState(() {
-                        denyInvitationOrLeaveGroup(group);
+                        _denyInvitationOrLeaveGroup(group);
                       });
                     }),
               ],
@@ -162,11 +162,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
         ));
   }
 
-  Future<void> acceptGroupInvitation(Group group) async {
+  Future<void> _acceptGroupInvitation(Group group) async {
     await _groupService.acceptGroupInvitation(group.groupId);
   }
 
-  Future<void> denyInvitationOrLeaveGroup(Group group) async {
+  Future<void> _denyInvitationOrLeaveGroup(Group group) async {
     await _groupService.denyInvitationOrLeaveGroup(group.groupId);
   }
 }
