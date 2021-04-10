@@ -13,49 +13,97 @@ class GroupsScreen extends StatefulWidget {
 GroupService _groupService = GroupService();
 
 class _GroupsScreenState extends State<GroupsScreen> {
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded',
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 500,
-      child: ListView(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            Text(Language.of(context).groups,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                )),
-            ListView.builder(
-                padding: EdgeInsets.all(5),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _groupService.acceptedGroups.length,
-                itemBuilder: (context, index) => createGroupCard(
-                    _groupService.acceptedGroups.elementAt(index), false)),
-            Text(Language.of(context).invitations,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                )),
-            ListView.builder(
-                padding: EdgeInsets.all(5),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _groupService.invitetIntoGroups.length,
-                itemBuilder: (context, index) => createGroupCard(
-                    _groupService.invitetIntoGroups.elementAt(index), true)),
-          ]),
+    return DefaultTextStyle(
+      style: Theme.of(context).textTheme.headline6,
+      textAlign: TextAlign.center,
+      child: FutureBuilder<void>(
+        future: _groupService.reloadAll(),
+        // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          List<Widget> children;
+          if (snapshot.connectionState == ConnectionState.done) {
+            children = <Widget>[
+              Text(Language.of(context).groups,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  )),
+              buildListViewAcceptedGroups(),
+              Text(Language.of(context).invitations,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  )),
+              buildListViewInvitedGroups()
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+            ];
+          }
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children,
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  ListView buildListViewInvitedGroups() {
+    return ListView.builder(
+        padding: EdgeInsets.all(5),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: _groupService.invitetIntoGroups.length,
+        itemBuilder: (context, index) => createGroupCard(
+            _groupService.invitetIntoGroups.elementAt(index), true));
+  }
+
+  ListView buildListViewAcceptedGroups() {
+    return ListView.builder(
+        padding: EdgeInsets.all(5),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: _groupService.acceptedGroups.length,
+        itemBuilder: (context, index) => createGroupCard(
+            _groupService.acceptedGroups.elementAt(index), false));
   }
 
   Card createGroupCard(Group group, bool isInvitet) {
     return Card(
+        key: UniqueKey(),
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               children: [
@@ -80,7 +128,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                       icon: Icon(Icons.add),
                       onPressed: () {
                         setState(() {
-                          _groupService.acceptGroupInvitation(group.groupId);
+                          acceptGroupInvitation(group);
                         });
                       }),
                 ),
@@ -88,7 +136,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       setState(() {
-                        _groupService.denyInvitationOrLeaveGroup(group.groupId);
+                        denyInvitationOrLeaveGroup(group);
                       });
                     }),
               ],
@@ -96,4 +144,32 @@ class _GroupsScreenState extends State<GroupsScreen> {
           ],
         ));
   }
+
+  Future<void> acceptGroupInvitation(Group group) async {
+    await _groupService.acceptGroupInvitation(group.groupId);
+  }
+
+  Future<void> denyInvitationOrLeaveGroup(Group group) async {
+    await _groupService.denyInvitationOrLeaveGroup(group.groupId);
+  }
 }
+
+/*ListView.builder(
+          itemBuilder: (context)=>
+            Text(Language
+                .of(context)
+                .groups,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                )),
+            buildListViewAcceptedGroups(),
+            Text(Language
+                .of(context)
+                .invitations,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                )),
+            buildListViewInvitedGroups(),
+          ])*/

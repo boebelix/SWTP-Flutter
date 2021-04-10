@@ -31,7 +31,7 @@ class GroupService {
     _userEndpoint = UserEndpoint();
   }
 
-  void reloadAll() async {
+  Future<void> reloadAll() async {
     await loadOwnGroup();
     await loadGroupMembershipsOfOwnUserOnly();
     await loadGroups();
@@ -46,6 +46,7 @@ class GroupService {
 
   Future<void> loadGroups() async {
     _invitedIntoGroups.clear();
+    _acceptedGroups.clear();
 
     if (_memberships.isEmpty) await loadGroupMembershipsOfOwnUserOnly();
 
@@ -70,26 +71,27 @@ class GroupService {
     }
   }
 
-  void denyInvitationOrLeaveGroup(int groupId) {
-    _groupsEndpoint.removeUserFromGroup(groupId, authService.user.userId);
-    loadGroupMembershipsOfOwnUserOnly();
-    loadGroups();
+  Future<void> denyInvitationOrLeaveGroup(int groupId) async {
+    await _groupsEndpoint.removeUserFromGroup(groupId, authService.user.userId);
+    await loadGroupMembershipsOfOwnUserOnly();
+    await loadGroups();
   }
 
-  void kickUserFromOwnGroup(int userId) {
-    _groupsEndpoint.removeUserFromGroup(_ownGroup.groupId, userId);
-    loadOwnGroup();
+  Future<void> kickUserFromOwnGroup(int userId) async {
+    await _groupsEndpoint.removeUserFromGroup(_ownGroup.groupId, userId);
+    await loadOwnGroup();
   }
 
-  void inviteUserToGroup(int userId) {
-    _groupsEndpoint.inviteUserToGroup(_ownGroup.groupId, userId);
-    loadOwnGroup();
+  Future<void> inviteUserToGroup(int userId) async {
+    await _groupsEndpoint.inviteUserToGroup(_ownGroup.groupId, userId);
+    await loadOwnGroup();
   }
 
-  void acceptGroupInvitation(int groupId) {
-    _groupsEndpoint.acceptGroupInvitation(groupId, authService.user.userId);
-    loadGroupMembershipsOfOwnUserOnly();
-    loadGroups();
+  Future<void> acceptGroupInvitation(int groupId) async {
+    await _groupsEndpoint.acceptGroupInvitation(
+        groupId, authService.user.userId);
+    await loadGroupMembershipsOfOwnUserOnly();
+    await loadGroups();
   }
 
   Group get ownGroup => _ownGroup;
