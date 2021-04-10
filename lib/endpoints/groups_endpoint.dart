@@ -70,18 +70,15 @@ class GroupsEndpoint {
     });
   }
 
-  Future<Map<String, dynamic>> removeUserFromGroup(
-      int groupId, int userId) async {
+  Future<void> removeUserFromGroup(int groupId, int userId) async {
     return await http.delete(
         Uri.http(url, "/api/groups/$groupId/members/$userId"),
         headers: {
-          "content-type": "application/json",
           "accept": "application/json",
           "Authorization": "Bearer ${userService.token}"
         }).then((response) {
-      if (response.statusCode == HttpStatus.ok) {
-        Map<String, dynamic> responseData = jsonDecode(response.body);
-        return responseData;
+      if (response.statusCode == HttpStatus.noContent) {
+        return;
       } else {
         print('throws');
         throw HttpException(
@@ -93,13 +90,13 @@ class GroupsEndpoint {
   Future<Map<String, dynamic>> acceptGroupInvitation(
       int groupId, int userId) async {
     return await http
-        .put(Uri.http(url, "/api/groups/$groupId/members/$userId"), headers: {
-      "content-type": "application/json",
-      "accept": "application/json",
-      "Authorization": "Bearer ${userService.token}"
-    }, body: {
-      "invitationPending": "false"
-    }).then((response) {
+        .put(Uri.http(url, "/api/groups/$groupId/members/$userId"),
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer ${userService.token}"
+            },
+            body: jsonEncode({"isInvitationPending": "false"}))
+        .then((response) {
       if (response.statusCode == HttpStatus.ok) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         return responseData;
