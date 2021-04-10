@@ -28,23 +28,6 @@ class _MapScreenState extends State<MapScreen> {
         ),
         MarkerLayerOptions(
           markers: [
-            Marker(
-              width: 80.0,
-              height: 80.0,
-              point: LatLng(49.260152, 7.360296),
-              builder: (ctx) => Container(
-                child: GestureDetector(
-                  child: Icon(
-                    Icons.location_on,
-                    color: Theme.of(context).primaryColor,
-                    size: 50,
-                  ),
-                  onTap: () {
-                    print('test');
-                  },
-                ),
-              ),
-            ),
             ...(poiService.pois).map((poi) {
               return  Marker(
                 width: 80.0,
