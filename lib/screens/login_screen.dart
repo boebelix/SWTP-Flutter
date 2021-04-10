@@ -4,8 +4,6 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/information_pre_loader_service.dart';
-import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/register.dart';
 
