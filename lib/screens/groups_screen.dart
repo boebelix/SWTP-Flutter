@@ -15,33 +15,36 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        children: <Widget>[
-          Text(Language.of(context).groups,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              )),
-          ListView.builder(
-              padding: EdgeInsets.all(5),
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) => createGroupCard(
-                  _groupService.acceptedGroups.elementAt(index))),
-          Text(Language.of(context).invitations,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              )),
-          ListView.builder(
-              padding: EdgeInsets.all(5),
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) => createGroupCard(
-                  _groupService.invitetIntoGroups.elementAt(index))),
-        ]);
+    return Container(
+      height: 500,
+      child: ListView(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            Text(Language.of(context).groups,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                )),
+            ListView.builder(
+                padding: EdgeInsets.all(5),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) => createGroupCard(
+                    _groupService.acceptedGroups.elementAt(index))),
+            Text(Language.of(context).invitations,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                )),
+            ListView.builder(
+                padding: EdgeInsets.all(5),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) => createGroupCard(
+                    _groupService.invitetIntoGroups.elementAt(index))),
+          ]),
+    );
   }
 
   Card createGroupCard(Group group) {
