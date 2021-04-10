@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:swtp_app/endpoints/LogInEndpoint.dart';
-import 'package:swtp_app/models/Credentials.dart';
-import 'package:swtp_app/widgets/login.dart';
-
-import 'models/User.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/screens/login_screen.dart';
+import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/widgets/register.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,40 +14,29 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ChangeNotifierProvider(
+      create: (_) => AuthEndpointProvider(),
+      child: MaterialApp(
+        title: 'SWTP',
+        localizationsDelegates: [
+          Language.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: Language.delegate.supportedLocales,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          accentColor: Colors.amber,
+          canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
+        ),
+        routes: {
+          '/': (ctx) => LoginScreen(),
+          TabScreen.routeName: (ctx) => TabScreen(),
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+          Register.routeName: (ctx) => Register(),
+        },
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  LogInEndpoint _endpoint = LogInEndpoint();
-
-  void _incrementCounter() {
-    setState(() {
-      print("Test");
-
-      Credentials credentials = Credentials("test", "test");
-      _endpoint.signIn(credentials);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Login();
   }
 }
