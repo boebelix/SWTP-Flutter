@@ -72,14 +72,24 @@ class GroupService {
 
   void denyInvitationOrLeaveGroup(int groupId) {
     _groupsEndpoint.removeUserFromGroup(groupId, authService.user.userId);
+    loadGroupMembershipsOfOwnUserOnly();
+    loadGroups();
   }
 
   void kickUserFromOwnGroup(int userId) {
     _groupsEndpoint.removeUserFromGroup(_ownGroup.groupId, userId);
+    loadOwnGroup();
   }
 
   void inviteUserToGroup(int userId) {
     _groupsEndpoint.inviteUserToGroup(_ownGroup.groupId, userId);
+    loadOwnGroup();
+  }
+
+  void acceptGroupInvitation(int groupId) {
+    _groupsEndpoint.acceptGroupInvitation(groupId, authService.user.userId);
+    loadGroupMembershipsOfOwnUserOnly();
+    loadGroups();
   }
 
   Group get ownGroup => _ownGroup;

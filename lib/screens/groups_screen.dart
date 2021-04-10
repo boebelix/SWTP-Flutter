@@ -32,7 +32,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 scrollDirection: Axis.vertical,
                 itemCount: _groupService.acceptedGroups.length,
                 itemBuilder: (context, index) => createGroupCard(
-                    _groupService.acceptedGroups.elementAt(index))),
+                    _groupService.acceptedGroups.elementAt(index), false)),
             Text(Language.of(context).invitations,
                 style: TextStyle(
                   fontSize: 20.0,
@@ -44,29 +44,55 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 scrollDirection: Axis.vertical,
                 itemCount: _groupService.invitetIntoGroups.length,
                 itemBuilder: (context, index) => createGroupCard(
-                    _groupService.invitetIntoGroups.elementAt(index))),
+                    _groupService.invitetIntoGroups.elementAt(index), true)),
           ]),
     );
   }
 
-  Card createGroupCard(Group group) {
+  Card createGroupCard(Group group, bool isInvitet) {
     return Card(
         elevation: 8,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Column(
+        child: Row(
           children: [
-            Text(group.groupName,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                )),
-            Text("${group.admin.firstName} ${group.admin.firstName}",
-                style: TextStyle(
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.normal,
-                ))
+            Column(
+              children: [
+                Text(group.groupName,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+                Text("${group.admin.firstName} ${group.admin.firstName}",
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.normal,
+                    ))
+              ],
+            ),
+            Row(
+              children: [
+                Visibility(
+                  key: GlobalKey(),
+                  visible: isInvitet,
+                  child: IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          _groupService.acceptGroupInvitation(group.groupId);
+                        });
+                      }),
+                ),
+                IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _groupService.denyInvitationOrLeaveGroup(group.groupId);
+                      });
+                    }),
+              ],
+            )
           ],
         ));
   }
