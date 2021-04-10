@@ -13,10 +13,6 @@ class GroupsScreen extends StatefulWidget {
 GroupService _groupService = GroupService();
 
 class _GroupsScreenState extends State<GroupsScreen> {
-  final Future<String> _calculation = Future<String>.delayed(
-    const Duration(seconds: 2),
-    () => 'Data Loaded',
-  );
 
   @override
   Widget build(BuildContext context) {
