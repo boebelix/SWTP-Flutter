@@ -26,7 +26,7 @@ class AuthEndpoint {
         throw Failure('Authentification failed');
       }
 
-      await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(Duration(milliseconds: 500));
 
       return AuthResponse.fromJSON(jsonDecode(response.body));
     } on SocketException {

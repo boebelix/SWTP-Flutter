@@ -69,11 +69,9 @@ class _LoginState extends State<LoginScreen> {
     if (_formKey.currentState.validate()) {
       await Provider.of<AuthEndpointProvider>(context, listen: false)
           .logIn(LoginCredentials(username.text, password.text));
+
       username.clear();
       password.clear();
-      await InformationPreLoaderService().loadAllInformation();
-      AuthEndpointProvider().setState(NotifierState.loaded);
-
     }
   }
 
