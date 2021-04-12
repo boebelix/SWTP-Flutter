@@ -10,7 +10,7 @@ class InformationPreLoaderService {
   Future<void> loadAllInformation() async {
     await groupService.reloadAll();
     List<Group> acceptedGroups = groupService.acceptedGroups;
-    List<int> userIds = List<int>();
+    List<int> userIds = [];
     userIds.add(AuthService().user.userId);
     for (Group group in acceptedGroups) {
       userIds.add(group.admin.userId);
