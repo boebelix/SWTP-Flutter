@@ -16,12 +16,15 @@ class _MapScreenState extends State<MapScreen> {
   String title;
   String description;
   String category;
+  Image image;
 
-  void onPoiClicked(String title, String description, String category) {
+  void onPoiClicked(
+      String title, String description, String category, Image image) {
     setState(() {
       this.title = title;
       this.description = description;
       this.category = category;
+      this.image = image;
       poiSelected = true;
     });
   }
@@ -61,10 +64,8 @@ class _MapScreenState extends State<MapScreen> {
                           size: 50,
                         ),
                         onTap: () {
-                          onPoiClicked(
-                              poi.title, poi.description, poi.category.name);
-                          print(
-                              'id: ${poi.poiId} cat: ${poi.category.name} title: ${poi.title} des: ${poi.description}');
+                          onPoiClicked(poi.title, poi.description,
+                              poi.category.name, poi.image);
                         },
                       ),
                     ),
@@ -75,10 +76,9 @@ class _MapScreenState extends State<MapScreen> {
           ],
         ),
         poiSelected == true
-            ? PoiOverview(title: title, description: description)
+            ? PoiOverview(title: title, description: description, image: image)
             : Container(),
       ],
     );
-    ;
   }
 }

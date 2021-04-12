@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class PoiOverview extends StatelessWidget {
   final String title;
   final String description;
+  final Image image;
 
-
-  PoiOverview({@required this.title,@required this.description});
+  PoiOverview({@required this.title, @required this.description, this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,11 @@ class PoiOverview extends StatelessWidget {
                 flex: 1,
                 child: Container(
                   color: Colors.amber,
+                  child: image != null
+                      ? Image(
+                          image: image.image,
+                        )
+                      : Container(),
                 ),
               ),
               Flexible(
