@@ -13,17 +13,4 @@ class PoiService {
 
   PoiEndpoint _poiEndpoint = PoiEndpoint();
   List<Poi> pois = [];
-
-  Future<void> getAllVisiblePois(List<int> userIds) async {
-    pois.clear();
-    for (int i in userIds) {
-      String response = await _poiEndpoint.getPoiForUser(i);
-      for (dynamic content in jsonDecode(response)) {
-        pois.add(Poi.fromJSON(content));
-      }
-    }
-    for (Poi i in pois) {
-      i.image = await _poiEndpoint.getPoiImage(i.poiId);
-    }
-  }
 }
