@@ -17,6 +17,7 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   List<Map<String, Object>> _pages;
   int _selectedPageIndex = 0;
+  AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -33,8 +34,10 @@ class _TabScreenState extends State<TabScreen> {
       },
       {
         'page': ProfileScreen(),
-        'title_de': 'Profil',
-        'title_en': 'Profile',
+        'title_de':
+            '${_authService.user.firstName} ${_authService.user.lastName}',
+        'title_en':
+            '${_authService.user.firstName} ${_authService.user.lastName}',
       },
     ];
     super.initState();
