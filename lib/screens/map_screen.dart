@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/services/poi_service.dart';
 import 'package:swtp_app/widgets/poi_overview.dart';
 
@@ -19,34 +20,20 @@ class _MapScreenState extends State<MapScreen> {
   Image image;
   LatLng setPoiAtThisPosition;
 
-  void onPoiClicked(
-      String title, String description, String category, Image image) {
-    setState(() {
-      this.title = title;
-      this.description = description;
-      this.category = category;
-      this.image = image;
-      poiSelected = true;
-    });
-  }
-
-
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery
-        .of(context)
-        .size;
-    Marker setPoiHere = _poiAtPositionLatLng(context, setPoiAtThisPosition);
+    final deviceSize = MediaQuery.of(context).size;
+    Marker setPoiHere = _createPoiAtPositionLatLng(context, setPoiAtThisPosition);
 
     return Stack(
       children: [
         FlutterMap(
           options: MapOptions(
-              center: LatLng(49.260152, 7.360296),
-              zoom: 10.0,
-              maxZoom: 18,
-              minZoom: 5,
-              onTap: _setTabbedPostion,
+            center: LatLng(49.260152, 7.360296),
+            zoom: 10.0,
+            maxZoom: 18,
+            minZoom: 5,
+            onTap: _setTabbedPostion,
           ),
           layers: [
             TileLayerOptions(
@@ -58,11 +45,7 @@ class _MapScreenState extends State<MapScreen> {
             MarkerLayerOptions(
               markers: [
                 ...(poiService.pois).map((poi) {
-                  return _poiAtPositionLatLng(
-                      context,
-                      LatLng(poi.position.latitude,
-                          poi.position.longitude)
-                  );
+                  return _poiAtPositionLatLng(context, poi);
                 }).toList(),
                 setPoiHere
               ],
@@ -76,7 +59,28 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Marker _poiAtPositionLatLng(BuildContext context, LatLng latLng) {
+  Marker _poiAtPositionLatLng(BuildContext context, Poi poi) {
+    return Marker(
+      width: 80.0,
+      height: 80.0,
+      point: LatLng(poi.position.latitude,poi.position.longitude),
+      builder: (ctx) => Container(
+        child: GestureDetector(
+          child: Icon(
+            Icons.location_on,
+            color: Theme.of(context).primaryColor,
+            size: 50,
+          ),
+          onTap: () {
+            onPoiClicked(
+                poi.title, poi.description, poi.category.name, poi.image);
+          },
+        ),
+      ),
+    );
+  }
+
+  Marker _createPoiAtPositionLatLng(BuildContext context, LatLng latLng) {
     return Marker(
       width: 80.0,
       height: 80.0,
@@ -97,6 +101,17 @@ class _MapScreenState extends State<MapScreen> {
   void _setTabbedPostion(LatLng latLng) {
     setState(() {
       setPoiAtThisPosition = latLng;
+    });
+  }
+
+  void onPoiClicked(
+      String title, String description, String category, Image image) {
+    setState(() {
+      this.title = title;
+      this.description = description;
+      this.category = category;
+      this.image = image;
+      poiSelected = true;
     });
   }
 }
