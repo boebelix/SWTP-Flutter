@@ -23,7 +23,8 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    Marker setPoiHere = _createPoiAtPositionLatLng(context, setPoiAtThisPosition);
+    Marker setPoiHere =
+        _createPoiAtPositionLatLng(context, setPoiAtThisPosition);
 
     return Stack(
       children: [
@@ -63,7 +64,7 @@ class _MapScreenState extends State<MapScreen> {
     return Marker(
       width: 80.0,
       height: 80.0,
-      point: LatLng(poi.position.latitude,poi.position.longitude),
+      point: LatLng(poi.position.latitude, poi.position.longitude),
       builder: (ctx) => Container(
         child: GestureDetector(
           child: Icon(
