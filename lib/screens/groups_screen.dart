@@ -36,6 +36,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 Icons.error_outline,
                 color: Colors.red,
                 size: 60,
+
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),

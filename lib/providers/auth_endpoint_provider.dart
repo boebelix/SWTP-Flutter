@@ -53,7 +53,7 @@ class AuthEndpointProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logIn(LoginCredentials credentials) async {
+  Future<void> logIn(LoginCredentials credentials) async {
     setState(NotifierState.loading);
 
     await Task(() => _logInEndpoint.signIn(credentials))
