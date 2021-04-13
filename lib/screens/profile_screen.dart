@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             TabBar(
               tabs: [
-                Tab(text: _groupService.ownGroup.groupName),
+                createOwnGroupText(context),
                 Tab(text: Language.of(context).ownPOI)
               ],
               controller: _controller,
@@ -57,5 +57,14 @@ class _ProfileScreenState extends State<ProfileScreen>
             )
           ]),
     );
+  }
+
+  Tab createOwnGroupText(BuildContext context) {
+    if (_groupService.ownGroup != null &&
+        _groupService.ownGroup.groupName != null &&
+        _groupService.ownGroup.groupName.isNotEmpty)
+      return Tab(text: _groupService.ownGroup.groupName);
+    else
+      return Tab(text: Language.of(context).ownGroup);
   }
 }
