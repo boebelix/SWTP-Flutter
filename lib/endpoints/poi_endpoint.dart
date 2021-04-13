@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/models/failure.dart';
@@ -28,10 +27,13 @@ class PoiEndpoint {
         return pois;
       } else {
         if (response.statusCode == HttpStatus.notFound) {
-          throw Failure("not found");
+          throw Failure("Not found");
         }
         if (response.statusCode == HttpStatus.forbidden) {
           throw Failure("Access not allowed");
+        }
+        if(response.statusCode==HttpStatus.requestTimeout){
+          throw Failure("Server not reachable");
         }
         throw Failure("User is not valid");
       }
@@ -54,7 +56,7 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.forbidden) {
         throw Failure("Access not allowed");
       }
-      throw Failure("unknown error occured");
+      throw Failure("Unknown Error Occured");
     });
   }
 }

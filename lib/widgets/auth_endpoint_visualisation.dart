@@ -47,7 +47,6 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
                 },
                 // Alles in Ordnung
                 (userService) {
-                  //_loginSuccessChangeScreen(context);
                   return Container();
                 },
               );

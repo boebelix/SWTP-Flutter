@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:swtp_app/endpoints/poi_endpoint.dart';
@@ -48,8 +46,10 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   _setPoiImage(Either<Failure, Image> poiImageResponse, int poiId) {
     if (poiImageResponse.isRight()) {
-      poiService.pois.where((element) => element.poiId == poiId).first.image =
-          poiImageResponse.getOrElse(null);
+      var poiAtId =
+          poiService.pois.where((element) => element.poiId == poiId).first;
+
+      poiAtId.image = poiImageResponse.getOrElse(null);
     }
   }
 
