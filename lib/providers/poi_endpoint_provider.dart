@@ -24,10 +24,6 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   Either<Failure, List<Poi>> poiResponse;
 
-  List<Either<Failure, String>> poiEithers = [];
-
-  List<Either<Failure, Image>> poiImageEithers = [];
-
   NotifierState get state => _state;
 
   void setState(NotifierState state) {
@@ -36,7 +32,9 @@ class PoiEndpointProvider extends ChangeNotifier {
   }
 
   void resetState() {
+    PoiService().pois.clear();
     setState(NotifierState.initial);
+
     notifyListeners();
   }
 
@@ -53,13 +51,10 @@ class PoiEndpointProvider extends ChangeNotifier {
       poiService.pois.where((element) => element.poiId == poiId).first.image =
           poiImageResponse.getOrElse(null);
     }
-
-    poiImageEithers.add(poiImageResponse);
   }
 
   Future<void> getAllVisiblePois(List<int> userIds) async {
     setState(NotifierState.loading);
-    poiService.pois.clear();
 
     for (int i in userIds) {
       await Task(() => _poiEndpoint.getPoiForUser(i))

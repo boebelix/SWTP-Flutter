@@ -22,6 +22,7 @@ class InformationPreLoaderService {
   List<int> userIds=[];
 
   Future<void> loadAllRelevaltUserIds() async {
+    userIds.clear();
     await groupService.reloadAll();
     List<Group> acceptedGroups = groupService.acceptedGroups;
     userIds.add(AuthService().user.userId);
