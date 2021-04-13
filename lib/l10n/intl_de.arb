@@ -43,5 +43,6 @@
   "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
   "groups": "Gruppen",
   "invitations": "Einladungen",
-  "founder": "Gründer"
+  "founder": "Gründer",
+  "ownPOI": "Eigene POI"
 }

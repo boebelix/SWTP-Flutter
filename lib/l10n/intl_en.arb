@@ -43,5 +43,6 @@
   "warning_password_not_same": "The passwords do not match",
   "groups": "Groups",
   "invitations": "Invitations",
-  "founder": "Founder"
+  "founder": "Founder",
+  "ownPOI": "Own POI"
 }
