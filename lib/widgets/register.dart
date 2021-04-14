@@ -69,12 +69,29 @@ class _RegisterStage extends State<Register> {
           }
         }
       }
-    } catch (error) {
+    } on Failure catch (error) {
+      print(error.toString());
+
       PopUpWarningDialog(
         context: context,
-        failure: Failure(error.toString()),
+        failure: error,
       );
     }
+  }
+
+  @override
+  void initState() {
+    username.text = "Bob";
+    password.text = "\$Test1234";
+    repeatPassword.text = "\$Test1234";
+    email.text = "abcd1234@stud.hs-kl.de";
+    firstname.text = "Bob";
+    lastname.text = "Der";
+    street.text = "Baumeister";
+    streetNr.text = "1";
+    zip.text = "11111";
+    city.text = "Berlin";
+    super.initState();
   }
 
   @override
