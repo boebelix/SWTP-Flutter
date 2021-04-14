@@ -41,11 +41,13 @@
   "alert_dialog_title": "Notice",
   "alert_dialog_button_text": "OK",
   "warning_password_not_same": "The passwords do not match",
+  "warning_group_name_NN": "Please enter a group name",
   "groups": "Groups",
   "invitations": "Invitations",
   "founder": "Founder",
   "ownPOI": "Own Poi",
   "ownGroup": "Own group",
   "members": "Members",
-  "invited": "Invited Users"
+  "invited": "Invited Users",
+  "createGroup": "Create group"
 }

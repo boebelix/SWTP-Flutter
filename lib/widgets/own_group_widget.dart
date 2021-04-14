@@ -11,16 +11,57 @@ class OwnGroupWidget extends StatefulWidget {
 
 class _OwnGroupState extends State<OwnGroupWidget> {
   GroupService _groupService = GroupService();
+  final TextEditingController _groupNameTextController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    if (_groupService.ownGroup.groupName.isEmpty)
-      // TODO: implement build
-      throw UnimplementedError();
+    if (_groupService.ownGroup.groupName.isNotEmpty)
+      return buildOwnGroupWidget();
+    else
+      return buildOwnGroupNonExistentWidget();
   }
 
   Widget buildOwnGroupNonExistentWidget() {
-    return Expanded(key: UniqueKey());
+    return Expanded(
+        key: UniqueKey(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: Language.of(context).ownGroup,
+                ),
+                controller: _groupNameTextController,
+                validator: _validatorGroupnameIsNotEmpty,
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.02, 0, 0),
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _createGroupWithName()),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        (Colors.black12),
+                      ),
+                    ),
+                    child: Text(
+                      Language.of(context).createGroup,
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   Widget buildOwnGroupWidget() {
@@ -34,7 +75,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             _buildListViewAcceptedMembersOfOwnGroup(),
             _buildInvitedText(context),
             _buildListViewOfInvitedMembersOfOwnGroup(),
-            IconButton(icon: Icon(Icons.person_add), onPressed: null)
+            _createInviteUserButton()
           ];
         } else if (snapshot.hasError) {
           children = <Widget>[
@@ -48,7 +89,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
               child: Text('Error: ${snapshot.error}'),
             )
           ];
-        } else if (_groupService.ownGroup.memberships.isEmpty) {
+        } else {
           children = const <Widget>[
             SizedBox(
               child: CircularProgressIndicator(),
@@ -56,22 +97,22 @@ class _OwnGroupState extends State<OwnGroupWidget> {
               height: 60,
             ),
           ];
-        } else {
-          children = <Widget>[
-            _buildMemberText(context),
-            _buildListViewAcceptedMembersOfOwnGroup(),
-            _buildInvitedText(context),
-            _buildListViewOfInvitedMembersOfOwnGroup(),
-            IconButton(icon: Icon(Icons.person_add), onPressed: null)
-          ];
         }
-
         return Center(
           child: Column(
             children: children,
           ),
         );
       },
+    );
+  }
+
+  Row _createInviteUserButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        IconButton(icon: Icon(Icons.person_add), onPressed: _showInvitationScreen),
+      ],
     );
   }
 
@@ -100,7 +141,10 @@ class _OwnGroupState extends State<OwnGroupWidget> {
         itemBuilder: (context, index) {
           if (!_groupService.ownGroup.memberships.elementAt(index).invitationPending)
             return _createMemberCard(_groupService.ownGroup.memberships.elementAt(index));
-          return null;
+          return Container(
+            height: 0.0,
+            width: 0.0,
+          );
         });
   }
 
@@ -113,7 +157,10 @@ class _OwnGroupState extends State<OwnGroupWidget> {
         itemBuilder: (context, index) {
           if (_groupService.ownGroup.memberships.elementAt(index).invitationPending)
             return _createMemberCard(_groupService.ownGroup.memberships.elementAt(index));
-          return null;
+          return Container(
+            height: 0.0,
+            width: 0.0,
+          );
         });
   }
 
@@ -128,7 +175,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 16),
+              padding: const EdgeInsets.all(16.0),
               child: Text("${membership.member.firstName} ${membership.member.firstName}",
                   style: TextStyle(
                     fontSize: 18.0,
@@ -148,5 +195,22 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   Future<void> _removeUserFromGroup(int userId) async {
     await _groupService.kickUserFromOwnGroup(userId);
+  }
+
+  void _showInvitationScreen() {}
+
+  String _validatorGroupnameIsNotEmpty(value) {
+    if (value == null || value.isEmpty) {
+      return Language.of(context).warning_group_name_NN;
+    }
+
+    return null;
+  }
+
+  Future<void> _createGroupWithName() async {
+    if (_formKey.currentState.validate()) {
+      //TODO createGroup in Endpoint erstellen und aufrufen
+    }
+    _groupNameTextController.clear();
   }
 }

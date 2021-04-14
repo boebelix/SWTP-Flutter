@@ -41,11 +41,13 @@
   "alert_dialog_title": "Hinweis",
   "alert_dialog_button_text": "OK",
   "warning_password_not_same": "Die Eingabe stimmt nicht mit dem Passwort überein",
+  "warning_group_name_NN": "Bitte geben sie einen Gruppennamen ein",
   "groups": "Gruppen",
   "invitations": "Einladungen",
   "founder": "Gründer",
   "ownPOI": "Eigene Poi",
   "ownGroup": "Eigene Gruppe",
   "members": "Mitglieder",
-  "invited": "Eingeladene Nutzer"
+  "invited": "Eingeladene Nutzer",
+  "createGroup": "Gruppe erstellen"
 }
