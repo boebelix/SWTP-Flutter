@@ -38,6 +38,7 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   _setPoiResponse(Either<Failure, List<Poi>> poiResponse) {
     if (poiResponse.isRight()) {
+      print(poiResponse.toString());
       poiService.pois.addAll(poiResponse.getOrElse(null));
     }
 

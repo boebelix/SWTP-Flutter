@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:swtp_app/endpoints/auth_endpoint.dart';
 import 'package:swtp_app/models/auth_response.dart';
 import 'package:swtp_app/models/failure.dart';
@@ -44,7 +44,7 @@ class AuthEndpointProvider extends ChangeNotifier {
 
       _authService.token = tmp.token;
       _authService.user = tmp.user;
-      await informationPreLoaderService.loadAllRelevaltUserIds();
+      await informationPreLoaderService.loadAllRelevantUserIds();
     }
 
     _authResponse = authResponse;

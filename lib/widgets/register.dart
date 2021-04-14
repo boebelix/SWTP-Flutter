@@ -278,7 +278,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexStreetNr.hasMatch(value)) {
-      return Language.of(context).warning_house_number_UperThenLower;
+      return Language.of(context).warning_house_number_UpperThenLower;
     }
 
     return null;

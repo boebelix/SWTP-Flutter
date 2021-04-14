@@ -20,7 +20,7 @@ class FailureTranslation {
     'parseFailure_de': 'Fehler beim Umwandeln des Pakets 👎',
     'parseFailure_en': 'Bad response format 👎',
     'authFail_de': 'Fehler beim Anmelden',
-    'authFail_en': 'Authentification failed',
+    'authFail_en': 'Authentication failed',
     'groupNotFound_de': 'Die Gruppe konnte nicht gefunden werden',
     'groupNotFound_en': 'The Group could\'t found',
     'unknownFailure_de': 'Unbekannter Fehler',
@@ -39,5 +39,7 @@ class FailureTranslation {
     'responseNoUserFound_en': 'No user found with this Id',
     'responseNoMembershipFound_de': 'Nutzer besitzt keine Gruppe',
     'responseNoMembershipFound_en': 'User dosen\'t have a membership',
+    'responseNoImageAvailable_de': 'Kein Foto verfügbar',
+    'responseNoImageAvailable_en': 'No Image available',
   };
 }

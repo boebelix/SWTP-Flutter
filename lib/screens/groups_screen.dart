@@ -89,9 +89,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.invitetIntoGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(
-            _groupService.invitetIntoGroups.elementAt(index), true));
+        itemCount: _groupService.invitedIntoGroups.length,
+        itemBuilder: (context, index) => _createGroupCard(_groupService.invitedIntoGroups.elementAt(index), true));
   }
 
   ListView _buildListViewAcceptedGroups() {
@@ -104,7 +103,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
             _groupService.acceptedGroups.elementAt(index), false));
   }
 
-  Card _createGroupCard(Group group, bool isInvitet) {
+  Card _createGroupCard(Group group, bool isInvited) {
     return Card(
         key: UniqueKey(),
         elevation: 8,
@@ -141,7 +140,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               children: [
                 Visibility(
                   key: GlobalKey(),
-                  visible: isInvitet,
+                  visible: isInvited,
                   child: IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {

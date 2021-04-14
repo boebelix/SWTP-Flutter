@@ -23,9 +23,9 @@ class GroupService {
   UserEndpoint _userEndpoint;
 
   GroupService._internal() {
-    _acceptedGroups = List<Group>();
-    _memberships = List<GroupMembership>();
-    _invitedIntoGroups = List<Group>();
+    _acceptedGroups = <Group>[];
+    _memberships = <GroupMembership>[];
+    _invitedIntoGroups = <Group>[];
     authService = AuthService();
     _groupsEndpoint = GroupsEndpoint();
     _userEndpoint = UserEndpoint();
@@ -38,10 +38,9 @@ class GroupService {
   }
 
   Future<void> loadOwnGroup() async {
-    Map<String, dynamic> response =
-        await _groupsEndpoint.getGroupById(authService.user.userId);
+    Map<String, dynamic> response = await _groupsEndpoint.getGroupById(authService.user.userId);
 
-    _ownGroup = _readGroupfromJson(response);
+    _ownGroup = _readGroupFromJson(response);
   }
 
   Future<void> loadGroups() async {
@@ -52,19 +51,16 @@ class GroupService {
 
     for (GroupMembership m in _memberships) {
       if (m.invitationPending) {
-        _invitedIntoGroups.add(_readGroupfromJson(
-            await _groupsEndpoint.getGroupById(m.id.groupId)));
+        _invitedIntoGroups.add(_readGroupFromJson(await _groupsEndpoint.getGroupById(m.id.groupId)));
       } else {
-        _acceptedGroups.add(_readGroupfromJson(
-            await _groupsEndpoint.getGroupById(m.id.groupId)));
+        _acceptedGroups.add(_readGroupFromJson(await _groupsEndpoint.getGroupById(m.id.groupId)));
       }
     }
   }
 
   Future<void> loadGroupMembershipsOfOwnUserOnly() async {
     _memberships.clear();
-    String response =
-        await _userEndpoint.getMemberships(authService.user.userId);
+    String response = await _userEndpoint.getMemberships(authService.user.userId);
 
     for (dynamic elem in jsonDecode(response)) {
       _memberships.add(GroupMembership.fromJSON(elem));
@@ -86,28 +82,27 @@ class GroupService {
   }
 
   Future<void> acceptGroupInvitation(int groupId) async {
-    await _groupsEndpoint.acceptGroupInvitation(
-        groupId, authService.user.userId);
+    await _groupsEndpoint.acceptGroupInvitation(groupId, authService.user.userId);
   }
 
   Group get ownGroup => _ownGroup;
 
   List<GroupMembership> get memberships => _memberships;
 
-  List<Group> get invitetIntoGroups => _invitedIntoGroups;
+  List<Group> get invitedIntoGroups => _invitedIntoGroups;
 
   List<Group> get acceptedGroups => _acceptedGroups;
 
-  Group _readGroupfromJson(Map<String, dynamic> json) {
-    Group gr = Group.fromJSON(json);
+  Group _readGroupFromJson(Map<String, dynamic> json) {
+    Group group = Group.fromJSON(json);
 
-    List<GroupMembership> groupmemberships = List<GroupMembership>();
+    List<GroupMembership> groupMemberships = <GroupMembership>[];
 
     for (dynamic elem in json['memberships']) {
-      groupmemberships.add(GroupMembership.fromJSON(elem));
+      groupMemberships.add(GroupMembership.fromJSON(elem));
     }
-    gr.memberships = groupmemberships;
+    group.memberships = groupMemberships;
 
-    return gr;
+    return group;
   }
 }
