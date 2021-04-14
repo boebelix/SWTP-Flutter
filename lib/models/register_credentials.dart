@@ -10,17 +10,19 @@ class RegisterCredentials {
   final String _city;
 
   RegisterCredentials(
-      this._username,
-      this._password,
-      this._email,
-      this._firstname,
-      this._lastname,
-      this._street,
-      this._streetNr,
-      this._zip,
-      this._city);
+    this._username,
+    this._password,
+    this._email,
+    this._firstname,
+    this._lastname,
+    this._street,
+    this._streetNr,
+    this._zip,
+    this._city,
+  );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "username": _username,
         "password": _password,
         "email": _email,
@@ -29,6 +31,6 @@ class RegisterCredentials {
         "street": _street,
         "streetNr": _streetNr,
         "zip": _zip,
-        "city": _city
+        "city": _city,
       };
 }

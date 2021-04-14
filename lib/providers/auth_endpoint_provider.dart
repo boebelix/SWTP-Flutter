@@ -6,7 +6,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/information_pre_loader_service.dart';
-import 'package:swtp_app/services/poi_service.dart';
 
 enum NotifierState { initial, loading, loaded }
 
