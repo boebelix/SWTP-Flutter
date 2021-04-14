@@ -30,7 +30,7 @@ class AuthService {
     return token.isNotEmpty && user != null;
   }
 
-  void registerUser({RegisterCredentials credentials}) async {
+  Future<void> registerUser({RegisterCredentials credentials}) async {
     Map<String, dynamic> responseData =
         await RegisterEndpoint().register(credentials);
     user = User.fromJSON(responseData);

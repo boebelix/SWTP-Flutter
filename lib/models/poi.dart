@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/models/user.dart';
@@ -10,6 +11,7 @@ class Poi {
   int poiId;
   Position position;
   String title;
+  Image image;
 
   Poi(
       {this.author,
