@@ -62,8 +62,8 @@ class _RegisterStage extends State<Register> {
 
           if (authService.isSignedIn()) {
             // Lösche den Stack der bei der Navigation hier enstand
-
             Navigator.pop(context);
+
             // Verbiete, das zurück navigieren im TabScreen
             Navigator.popAndPushNamed(context, TabScreen.routeName);
           }
