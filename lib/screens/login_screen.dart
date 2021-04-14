@@ -59,7 +59,6 @@ class _LoginState extends State<LoginScreen> {
               ),
             ),
             AuthEndpointVisualisation(
-              destinationRouteBySuccess: TabScreen.routeName,
             ),
             PoiEndpointVisualisation(
               destinationRouteBySuccess: TabScreen.routeName,
