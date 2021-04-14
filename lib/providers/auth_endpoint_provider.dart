@@ -4,14 +4,12 @@ import 'package:swtp_app/endpoints/auth_endpoint.dart';
 import 'package:swtp_app/models/auth_response.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
+import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/information_pre_loader_service.dart';
 
-enum NotifierState { initial, loading, loaded }
-
 class AuthEndpointProvider extends ChangeNotifier {
-  static final AuthEndpointProvider _instance =
-      AuthEndpointProvider._internal();
+  static final AuthEndpointProvider _instance = AuthEndpointProvider._internal();
 
   factory AuthEndpointProvider() => _instance;
 
@@ -21,8 +19,7 @@ class AuthEndpointProvider extends ChangeNotifier {
   AuthEndpoint _logInEndpoint = AuthEndpoint();
   NotifierState _state = NotifierState.initial;
   Either<Failure, AuthResponse> _authResponse;
-  InformationPreLoaderService informationPreLoaderService =
-      InformationPreLoaderService();
+  InformationPreLoaderService informationPreLoaderService = InformationPreLoaderService();
 
   NotifierState get state => _state;
 

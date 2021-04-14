@@ -16,7 +16,7 @@ class GroupService {
   List<GroupMembership> _memberships;
   List<Group> _invitedIntoGroups;
 
-  AuthService authService;
+  AuthService _authService;
 
   GroupsEndpoint _groupsEndpoint;
 
@@ -26,7 +26,7 @@ class GroupService {
     _acceptedGroups = <Group>[];
     _memberships = <GroupMembership>[];
     _invitedIntoGroups = <Group>[];
-    authService = AuthService();
+    _authService = AuthService();
     _groupsEndpoint = GroupsEndpoint();
     _userEndpoint = UserEndpoint();
   }
@@ -38,7 +38,7 @@ class GroupService {
   }
 
   Future<void> loadOwnGroup() async {
-    Map<String, dynamic> response = await _groupsEndpoint.getGroupById(authService.user.userId);
+    Map<String, dynamic> response = await _groupsEndpoint.getGroupById(_authService.user.userId);
 
     _ownGroup = _readGroupFromJson(response);
   }
@@ -60,7 +60,7 @@ class GroupService {
 
   Future<void> loadGroupMembershipsOfOwnUserOnly() async {
     _memberships.clear();
-    String response = await _userEndpoint.getMemberships(authService.user.userId);
+    String response = await _userEndpoint.getMemberships(_authService.user.userId);
 
     for (dynamic elem in jsonDecode(response)) {
       _memberships.add(GroupMembership.fromJSON(elem));
@@ -68,7 +68,7 @@ class GroupService {
   }
 
   Future<void> denyInvitationOrLeaveGroup(int groupId) async {
-    await _groupsEndpoint.removeUserFromGroup(groupId, authService.user.userId);
+    await _groupsEndpoint.removeUserFromGroup(groupId, _authService.user.userId);
   }
 
   Future<void> kickUserFromOwnGroup(int userId) async {
@@ -82,7 +82,7 @@ class GroupService {
   }
 
   Future<void> acceptGroupInvitation(int groupId) async {
-    await _groupsEndpoint.acceptGroupInvitation(groupId, authService.user.userId);
+    await _groupsEndpoint.acceptGroupInvitation(groupId, _authService.user.userId);
   }
 
   Group get ownGroup => _ownGroup;

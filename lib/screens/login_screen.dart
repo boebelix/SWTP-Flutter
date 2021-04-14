@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/models/login_credentials.dart';
-import 'package:swtp_app/providers/auth_endpoint_provider.dart';
-import 'package:swtp_app/providers/poi_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
-import 'package:swtp_app/services/information_pre_loader_service.dart';
 import 'package:swtp_app/widgets/register.dart';
 import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
 
@@ -58,8 +54,7 @@ class _LoginState extends State<LoginScreen> {
                 ],
               ),
             ),
-            AuthEndpointVisualisation(
-            ),
+            AuthEndpointVisualisation(),
             PoiEndpointVisualisation(
               destinationRouteBySuccess: TabScreen.routeName,
             ),
@@ -71,13 +66,16 @@ class _LoginState extends State<LoginScreen> {
 
   void _sendLoginData() async {
     if (_formKey.currentState.validate()) {
-      await Provider.of<AuthEndpointProvider>(context, listen: false)
-          .logIn(LoginCredentials(username.text, password.text));
+      AuthService authService = AuthService();
+
+      await authService.logIn(
+        context: context,
+        username: username.text,
+        password: password.text,
+      );
 
       username.clear();
       password.clear();
-      await Provider.of<PoiEndpointProvider>(context, listen: false)
-          .getAllVisiblePois(InformationPreLoaderService().userIds);
     }
   }
 
@@ -148,8 +146,7 @@ class _LoginState extends State<LoginScreen> {
               Language.load(Locale('de'));
             });
           },
-          icon: Image.asset('icons/flags/png/de.png',
-              package: 'country_icons'), //Text(Language.of(context).german)),
+          icon: Image.asset('icons/flags/png/de.png', package: 'country_icons'), //Text(Language.of(context).german)),
         )
       ],
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:swtp_app/l10n/failure_translation.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/group_service.dart';
@@ -15,11 +17,23 @@ class InformationPreLoaderService {
   PoiService poiService = PoiService();
   BuildContext context;
 
+  /// Alle NutzerIds der Admins von allen angehörigen Gruppen
   List<int> userIds = [];
 
   Future<void> loadAllRelevantUserIds() async {
     userIds.clear();
-    await groupService.reloadAll();
+
+    // Beim Registrien ist noch keine Gruppe vorhanden. Dies führt zu einem
+    // Fehler beim Aufrufen der Gruppe, der im Grunde nicht gravierend ist.
+    // Es ist der Normalzustand nach dem Registrien, da noch keine Gruppe
+    // angelegt ist.
+    try {
+      await groupService.reloadAll();
+    } catch (e) {
+      if (FailureTranslation.text('groupNotFound') != e.toString()) {
+        throw Failure('${FailureTranslation.text('unknownFailure')}');
+      }
+    }
 
     List<Group> acceptedGroups = groupService.acceptedGroups;
 

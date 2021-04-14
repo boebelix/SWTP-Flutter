@@ -1,17 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
+import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
+import 'package:swtp_app/services/log_service.dart';
 
 class PoiEndpoint {
   var url = Properties.url;
   AuthService userService = AuthService();
+  LogService logService = LogService();
 
-  Future<String> getPoiForUser(int userId) async {
+  Future<List<Poi>> getPoiForUser(int userId) async {
     try {
       final response = await http.get(
         Uri.http(url, "/api/pois", {
@@ -25,7 +29,14 @@ class PoiEndpoint {
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return response.body;
+        List<Poi> pois = [];
+
+        logService.prettyLogger.d(jsonDecode(response.body));
+
+        for (dynamic content in jsonDecode(response.body)) {
+          pois.add(Poi.fromJSON(content));
+        }
+        return pois;
       }
 
       if (response.statusCode == HttpStatus.notFound) {
