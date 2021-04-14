@@ -37,7 +37,7 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
-  void _sendRegisterData() async {
+  Future<void> _sendRegisterData() async {
     try {
       AuthService userService = AuthService();
       if (_formKey.currentState.validate()) {
