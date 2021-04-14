@@ -31,7 +31,7 @@ class InformationPreLoaderService {
       await groupService.reloadAll();
     } catch (e) {
       if (FailureTranslation.text('groupNotFound') != e.toString()) {
-        throw Failure('${FailureTranslation.text('unknownFailure')}');
+        throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
       }
     }
 

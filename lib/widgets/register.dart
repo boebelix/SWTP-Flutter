@@ -78,21 +78,6 @@ class _RegisterStage extends State<Register> {
   }
 
   @override
-  void initState() {
-    username.text = "Bob";
-    password.text = "\$Test1234";
-    repeatPassword.text = "\$Test1234";
-    email.text = "abaa1234@stud.hs-kl.de";
-    firstname.text = "Bob";
-    lastname.text = "Der";
-    street.text = "Baumeister";
-    streetNr.text = "1";
-    zip.text = "11111";
-    city.text = "Berlin";
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
