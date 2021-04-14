@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swtp_app/models/group.dart';
-import 'package:swtp_app/providers/poi_endpoint_provider.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/services/poi_service.dart';
