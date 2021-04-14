@@ -41,5 +41,7 @@ class FailureTranslation {
     'responseNoMembershipFound_en': 'User dosen\'t have a membership',
     'responseNoImageAvailable_de': 'Kein Foto verfügbar',
     'responseNoImageAvailable_en': 'No Image available',
+    'responseUserExistAlready_de': 'Nutzer existiert bereits',
+    'responseExistAlready_en': 'User already exists',
   };
 }

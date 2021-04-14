@@ -25,6 +25,10 @@ class RegisterEndpoint {
         ),
       );
 
+      if (response.statusCode == HttpStatus.conflict) {
+        throw Failure(FailureTranslation.text('responseExistAlready'));
+      }
+
       if (response.statusCode == HttpStatus.ok) {
         return jsonDecode(response.body);
       } else {
