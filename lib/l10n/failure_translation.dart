@@ -27,5 +27,17 @@ class FailureTranslation {
     'unknownFailure_en': 'Unknown Failure',
     'removeUserGroup_de': 'Fehler beim löschen des Nutzer aus der Gruppe',
     'removeUserGroup_en': 'Failure while remove user from group',
+    'responseNotFound_de': 'Keine Pois für Nutzer gefunden',
+    'responseNotFound_en': 'No Pois found for user',
+    'responseNoAccess_de': 'Kein Zugriff auf Pois',
+    'responseNoAccess_en': 'No access for Pois',
+    'responseUserInvalid_de': 'Nutzer hat keine Berechtigung ',
+    'responseUserInvalid_en': 'User is not valid',
+    'responseFailureRegister_de': 'Fehler beim Registrieren',
+    'responseFailureRegister_en': 'Failure on registration',
+    'responseNoUserFound_de': 'Kein Nutzer mit dieser Id gefunden',
+    'responseNoUserFound_en': 'No user found with this Id',
+    'responseNoMembershipFound_de': 'Nutzer besitzt keine Gruppe',
+    'responseNoMembershipFound_en': 'User dosen\'t have a membership',
   };
 }

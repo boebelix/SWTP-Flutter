@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:swtp_app/l10n/failure_translation.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/properties/properties.dart';
 
@@ -9,21 +11,29 @@ class RegisterEndpoint {
   var url = Properties.url;
 
   Future<Map<String, dynamic>> register(RegisterCredentials credentials) async {
-    return await http
-        .post(Uri.http(url, "/api/users"),
-            headers: {
-              "content-type": "application/json",
-              "accept": "application/json",
-            },
-            body: jsonEncode(credentials.toJson()))
-        .then((response) {
-      print(response.body);
+    try {
+      final response = await http.post(
+        Uri.http(url, "/api/users"),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+        },
+        body: jsonEncode(
+          credentials.toJson(),
+        ),
+      );
+
       if (response.statusCode == HttpStatus.ok) {
-        Map<String, dynamic> responseData = jsonDecode(response.body);
-        return responseData;
+        return jsonDecode(response.body);
       } else {
-        throw HttpException('Unauthorized');
+        throw Failure(FailureTranslation.text('responseFailureRegister'));
       }
-    });
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
   }
 }

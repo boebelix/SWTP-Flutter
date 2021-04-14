@@ -20,7 +20,7 @@ class AuthEndpoint {
         },
         body: jsonEncode(data.toJson()),
       );
-// print(response.statusCode);
+
       if (response.statusCode == HttpStatus.unauthorized) {
         throw Failure(FailureTranslation.text('authFail'));
       }
