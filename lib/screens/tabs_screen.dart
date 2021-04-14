@@ -37,9 +37,9 @@ class _TabScreenState extends State<TabScreen> {
       },
       {
         'page': ProfileScreen(),
-        'title_de':
-            '${_authService.user.firstName} ${_authService.user.lastName}' ??
-                '',
+        'title_de': _authService.user == null
+            ? ''
+            : '${_authService.user.firstName} ${_authService.user.lastName}',
         'title_en': _authService.user == null
             ? ''
             : '${_authService.user.firstName} ${_authService.user.lastName}',
