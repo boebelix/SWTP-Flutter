@@ -64,7 +64,7 @@ class _RegisterStage extends State<Register> {
             // Lösche den Stack der bei der Navigation hier enstand
             Navigator.pop(context);
 
-            // Verbiete, das zurück navigieren im TabScreen
+            // Verbietet, das zurück navigieren im TabScreen
             Navigator.popAndPushNamed(context, TabScreen.routeName);
           }
         }
