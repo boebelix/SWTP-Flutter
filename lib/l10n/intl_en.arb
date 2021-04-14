@@ -45,5 +45,7 @@
   "invitations": "Invitations",
   "founder": "Founder",
   "ownPOI": "Own Poi",
-  "ownGroup": "Own group"
+  "ownGroup": "Own group",
+  "members": "Members",
+  "invited": "Invited Users"
 }

@@ -1,9 +1,9 @@
 class GroupMembershipId {
-  int groupId;
-  int userId;
+  int groupId = 0;
+  int userId = 0;
 
-  GroupMembershipId(this.groupId, this.userId);
+  GroupMembershipId({this.groupId, this.userId});
 
   factory GroupMembershipId.fromJSON(Map<String, dynamic> json) =>
-      GroupMembershipId(json['groupId'], json['userId']);
+      GroupMembershipId(groupId: json['groupId'], userId: json['userId']);
 }

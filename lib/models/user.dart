@@ -1,13 +1,13 @@
 class User {
-  int userId;
-  String userName;
-  String firstName;
-  String lastName;
-  String email;
-  String city;
-  String street;
-  String streetNr;
-  String zip;
+  int userId = 0;
+  String userName = "";
+  String firstName = "";
+  String lastName = "";
+  String email = "";
+  String city = "";
+  String street = "";
+  String streetNr = "";
+  String zip = "";
 
   User(
       {this.userId,

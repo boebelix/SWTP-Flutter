@@ -11,7 +11,7 @@ class GroupService {
 
   factory GroupService() => _instance;
 
-  Group _ownGroup;
+  Group _ownGroup = Group();
   List<Group> _acceptedGroups;
   List<GroupMembership> _memberships;
   List<Group> _invitedIntoGroups;
