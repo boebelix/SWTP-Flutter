@@ -17,7 +17,10 @@ class Group {
   Group({this.admin, this.groupId, this.groupName, this.memberships});
 
   factory Group.fromJSON(Map<String, dynamic> json) => Group(
-      admin: User.fromJSON(json['admin']), groupId: json['groupId'], groupName: json['groupName'], memberships: null);
+      admin: User.fromJSON(json['admin']),
+      groupId: json['groupId'],
+      groupName: json['groupName'],
+      memberships: null);
 
   Map<String, dynamic> toJson() => {
         "admin": admin,
