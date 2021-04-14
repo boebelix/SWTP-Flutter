@@ -11,7 +11,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  PoiService poiService = PoiService();
+  PoiService _poiService = PoiService();
   bool poiSelected = false;
 
   String _title;
@@ -45,7 +45,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             MarkerLayerOptions(
               markers: [
-                ...(poiService.pois).map((poi) {
+                ...(_poiService.pois).map((poi) {
                   return _poiAtPositionLatLng(context, poi);
                 }).toList(),
                 _setPoiHere
