@@ -98,11 +98,11 @@ class _TabScreenState extends State<TabScreen> {
         onPressed: () {
           setState(() {
             AuthService().logOut(context);
-            Navigator.popAndPushNamed(context, LoginScreen.routeName);
             Provider.of<AuthEndpointProvider>(context, listen: false)
                 .resetState();
             Provider.of<PoiEndpointProvider>(context, listen: false)
                 .resetState();
+            Navigator.popAndPushNamed(context, LoginScreen.routeName);
           });
         });
   }

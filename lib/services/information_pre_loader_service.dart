@@ -16,17 +16,20 @@ class InformationPreLoaderService {
 
   GroupService groupService = GroupService();
   PoiService poiService = PoiService();
-  BuildContext context;
-
   List<int> userIds = [];
 
   Future<void> loadAllRelevaltUserIds() async {
     userIds.clear();
     await groupService.reloadAll();
     List<Group> acceptedGroups = groupService.acceptedGroups;
+    //eigene Gruppe der Liste hinzufügen
     userIds.add(AuthService().user.userId);
+
+    //alle anderen Gruppen denen der Nutzer angehört hinzufügen
     for (Group group in acceptedGroups) {
+
       userIds.add(group.admin.userId);
+
     }
   }
 }

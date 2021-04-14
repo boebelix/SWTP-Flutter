@@ -14,17 +14,17 @@ class _MapScreenState extends State<MapScreen> {
   PoiService poiService = PoiService();
   bool poiSelected = false;
 
-  String title;
-  String description;
-  String category;
-  Image image;
-  LatLng setPoiAtThisPosition;
+  String _title;
+  String _description;
+  String _category;
+  Image _image;
+  LatLng _setPoiAtThisPosition;
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    Marker setPoiHere =
-        _createPoiAtPositionLatLng(context, setPoiAtThisPosition);
+    Marker _setPoiHere =
+        _createPoiAtPositionLatLng(context, _setPoiAtThisPosition);
 
     return Stack(
       children: [
@@ -48,13 +48,13 @@ class _MapScreenState extends State<MapScreen> {
                 ...(poiService.pois).map((poi) {
                   return _poiAtPositionLatLng(context, poi);
                 }).toList(),
-                setPoiHere
+                _setPoiHere
               ],
             ),
           ],
         ),
         poiSelected == true
-            ? PoiOverview(title: title, description: description, image: image)
+            ? PoiOverview(title: _title, description: _description, image: _image)
             : Container(),
       ],
     );
@@ -73,8 +73,8 @@ class _MapScreenState extends State<MapScreen> {
             size: 50,
           ),
           onTap: () {
-            onPoiClicked(
-                poi.title, poi.description, poi.category.name, poi.image);
+            _onPoiClicked(
+                title: poi.title, description: poi.description, category: poi.category.name, image: poi.image);
           },
         ),
       ),
@@ -101,17 +101,17 @@ class _MapScreenState extends State<MapScreen> {
 
   void _setTabbedPostion(LatLng latLng) {
     setState(() {
-      setPoiAtThisPosition = latLng;
+      _setPoiAtThisPosition = latLng;
     });
   }
 
-  void onPoiClicked(
-      String title, String description, String category, Image image) {
+  void _onPoiClicked(
+  {String title, String description, String category, Image image}) {
     setState(() {
-      this.title = title;
-      this.description = description;
-      this.category = category;
-      this.image = image;
+      this._title = title;
+      this._description = description;
+      this._category = category;
+      this._image = image;
       poiSelected = true;
     });
   }
