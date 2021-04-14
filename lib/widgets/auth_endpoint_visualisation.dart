@@ -4,10 +4,6 @@ import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class AuthEndpointVisualisation extends StatefulWidget {
-  final String destinationRouteBySuccess;
-
-  AuthEndpointVisualisation({@required this.destinationRouteBySuccess});
-
   @override
   _AuthEndpointVisualisationState createState() =>
       _AuthEndpointVisualisationState();
@@ -47,7 +43,6 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
                 },
                 // Alles in Ordnung
                 (userService) {
-                  _loginSuccessChangeScreen(context);
                   return Container();
                 },
               );
@@ -68,11 +63,5 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
         ),
       ),
     );
-  }
-
-  void _loginSuccessChangeScreen(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.popAndPushNamed(context, widget.destinationRouteBySuccess);
-    });
   }
 }

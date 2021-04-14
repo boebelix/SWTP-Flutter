@@ -10,7 +10,7 @@ class Group {
   int groupId;
 
   @required
-  String groupName;
+  String groupName = "Meine Gruppe";
 
   List<GroupMembership> memberships;
 

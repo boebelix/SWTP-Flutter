@@ -45,7 +45,7 @@ class AuthEndpointProvider extends ChangeNotifier {
 
       _authService.token = tmp.token;
       _authService.user = tmp.user;
-      await informationPreLoaderService.loadAllInformation();
+      await informationPreLoaderService.loadAllRelevaltUserIds();
     }
 
     _authResponse = authResponse;
