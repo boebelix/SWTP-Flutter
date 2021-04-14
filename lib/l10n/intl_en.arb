@@ -44,5 +44,6 @@
   "groups": "Groups",
   "invitations": "Invitations",
   "founder": "Founder",
-  "ownPOI": "Own Poi"
+  "ownPOI": "Own Poi",
+  "defaultNameGroup": "Group"
 }

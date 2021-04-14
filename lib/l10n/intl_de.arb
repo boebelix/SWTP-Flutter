@@ -44,5 +44,6 @@
   "groups": "Gruppen",
   "invitations": "Einladungen",
   "founder": "Gründer",
-  "ownPOI": "Eigene Poi"
+  "ownPOI": "Eigene Poi",
+  "defaultNameGroup": "Gruppe"
 }
