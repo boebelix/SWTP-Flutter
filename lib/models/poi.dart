@@ -6,11 +6,11 @@ import 'package:swtp_app/models/user.dart';
 class Poi {
   User author;
   Category category;
-  String createDate;
-  String description;
+  String createDate = "";
+  String description = "";
   int poiId;
   Position position;
-  String title;
+  String title = "";
   Image image;
 
   Poi(

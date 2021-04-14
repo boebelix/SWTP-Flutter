@@ -6,7 +6,7 @@
   "register": "Register",
   "user_name": "Username",
   "password": "Password",
-  "email": "E-Mail adress",
+  "email": "E-Mail address",
   "firstname": "Firstname",
   "lastname": "Lastname",
   "street": "Street",
@@ -25,7 +25,7 @@
   "warning_street_NN": "Please enter the street name",
   "warning_street_UpperThenLower": "Street name must begin with a capital letter and the rest must be lower case letters",
   "warning_house_number_NN": "Please enter the street name",
-  "warning_house_number_UperThenLower": "House number must begin with a capital letter and the rest must be lower case letters",
+  "warning_house_number_UpperThenLower": "Must be a number",
   "warning_postcode_NN": "Please enter the postcode",
   "warning_postcode_5_Figures": "The postcode must be 5 digits long",
   "warning_city_NN": "Please enter the city name",
@@ -44,5 +44,6 @@
   "groups": "Groups",
   "invitations": "Invitations",
   "founder": "Founder",
-  "ownPOI": "Own Poi"
+  "ownPOI": "Own Poi",
+  "defaultNameGroup": "Group"
 }

@@ -1,7 +1,7 @@
 import 'package:swtp_app/models/user.dart';
 
 class AuthResponse {
-  String token;
+  String token = "";
   User user;
 
   AuthResponse({this.token, this.user});

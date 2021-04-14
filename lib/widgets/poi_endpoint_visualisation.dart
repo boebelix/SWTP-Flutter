@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/providers/poi_endpoint_provider.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
+import 'package:swtp_app/models/notifier_state.dart';
 
 class PoiEndpointVisualisation extends StatefulWidget {
   final String destinationRouteBySuccess;
@@ -39,7 +40,7 @@ class _PoiEndpointVisualisationState extends State<PoiEndpointVisualisation> {
                   failure: failure,
                 );
               },
-              (poiList) {
+                  (_) {
                 _loginSuccessChangeScreen(context);
                 return Container();
               },

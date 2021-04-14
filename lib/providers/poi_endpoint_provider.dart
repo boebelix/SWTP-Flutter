@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:swtp_app/endpoints/poi_endpoint.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
+import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/services/poi_service.dart';
-
-enum NotifierState { initial, loading, loaded }
 
 class PoiEndpointProvider extends ChangeNotifier {
   static final PoiEndpointProvider _instance = PoiEndpointProvider._internal();
@@ -19,6 +19,8 @@ class PoiEndpointProvider extends ChangeNotifier {
   PoiEndpoint _poiEndpoint = PoiEndpoint();
 
   PoiService poiService = PoiService();
+
+  LogService logService = LogService();
 
   Either<Failure, List<Poi>> poiResponse;
 
@@ -46,8 +48,7 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   _setPoiImage(Either<Failure, Image> poiImageResponse, int poiId) {
     if (poiImageResponse.isRight()) {
-      var poiAtId =
-          poiService.pois.where((element) => element.poiId == poiId).first;
+      var poiAtId = poiService.pois.where((element) => element.poiId == poiId).first;
 
       poiAtId.image = poiImageResponse.getOrElse(null);
     }
@@ -55,7 +56,6 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   Future<void> getAllVisiblePois(List<int> userIds) async {
     setState(NotifierState.loading);
-
     for (int i in userIds) {
       await Task(() => _poiEndpoint.getPoiForUser(i))
           .attempt()
@@ -63,6 +63,7 @@ class PoiEndpointProvider extends ChangeNotifier {
           .run()
           .then((value) => _setPoiResponse(value));
     }
+
     for (Poi i in poiService.pois) {
       await Task(() => _poiEndpoint.getPoiImage(i.poiId))
           .attempt()

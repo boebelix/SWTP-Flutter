@@ -25,7 +25,7 @@
   "warning_street_NN": "Bitte geben Sie Ihre Straße ein",
   "warning_street_UpperThenLower": "Der Name muss mit einem Großbuchstaben beginnen gefolgt von Kleinbuchstaben",
   "warning_house_number_NN": "Bitte geben Sie Ihre Hausnummer ein",
-  "warning_house_number_UperThenLower": "Die Hausnummer beginnt mit Zahlen und kann mit einem Buchstaben enden",
+  "warning_house_number_UpperThenLower": "Beginnt mit Zahl",
   "warning_postcode_NN": "Bitte geben Sie Ihre Postleitzahl ein",
   "warning_postcode_5_Figures": "Die Postleitzahl besteht aus 5 Zahlen",
   "warning_city_NN": "Bitte geben Sie Ihre Stadt ein",
@@ -44,5 +44,6 @@
   "groups": "Gruppen",
   "invitations": "Einladungen",
   "founder": "Gründer",
-  "ownPOI": "Eigene Poi"
+  "ownPOI": "Eigene Poi",
+  "defaultNameGroup": "Gruppe"
 }

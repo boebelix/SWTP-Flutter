@@ -8,12 +8,8 @@ class GroupMembership {
 
   GroupMembership({this.id, this.member, this.invitationPending});
 
-  factory GroupMembership.fromJSON(
-          Map<String, dynamic> json) =>
-      GroupMembership(
-          id: json['id'] == null
-              ? null
-              : GroupMembershipId.fromJSON(json['id']),
-          member: json['member'] == null ? null : User.fromJSON(json['member']),
-          invitationPending: json['invitationPending']);
+  factory GroupMembership.fromJSON(Map<String, dynamic> json) => GroupMembership(
+      id: json['id'] == null ? null : GroupMembershipId.fromJSON(json['id']),
+      member: json['member'] == null ? null : User.fromJSON(json['member']),
+      invitationPending: json['invitationPending']);
 }

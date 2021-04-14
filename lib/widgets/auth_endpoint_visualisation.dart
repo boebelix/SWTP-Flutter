@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class AuthEndpointVisualisation extends StatefulWidget {
@@ -35,7 +36,6 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     notifier.resetState();
                   });
-
                   return PopUpWarningDialog(
                     context: context,
                     failure: failure,
@@ -53,7 +53,7 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
   }
 
   Widget _loadingIndicator(BuildContext context) {
-    final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.7;
+    final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.3;
     return Center(
       child: SizedBox(
         height: sizeLoadingIndicator,
