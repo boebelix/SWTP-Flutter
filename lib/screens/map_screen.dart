@@ -17,10 +17,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   bool poiSelected = false;
 
-  String _title;
-  String _description;
-  String _category;
-  Image _image;
+  Poi _poi;
+
   LatLng _setPoiAtThisPosition;
 
   @override
@@ -79,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
                     ],
                   ),
                   poiSelected == true
-                      ? PoiOverview(title: _title, description: _description, image: _image)
+                      ? PoiOverview(poi: _poi,)
                       : Container(),
                 ]);
               },
@@ -102,8 +100,7 @@ class _MapScreenState extends State<MapScreen> {
             size: 50,
           ),
           onTap: () {
-            _onPoiClicked(
-                title: poi.title, description: poi.description, category: poi.category.name, image: poi.image);
+            _onPoiClicked(poi: poi);
           },
         ),
       ),
@@ -134,13 +131,10 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void _onPoiClicked({String title, String description, String category, Image image}) {
+  void _onPoiClicked({@required Poi poi}) {
     setState(() {
-      this._title = title;
-      this._description = description;
-      this._category = category;
-      this._image = image;
-      poiSelected = true;
+      this._poi=poi;
+      this.poiSelected=true;
     });
   }
 }
