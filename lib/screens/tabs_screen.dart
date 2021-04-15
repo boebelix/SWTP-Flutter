@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
-import 'package:swtp_app/providers/poi_endpoint_provider.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/screens/groups_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/map_screen.dart';
@@ -100,7 +100,7 @@ class _TabScreenState extends State<TabScreen> {
             AuthService().logOut(context);
             Provider.of<AuthEndpointProvider>(context, listen: false)
                 .resetState();
-            Provider.of<PoiEndpointProvider>(context, listen: false)
+            Provider.of<PoiServiceProvider>(context, listen: false)
                 .resetState();
             Navigator.popAndPushNamed(context, LoginScreen.routeName);
           });

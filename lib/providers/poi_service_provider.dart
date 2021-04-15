@@ -5,20 +5,19 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/services/log_service.dart';
-import 'package:swtp_app/services/poi_service.dart';
 
-class PoiEndpointProvider extends ChangeNotifier {
-  static final PoiEndpointProvider _instance = PoiEndpointProvider._internal();
+class PoiServiceProvider extends ChangeNotifier {
+  static final PoiServiceProvider _instance = PoiServiceProvider._internal();
 
-  factory PoiEndpointProvider() => _instance;
+  factory PoiServiceProvider() => _instance;
 
-  PoiEndpointProvider._internal();
+  PoiServiceProvider._internal();
 
   NotifierState _state = NotifierState.initial;
 
   PoiEndpoint _poiEndpoint = PoiEndpoint();
 
-  PoiService poiService = PoiService();
+  List<Poi> pois=[];
 
   LogService logService = LogService();
 
@@ -32,7 +31,7 @@ class PoiEndpointProvider extends ChangeNotifier {
   }
 
   void resetState() {
-    PoiService().pois.clear();
+    pois.clear();
     setState(NotifierState.initial);
 
     notifyListeners();
@@ -40,7 +39,7 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   _setPoiResponse(Either<Failure, List<Poi>> poiResponse) {
     if (poiResponse.isRight()) {
-      poiService.pois.addAll(poiResponse.getOrElse(null));
+      pois.addAll(poiResponse.getOrElse(() => null));
     }
 
     this.poiResponse = poiResponse;
@@ -48,7 +47,7 @@ class PoiEndpointProvider extends ChangeNotifier {
 
   _setPoiImage(Either<Failure, Image> poiImageResponse, int poiId) {
     if (poiImageResponse.isRight()) {
-      var poiAtId = poiService.pois.where((element) => element.poiId == poiId).first;
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
 
       poiAtId.image = poiImageResponse.getOrElse(null);
     }
@@ -64,7 +63,7 @@ class PoiEndpointProvider extends ChangeNotifier {
           .then((value) => _setPoiResponse(value));
     }
 
-    for (Poi i in poiService.pois) {
+    for (Poi i in pois) {
       await Task(() => _poiEndpoint.getPoiImage(i.poiId))
           .attempt()
           .mapLeftToFailure()
