@@ -17,8 +17,8 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
   Widget build(BuildContext context) {
     final Poi poi = ModalRoute.of(context).settings.arguments as Poi;
 
-    final DateTime dateTime=DateTime.parse(poi.createDate);
-    final String formattedDate= DateFormat.yMMMd().add_Hm().format(dateTime);
+    final DateTime dateTime = DateTime.parse(poi.createDate);
+    final String formattedDate = DateFormat.yMMMd().add_Hm().format(dateTime);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,18 +42,23 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      Language.of(context).author +": "+ poi.author.firstName +" "+poi.author.lastName,
+                      Language.of(context).author + ": " + poi.author.firstName + " " + poi.author.lastName,
                       style: TextStyle(fontSize: 18),
                     ),
-                    Text("$formattedDate",style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                    ),),
+                    Text(
+                      "$formattedDate",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
                   ],
                 ),
               ],

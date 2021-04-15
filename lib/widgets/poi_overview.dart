@@ -64,8 +64,7 @@ class PoiOverview extends StatelessWidget {
                         height: 22,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, PoiDetailWidget.routeName,
-                                arguments: poi);
+                            Navigator.pushNamed(context, PoiDetailWidget.routeName, arguments: poi);
                           },
                           child: Text('Details'),
                         ),

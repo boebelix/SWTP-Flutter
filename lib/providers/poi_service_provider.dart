@@ -17,7 +17,7 @@ class PoiServiceProvider extends ChangeNotifier {
 
   PoiEndpoint _poiEndpoint = PoiEndpoint();
 
-  List<Poi> pois=[];
+  List<Poi> pois = [];
 
   LogService logService = LogService();
 

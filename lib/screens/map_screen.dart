@@ -68,7 +68,7 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       MarkerLayerOptions(
                         markers: [
-                          ...(Provider.of<PoiServiceProvider>(context,listen: false).pois).map((poi) {
+                          ...(Provider.of<PoiServiceProvider>(context, listen: false).pois).map((poi) {
                             return _poiAtPositionLatLng(context, poi);
                           }).toList(),
                           _setPoiHere
@@ -77,7 +77,9 @@ class _MapScreenState extends State<MapScreen> {
                     ],
                   ),
                   poiSelected == true
-                      ? PoiOverview(poi: _poi,)
+                      ? PoiOverview(
+                          poi: _poi,
+                        )
                       : Container(),
                 ]);
               },
@@ -133,8 +135,8 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onPoiClicked({@required Poi poi}) {
     setState(() {
-      this._poi=poi;
-      this.poiSelected=true;
+      this._poi = poi;
+      this.poiSelected = true;
     });
   }
 }

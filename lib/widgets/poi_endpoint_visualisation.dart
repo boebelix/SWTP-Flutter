@@ -11,8 +11,7 @@ class PoiEndpointVisualisation extends StatefulWidget {
   PoiEndpointVisualisation({this.destinationRouteBySuccess});
 
   @override
-  _PoiEndpointVisualisationState createState() =>
-      _PoiEndpointVisualisationState();
+  _PoiEndpointVisualisationState createState() => _PoiEndpointVisualisationState();
 }
 
 class _PoiEndpointVisualisationState extends State<PoiEndpointVisualisation> {
@@ -41,7 +40,7 @@ class _PoiEndpointVisualisationState extends State<PoiEndpointVisualisation> {
                   failure: failure,
                 );
               },
-                  (_) {
+              (_) {
                 _loginSuccessChangeScreen(context);
                 return Container();
               },
