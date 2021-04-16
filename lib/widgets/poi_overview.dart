@@ -6,13 +6,12 @@ import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 
 class PoiOverview extends StatelessWidget {
-
   final Poi poi;
 
   PoiOverview({@required this.poi});
 
-  void _getPoiComments(BuildContext context) async{
-    poi.comments=await Provider.of<PoiServiceProvider>(context,listen: false).getCommentsForPoi(poi.poiId);
+  void _getPoiComments(BuildContext context) async {
+    poi.comments = await Provider.of<PoiServiceProvider>(context, listen: false).getCommentsForPoi(poi.poiId);
   }
 
   @override

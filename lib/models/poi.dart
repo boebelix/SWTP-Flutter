@@ -13,16 +13,9 @@ class Poi {
   Position position;
   String title = "";
   Image image;
-  List<Comment> comments;
+  List<Comment> comments = [];
 
-  Poi(
-      {this.author,
-      this.category,
-      this.createDate,
-      this.description,
-      this.poiId,
-      this.position,
-      this.title});
+  Poi({this.author, this.category, this.createDate, this.description, this.poiId, this.position, this.title});
 
   factory Poi.fromJSON(Map<String, dynamic> json) => Poi(
         author: User.fromJSON(json['author']),

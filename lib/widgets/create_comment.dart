@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
 
 class CreateComment extends StatefulWidget {
+  final int poiId;
+
+  CreateComment({this.poiId});
+
   @override
-  _CreateCommentState createState() => _CreateCommentState();
+  _CreateCommentState createState() => _CreateCommentState(poiId: poiId);
 }
 
 class _CreateCommentState extends State<CreateComment> {
+  final int poiId;
+
+  _CreateCommentState({this.poiId});
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController commentController = TextEditingController();
+
+  void _createPoiComment() async {
+    await Provider.of<PoiServiceProvider>(context, listen: false).createCommentForPoi(poiId, commentController.text);
+  }
+
+  String _validatorComment(value) {
+    if (value == null || value.isEmpty) {
+      return Language.of(context).warning_comment_NN;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +47,15 @@ class _CreateCommentState extends State<CreateComment> {
                 validator: _validatorComment,
               ),
             ),
-            Icon(Icons.send,size: 30,),
+            IconButton(
+                icon: Icon(
+                  Icons.send,
+                  size: 30,
+                ),
+                onPressed: _createPoiComment)
           ],
         ),
       ),
     );
-  }
-
-  String _validatorComment(value) {
-    if (value == null || value.isEmpty) {
-      return Language.of(context).warning_comment_NN;
-    }
-    return null;
   }
 }

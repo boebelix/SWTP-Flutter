@@ -25,6 +25,8 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+
     final int poiId = ModalRoute.of(context).settings.arguments as int;
 
     final Poi poi =
@@ -36,56 +38,55 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
       ),
       body: Column(
         children: [
-          Flexible(
-            flex: 2,
-            child: Image(
-              image: poi.image.image,
-            ),
+          Image(
+            image: poi.image.image,
+            height: deviceSize.height * 0.3,
           ),
-          Flexible(
-            flex: 1,
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                  child: Text(
-                    poi.description,
-                    style: TextStyle(
-                      fontSize: 16,
+          Wrap(
+            children: [
+              ListView(
+                shrinkWrap: true,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                    child: Text(
+                      poi.description,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        Language.of(context).author + ": " + poi.author.firstName + " " + poi.author.lastName,
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Text(
-                        "${_formatDate(poi.createDate)}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black54,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          Language.of(context).author + ": " + poi.author.firstName + " " + poi.author.lastName,
+                          style: TextStyle(fontSize: 15),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Text(
+                          "${_formatDate(poi.createDate)}",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
           //Platzhalter für späteren Einbau der Kommentarfunktion
           Flexible(
-            flex: 2,
             child: Consumer<PoiServiceProvider>(
               builder: (_, notifier, __) {
                 switch (notifier.state) {
@@ -120,7 +121,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
 
                         return ListView.builder(
                           padding: EdgeInsets.all(5),
-                          shrinkWrap: true,
+                          shrinkWrap: false,
                           scrollDirection: Axis.vertical,
                           itemCount: itemCount,
                           itemBuilder: (context, index) => _buildCommentCard(comments.elementAt(index)),
@@ -131,7 +132,12 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
               },
             ),
           ),
-          CreateComment(),
+          Align(
+            alignment: FractionalOffset.bottomLeft,
+            child: CreateComment(
+              poiId: poi.poiId,
+            ),
+          ),
         ],
       ),
     );

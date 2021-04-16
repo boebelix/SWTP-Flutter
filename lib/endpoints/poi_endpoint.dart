@@ -94,23 +94,24 @@ class PoiEndpoint {
   Future<List<Comment>> getCommentsForPoi(int poiId) async {
     try {
       final response = await http.get(
-        Uri.http(url, "/api/pois/$poiId/comments"), headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-        "Authorization": "Bearer ${userService.token}",
-      },
+        Uri.http(url, "/api/pois/$poiId/comments"),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": "Bearer ${userService.token}",
+        },
       );
 
-      if(response.statusCode==HttpStatus.ok){
-        List<Comment> comments=[];
+      if (response.statusCode == HttpStatus.ok) {
+        List<Comment> comments = [];
         for (dynamic content in jsonDecode(response.body)) {
           comments.add(Comment.fromJson(content));
         }
         return comments;
       }
-      if(response.statusCode==HttpStatus.notFound){
+      if (response.statusCode == HttpStatus.notFound) {
         throw Failure(FailureTranslation.text('responsePoiNotFound'));
-      }else{
+      } else {
         throw Failure(FailureTranslation.text('responseUnknownError'));
       }
     } on SocketException {
@@ -122,4 +123,36 @@ class PoiEndpoint {
     }
   }
 
+  Future<Comment> createCommentForPoi(int poiId, String comment) async {
+    try {
+      final response = await http.post(Uri.http(url, "/api/comments/"),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer ${userService.token}"
+          },
+          body: jsonEncode(<String, String>{
+            "comment": "$comment",
+            "authorId": "${userService.user.userId}",
+            "poiId": "$poiId",
+          }));
+      if (response.statusCode == HttpStatus.ok) {
+        return Comment.fromJson(jsonDecode(response.body));
+      }
+      if (response.statusCode == HttpStatus.internalServerError) {
+        throw Failure(FailureTranslation.text('responsePoiIdInvalid'));
+      }
+      if (response.statusCode == HttpStatus.forbidden) {
+        throw Failure(FailureTranslation.text('responseUserInvalid'));
+      } else {
+        throw Failure(FailureTranslation.text('responseUnknownError'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
 }

@@ -47,5 +47,7 @@ class FailureTranslation {
     'responsePoiNotFound_en': 'This Poi is not available',
     'responseUnknownError_de': 'Unbekannter Fehler aufgetreten',
     'responseUnknownError_en': 'Unknown Error occurred',
+    'responsePoiIdInvalid_de': 'Poi existiert nicht',
+    'responsePoiIdInvalid_en': 'Poi does not exist',
   };
 }

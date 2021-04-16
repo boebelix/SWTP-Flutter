@@ -55,10 +55,18 @@ class PoiServiceProvider extends ChangeNotifier {
   }
 
   _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
-    if(poiCommentResponse.isRight()){
-      var poiAtId = pois.where((element) => element.poiId==poiId).first;
+    if (poiCommentResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
 
-      poiAtId.comments=poiCommentResponse.getOrElse(null);
+      poiAtId.comments.addAll(poiCommentResponse.getOrElse(null));
+    }
+  }
+
+  _addPoiComment(Either<Failure, Comment> poiCreateCommentResponse, int poiId) {
+    if (poiCreateCommentResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
+
+      poiAtId.comments.add(poiCreateCommentResponse.getOrElse(null));
     }
   }
 
@@ -87,6 +95,10 @@ class PoiServiceProvider extends ChangeNotifier {
   Future<List<Comment>> getCommentsForPoi(int poiId) async {
     setState(NotifierState.loading);
 
+    for (Poi poi in pois) {
+      poi.comments.clear();
+    }
+
     await Task(() => _poiEndpoint.getCommentsForPoi(poiId))
         .attempt()
         .mapLeftToFailure()
@@ -95,7 +107,19 @@ class PoiServiceProvider extends ChangeNotifier {
 
     setState(NotifierState.loaded);
 
-    return pois.where((element) => element.poiId==poiId).first.comments;
+    return pois.where((element) => element.poiId == poiId).first.comments;
+  }
+
+  Future<void> createCommentForPoi(int poiId, String comment) async {
+    setState(NotifierState.loading);
+
+    await Task(() => _poiEndpoint.createCommentForPoi(poiId, comment))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _addPoiComment(value, poiId));
+
+    setState(NotifierState.loaded);
   }
 }
 
