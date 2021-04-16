@@ -5,6 +5,7 @@ import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/services/poi_service.dart';
 
 class AuthService {
@@ -21,6 +22,7 @@ class AuthService {
     user = null;
     token = null;
     Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
+    Provider.of<UserEndpointProvider>(context, listen: false).resetState();
   }
 
   bool isSignedIn() {
@@ -39,9 +41,14 @@ class AuthService {
 
   Future<void> logIn({@required BuildContext context, @required String username, @required String password}) async {
     PoiService poiService = PoiService();
-
     var authEndpointProvider = Provider.of<AuthEndpointProvider>(context, listen: false);
     await authEndpointProvider.logIn(LoginCredentials(username, password));
+
+    var userEndpointProvider = Provider.of<UserEndpointProvider>(context, listen: false);
+    if (AuthService().isSignedIn()) {
+      await userEndpointProvider.getAllUsers();
+      await userEndpointProvider.getMembersOfOwnGroup();
+    }
 
     await poiService.loadPoisAfterSuccesfullAuthentication(context);
   }
