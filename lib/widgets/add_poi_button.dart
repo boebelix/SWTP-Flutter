@@ -23,7 +23,11 @@ class AddPoiButton extends StatelessWidget {
             ),
             onPressed: () async {
               await Provider.of<CategoriesServiceProvider>(context, listen: false).getAllCategories();
-              Navigator.pushNamed(context, AddPoiForm.routeName);
+
+              // Lösche alle Kategorien, wenn der Nutzer auf den Zurückbutton drückt, damit beim wiederholten erstellen eines Poi,
+              // die Kategorien nicht noch einmal in die Liste angehängt werden und doppelt vorkommen.
+              Navigator.pushNamed(context, AddPoiForm.routeName)
+                  .whenComplete(() => Provider.of<CategoriesServiceProvider>(context, listen: false).resetState());
             },
             child: Text(
               Language.of(context).addNewPoi,

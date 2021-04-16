@@ -59,6 +59,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
   Consumer<CategoriesServiceProvider> _inputCategories(BuildContext context) {
     return Consumer<CategoriesServiceProvider>(builder: (_, notifier, __) {
       if (notifier.state == NotifierState.loaded) {
+        print(notifier.categories.toString());
         var categories = notifier.categories;
         return BuildRadioButtons(
           categories: categories,
