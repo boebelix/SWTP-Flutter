@@ -36,10 +36,13 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
             flex: 1,
             child: ListView(
               children: [
-                Text(
-                  poi.description,
-                  style: TextStyle(
-                    fontSize: 16,
+                Padding(
+                  padding: const EdgeInsets.only(left: 8,right: 8),
+                  child: Text(
+                    poi.description,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -48,15 +51,21 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      Language.of(context).author + ": " + poi.author.firstName + " " + poi.author.lastName,
-                      style: TextStyle(fontSize: 18),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        Language.of(context).author + ": " + poi.author.firstName + " " + poi.author.lastName,
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
-                    Text(
-                      "$formattedDate",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black54,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        "$formattedDate",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black54,
+                        ),
                       ),
                     ),
                   ],
