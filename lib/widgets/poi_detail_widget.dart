@@ -11,7 +11,7 @@ import 'package:swtp_app/widgets/create_comment.dart';
 import 'loading_indicator.dart';
 
 class PoiDetailWidget extends StatefulWidget {
-  static const routeName = '/poiDatailWidget';
+  static const routeName = '/poiDetailWidget';
 
   @override
   _PoiDetailWidgetState createState() => _PoiDetailWidgetState();
@@ -25,7 +25,6 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
 
     final int poiId = ModalRoute.of(context).settings.arguments as int;
 
