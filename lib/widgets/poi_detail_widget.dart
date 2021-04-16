@@ -37,7 +37,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8,right: 8),
+                  padding: const EdgeInsets.only(left: 8,right: 8, top: 8),
                   child: Text(
                     poi.description,
                     style: TextStyle(
