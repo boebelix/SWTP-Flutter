@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/notifier_state.dart';
-import 'package:swtp_app/widgets/warning_dialog.dart';
-import 'loading_indicator.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
+import 'package:swtp_app/widgets/build_radiobutton.dart';
 
 class AddPoiForm extends StatefulWidget {
   static const routeName = '/addPoiForm';
@@ -19,21 +17,6 @@ class _AddPoiFormState extends State<AddPoiForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
-
-  int selectedRadioTile;
-  Category selectedCategory;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedRadioTile = 0;
-  }
-
-  void setSelectedCategory(Category category) {
-    setState(() {
-      selectedCategory = category;
-    });
-  }
 
   @override
   void dispose() {
@@ -74,67 +57,16 @@ class _AddPoiFormState extends State<AddPoiForm> {
   }
 
   Consumer<CategoriesServiceProvider> _inputCategories(BuildContext context) {
-    return Consumer<CategoriesServiceProvider>(
-      builder: (_, notifier, __) {
-        switch (notifier.state) {
-          case NotifierState.initial:
-            {
-              return Container();
-            }
-            break;
-
-          case NotifierState.loading:
-            {
-              return LoadingIndicator();
-            }
-            break;
-
-          default:
-            {
-              return notifier.categoriesResponse.fold(
-                //Fehlerfall
-                (failure) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    notifier.resetState();
-                  });
-                  return PopUpWarningDialog(
-                    context: context,
-                    failure: failure,
-                  );
-                },
-                // Alles in Ordnung
-                (categories) {
-                  return _buildCategories(categories);
-                },
-              );
-            }
-        }
-      },
-    );
-  }
-
-  ListView _buildCategories(List<Category> categories) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: categories.length,
-      itemBuilder: (context, index) {
-        return _radioListTileElement(categories, index);
-      },
-    );
-  }
-
-  RadioListTile<Category> _radioListTileElement(List<Category> categories, int index) {
-    return RadioListTile(
-      value: categories[index],
-      groupValue: selectedCategory,
-      title: Text(categories[index].name),
-      onChanged: (currentCategory) {
-        print("Current Category ${currentCategory.name}");
-        setSelectedCategory(currentCategory);
-      },
-      selected: selectedCategory == categories[index],
-    );
+    return Consumer<CategoriesServiceProvider>(builder: (_, notifier, __) {
+      if (notifier.state == NotifierState.loaded) {
+        var categories = notifier.categories;
+        return BuildRadioButtons(
+          categories: categories,
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 
   TextFormField _inputDescription(BuildContext context) {
