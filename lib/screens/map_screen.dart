@@ -8,6 +8,8 @@ import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/poi_overview.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
+import 'package:swtp_app/widgets/add_poi_button.dart';
+import 'package:swtp_app/providers/categories_service_provider.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -15,7 +17,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  bool poiSelected = false;
+  bool _poiSelected = false;
+  bool _isOwnPoiSet = false;
 
   Poi _poi;
 
@@ -50,41 +53,60 @@ class _MapScreenState extends State<MapScreen> {
                 );
               },
               (_) {
-                return Stack(children: [
-                  FlutterMap(
-                    options: MapOptions(
-                      center: LatLng(49.260152, 7.360296),
-                      zoom: 10.0,
-                      maxZoom: 18,
-                      minZoom: 5,
-                      onTap: _setTabbedPostion,
-                    ),
-                    layers: [
-                      TileLayerOptions(
-                        urlTemplate: "https://tile.openstreetmap.de/{z}/{x}/{y}.png",
-                        additionalOptions: {
-                          'id': 'mapbox.streets',
-                        },
-                      ),
-                      MarkerLayerOptions(
-                        markers: [
-                          ...(Provider.of<PoiServiceProvider>(context, listen: false).pois).map((poi) {
-                            return _poiAtPositionLatLng(context, poi);
-                          }).toList(),
-                          _setPoiHere
-                        ],
-                      ),
-                    ],
-                  ),
-                  poiSelected == true
-                      ? PoiOverview(
-                          poi: _poi,
-                        )
-                      : Container(),
-                ]);
+                return Stack(
+                  children: [
+                    _showMap(context, _setPoiHere),
+
+                    _poiSelected == true ? PoiOverview(poi: _poi) : Container(),
+
+                    _isOwnPoiSet == true ? AddPoiButton() : Container(),
+
+                    // Beim klicken auf neuen Poi erstellen werden die Kategorien geladen
+                    _showLoadingIndicatorWhileGetCategories(),
+                  ],
+                );
               },
             );
         }
+      },
+    );
+  }
+
+  FlutterMap _showMap(BuildContext context, Marker _setPoiHere) {
+    return FlutterMap(
+      options: MapOptions(
+        center: LatLng(49.260152, 7.360296),
+        zoom: 10.0,
+        maxZoom: 18,
+        minZoom: 5,
+        onTap: _setTabbedPostion,
+      ),
+      layers: [
+        TileLayerOptions(
+          urlTemplate: "https://tile.openstreetmap.de/{z}/{x}/{y}.png",
+          additionalOptions: {
+            'id': 'mapbox.streets',
+          },
+        ),
+        MarkerLayerOptions(
+          markers: [
+            ...(Provider.of<PoiServiceProvider>(context, listen: false).pois).map((poi) {
+              return _poiAtPositionLatLng(context, poi);
+            }).toList(),
+            _setPoiHere
+          ],
+        ),
+      ],
+    );
+  }
+
+  Consumer<CategoriesServiceProvider> _showLoadingIndicatorWhileGetCategories() {
+    return Consumer<CategoriesServiceProvider>(
+      builder: (_, notifier, __) {
+        if (notifier.state == NotifierState.loading) {
+          return LoadingIndicator();
+        }
+        return Container();
       },
     );
   }
@@ -118,7 +140,7 @@ class _MapScreenState extends State<MapScreen> {
         child: GestureDetector(
           child: Icon(
             Icons.location_on,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).buttonColor,
             size: 50,
           ),
           onTap: () {},
@@ -130,13 +152,14 @@ class _MapScreenState extends State<MapScreen> {
   void _setTabbedPostion(LatLng latLng) {
     setState(() {
       _setPoiAtThisPosition = latLng;
+      _isOwnPoiSet = true;
     });
   }
 
   void _onPoiClicked({@required Poi poi}) {
     setState(() {
       this._poi = poi;
-      this.poiSelected = true;
+      this._poiSelected = true;
     });
   }
 }
