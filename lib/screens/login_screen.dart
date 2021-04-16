@@ -19,6 +19,13 @@ class _LoginState extends State<LoginScreen> {
   final TextEditingController password = TextEditingController();
 
   @override
+  void initState() {
+    username.text = "test";
+    password.text = "test";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
