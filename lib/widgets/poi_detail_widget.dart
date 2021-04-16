@@ -40,7 +40,6 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
         children: [
           Image(
             image: poi.image.image,
-            height: deviceSize.height * 0.3,
           ),
           Wrap(
             children: [
@@ -150,7 +149,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
       child: Container(
         child: IntrinsicHeight(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
                 flex: 1,

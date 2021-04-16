@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swtp_app/models/comment.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
