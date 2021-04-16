@@ -33,6 +33,5 @@ class AddPoiButton extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

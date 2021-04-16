@@ -20,53 +20,19 @@ class _AddPoiFormState extends State<AddPoiForm> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
-  int selectedRadio;
   int selectedRadioTile;
   Category selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    selectedRadio = 0;
     selectedRadioTile = 0;
-  }
-
-  void setSelectedRadio(int val) {
-    setState(() {
-      selectedRadio = val;
-    });
-  }
-
-  void setSelectedRadioTile(int val) {
-    setState(() {
-      selectedRadioTile = val;
-    });
   }
 
   void setSelectedCategory(Category category) {
     setState(() {
       selectedCategory = category;
     });
-  }
-
-  List<Widget> createCategoriesList(List<Category> categories) {
-    List<Widget> widgets = [];
-    for (Category category in categories) {
-      widgets.add(
-        RadioListTile(
-          value: category,
-          groupValue: selectedCategory,
-          title: Text(category.name),
-          subtitle: Text(category.categoryId.toString()),
-          onChanged: (currentCategory) {
-            print("Current Category ${currentCategory.name}");
-            setSelectedCategory(currentCategory);
-          },
-          selected: selectedCategory == category,
-        ),
-      );
-    }
-    return widgets;
   }
 
   @override
@@ -97,67 +63,105 @@ class _AddPoiFormState extends State<AddPoiForm> {
               child: ListView(
                 padding: const EdgeInsets.all(8.0),
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: Language.of(context).newPoiTitle,
-                      icon: Icon(Icons.account_circle),
-                    ),
-                    validator: (value) {},
-                    controller: _titleController,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: Language.of(context).newPoiDescription,
-                      icon: Icon(Icons.text_snippet),
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    validator: (value) {},
-                    controller: _descriptionController,
-                  ),
-                  Consumer<CategoriesServiceProvider>(
-                    builder: (_, notifier, __) {
-                      switch (notifier.state) {
-                        case NotifierState.initial:
-                          {
-                            return Container();
-                          }
-                          break;
-
-                        case NotifierState.loading:
-                          {
-                            return LoadingIndicator();
-                          }
-                          break;
-
-                        default:
-                          {
-                            return notifier.categoriesResponse.fold(
-                              //Fehlerfall
-                              (failure) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  notifier.resetState();
-                                });
-                                return PopUpWarningDialog(
-                                  context: context,
-                                  failure: failure,
-                                );
-                              },
-                              // Alles in Ordnung
-                              (categories) {
-                                return Column(
-                                  children: createCategoriesList(categories),
-                                );
-                              },
-                            );
-                          }
-                      }
-                    },
-                  ),
+                  _inputTitle(context),
+                  _inputDescription(context),
+                  _inputCategories(context),
                 ],
               ),
             )),
       ),
+    );
+  }
+
+  Consumer<CategoriesServiceProvider> _inputCategories(BuildContext context) {
+    return Consumer<CategoriesServiceProvider>(
+      builder: (_, notifier, __) {
+        switch (notifier.state) {
+          case NotifierState.initial:
+            {
+              return Container();
+            }
+            break;
+
+          case NotifierState.loading:
+            {
+              return LoadingIndicator();
+            }
+            break;
+
+          default:
+            {
+              return notifier.categoriesResponse.fold(
+                //Fehlerfall
+                (failure) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    notifier.resetState();
+                  });
+                  return PopUpWarningDialog(
+                    context: context,
+                    failure: failure,
+                  );
+                },
+                // Alles in Ordnung
+                (categories) {
+                  return _buildCategories(categories);
+                },
+              );
+            }
+        }
+      },
+    );
+  }
+
+  ListView _buildCategories(List<Category> categories) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: categories.length,
+      itemBuilder: (context, index) {
+        return _radioListTileElement(categories, index);
+      },
+    );
+  }
+
+  RadioListTile<Category> _radioListTileElement(List<Category> categories, int index) {
+    return RadioListTile(
+      value: categories[index],
+      groupValue: selectedCategory,
+      title: Text(categories[index].name),
+      onChanged: (currentCategory) {
+        print("Current Category ${currentCategory.name}");
+        setSelectedCategory(currentCategory);
+      },
+      selected: selectedCategory == categories[index],
+    );
+  }
+
+  TextFormField _inputDescription(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: Language.of(context).newPoiDescription,
+        icon: Icon(Icons.text_snippet),
+      ),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+      validator: (value) {
+        return null;
+      },
+      controller: _descriptionController,
+    );
+  }
+
+  TextFormField _inputTitle(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: Language.of(context).newPoiTitle,
+        icon: Icon(Icons.account_circle),
+      ),
+      validator: (value) {
+        return null;
+      },
+      controller: _titleController,
     );
   }
 }
