@@ -46,5 +46,9 @@
   "invitations": "Einladungen",
   "founder": "Gründer",
   "ownPOI": "Eigene Poi",
-  "defaultNameGroup": "Gruppe"
+  "defaultNameGroup": "Gruppe",
+  "addNewPoi": "Neuen Poi erstellen",
+  "newPoiTitle": "Titel",
+  "newPoiDescription": "Beschreibung",
+  "newPoiCategory": "Kategorie"
 }

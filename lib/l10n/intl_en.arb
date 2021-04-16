@@ -46,5 +46,9 @@
   "invitations": "Invitations",
   "founder": "Founder",
   "ownPOI": "Own Poi",
-  "defaultNameGroup": "Group"
+  "defaultNameGroup": "Group",
+  "addNewPoi": "Add new poi",
+  "newPoiTitle": "Title",
+  "newPoiDescription": "Description",
+  "newPoiCategory": "Category"
 }
