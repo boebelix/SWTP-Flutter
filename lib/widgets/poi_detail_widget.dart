@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/locale.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/poi.dart';
-import 'package:swtp_app/services/auth_service.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
+import 'package:swtp_app/models/comment.dart';
+import 'package:swtp_app/widgets/create_comment.dart';
+import 'loading_indicator.dart';
 
 class PoiDetailWidget extends StatefulWidget {
   static const routeName = '/poiDatailWidget';
@@ -13,12 +18,17 @@ class PoiDetailWidget extends StatefulWidget {
 }
 
 class _PoiDetailWidgetState extends State<PoiDetailWidget> {
+  String _formatDate(String date) {
+    final DateTime dateTime = DateTime.parse(date);
+    return DateFormat.yMMMd().add_Hm().format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Poi poi = ModalRoute.of(context).settings.arguments as Poi;
+    final int poiId = ModalRoute.of(context).settings.arguments as int;
 
-    final DateTime dateTime = DateTime.parse(poi.createDate);
-    final String formattedDate = DateFormat.yMMMd().add_Hm().format(dateTime);
+    final Poi poi =
+        Provider.of<PoiServiceProvider>(context, listen: false).pois.where((element) => element.poiId == poiId).first;
 
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +47,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8,right: 8, top: 8),
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
                   child: Text(
                     poi.description,
                     style: TextStyle(
@@ -61,7 +71,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Text(
-                        "$formattedDate",
+                        "${_formatDate(poi.createDate)}",
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.black54,
@@ -73,15 +83,111 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
               ],
             ),
           ),
-
           //Platzhalter für späteren Einbau der Kommentarfunktion
           Flexible(
             flex: 2,
-            child: Container(
-              color: Theme.of(context).primaryColor,
+            child: Consumer<PoiServiceProvider>(
+              builder: (_, notifier, __) {
+                switch (notifier.state) {
+                  case NotifierState.initial:
+                    return Container();
+                    break;
+                  case NotifierState.loading:
+                    return LoadingIndicator();
+                    break;
+                  default:
+                    return notifier.poiResponse.fold(
+                      (failure) {
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (_) {
+                            notifier.resetState();
+                          },
+                        );
+
+                        return PopUpWarningDialog(
+                          context: context,
+                          failure: failure,
+                        );
+                      },
+                      (_) {
+                        List<Comment> comments = Provider.of<PoiServiceProvider>(context, listen: false)
+                            .pois
+                            .where((element) => element.poiId == poi.poiId)
+                            .first
+                            .comments;
+
+                        int itemCount = comments.length;
+
+                        return ListView.builder(
+                          padding: EdgeInsets.all(5),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: itemCount,
+                          itemBuilder: (context, index) => _buildCommentCard(comments.elementAt(index)),
+                        );
+                      },
+                    );
+                }
+              },
             ),
           ),
+          CreateComment(),
         ],
+      ),
+    );
+  }
+
+  Card _buildCommentCard(Comment comment) {
+    return Card(
+      key: UniqueKey(),
+      elevation: 0,
+      child: Container(
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Icon(
+                  Icons.account_circle_outlined,
+                  size: 40,
+                ),
+              ),
+              SizedBox(
+                width: 18,
+              ),
+              Flexible(
+                flex: 4,
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.black38,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(comment.author.firstName + " " + comment.author.lastName),
+                            Text('${_formatDate(comment.createDate)}')
+                          ],
+                        ),
+                        Text(
+                          comment.comment,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

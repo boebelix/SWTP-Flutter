@@ -5,6 +5,7 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/services/log_service.dart';
+import 'package:swtp_app/models/comment.dart';
 
 class PoiServiceProvider extends ChangeNotifier {
   static final PoiServiceProvider _instance = PoiServiceProvider._internal();
@@ -53,8 +54,17 @@ class PoiServiceProvider extends ChangeNotifier {
     }
   }
 
+  _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
+    if(poiCommentResponse.isRight()){
+      var poiAtId = pois.where((element) => element.poiId==poiId).first;
+
+      poiAtId.comments=poiCommentResponse.getOrElse(null);
+    }
+  }
+
   Future<void> getAllVisiblePois(List<int> userIds) async {
     setState(NotifierState.loading);
+
     for (int i in userIds) {
       await Task(() => _poiEndpoint.getPoiForUser(i))
           .attempt()
@@ -72,6 +82,20 @@ class PoiServiceProvider extends ChangeNotifier {
     }
 
     setState(NotifierState.loaded);
+  }
+
+  Future<List<Comment>> getCommentsForPoi(int poiId) async {
+    setState(NotifierState.loading);
+
+    await Task(() => _poiEndpoint.getCommentsForPoi(poiId))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _setPoiComments(value, poiId));
+
+    setState(NotifierState.loaded);
+
+    return pois.where((element) => element.poiId==poiId).first.comments;
   }
 }
 

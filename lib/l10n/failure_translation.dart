@@ -43,5 +43,9 @@ class FailureTranslation {
     'responseNoImageAvailable_en': 'No Image available',
     'responseUserExistAlready_de': 'Nutzer existiert bereits',
     'responseExistAlready_en': 'User already exists',
+    'responsePoiNotFound_de': 'Dieses Poi ist nicht vorhanden',
+    'responsePoiNotFound_en': 'This Poi is not available',
+    'responseUnknownError_de': 'Unbekannter Fehler aufgetreten',
+    'responseUnknownError_en': 'Unknown Error occurred',
   };
 }

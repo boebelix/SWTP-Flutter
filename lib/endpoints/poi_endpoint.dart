@@ -9,6 +9,7 @@ import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/log_service.dart';
+import 'package:swtp_app/models/comment.dart';
 
 class PoiEndpoint {
   var url = Properties.url;
@@ -81,7 +82,6 @@ class PoiEndpoint {
       } else {
         throw Failure(FailureTranslation.text('responseUserInvalid'));
       }
-      throw Failure("Unknown Error Occured");
     } on SocketException {
       throw Failure(FailureTranslation.text('noConnection'));
     } on HttpException {
@@ -90,4 +90,36 @@ class PoiEndpoint {
       throw Failure(FailureTranslation.text('parseFailure'));
     }
   }
+
+  Future<List<Comment>> getCommentsForPoi(int poiId) async {
+    try {
+      final response = await http.get(
+        Uri.http(url, "/api/pois/$poiId/comments"), headers: {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "Authorization": "Bearer ${userService.token}",
+      },
+      );
+
+      if(response.statusCode==HttpStatus.ok){
+        List<Comment> comments=[];
+        for (dynamic content in jsonDecode(response.body)) {
+          comments.add(Comment.fromJson(content));
+        }
+        return comments;
+      }
+      if(response.statusCode==HttpStatus.notFound){
+        throw Failure(FailureTranslation.text('responsePoiNotFound'));
+      }else{
+        throw Failure(FailureTranslation.text('responseUnknownError'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
 }

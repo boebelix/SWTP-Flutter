@@ -35,6 +35,7 @@
   "warning_email_NN": "Please enter a Applied Life Science Kaiserslautern mail adresse",
   "warning_email_not_hskl": "The email address must be of form \"abcd1234@stud.hs-kl.de\"",
   "warning_password": "Please enter a password",
+  "warning_comment_NN": "You need to enter a comment",
   "password_level_not_save": "Password is not safe enough",
   "password_repeat": "Repeat the password",
   "password_empty": "Please repeat the password",
@@ -46,5 +47,6 @@
   "invitations": "Invitations",
   "founder": "Founder",
   "ownPOI": "Own Poi",
-  "defaultNameGroup": "Group"
+  "defaultNameGroup": "Group",
+  "comment": "Kommentieren"
 }
