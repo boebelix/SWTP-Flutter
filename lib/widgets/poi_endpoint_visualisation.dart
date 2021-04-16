@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:swtp_app/providers/poi_endpoint_provider.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
+import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 
@@ -10,21 +11,20 @@ class PoiEndpointVisualisation extends StatefulWidget {
   PoiEndpointVisualisation({this.destinationRouteBySuccess});
 
   @override
-  _PoiEndpointVisualisationState createState() =>
-      _PoiEndpointVisualisationState();
+  _PoiEndpointVisualisationState createState() => _PoiEndpointVisualisationState();
 }
 
 class _PoiEndpointVisualisationState extends State<PoiEndpointVisualisation> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<PoiEndpointProvider>(
+    return Consumer<PoiServiceProvider>(
       builder: (_, notifier, __) {
         switch (notifier.state) {
           case NotifierState.initial:
             return Container();
             break;
           case NotifierState.loading:
-            return _loadingIndicator(context);
+            return LoadingIndicator();
             break;
           default:
             return notifier.poiResponse.fold(
@@ -40,26 +40,13 @@ class _PoiEndpointVisualisationState extends State<PoiEndpointVisualisation> {
                   failure: failure,
                 );
               },
-                  (_) {
+              (_) {
                 _loginSuccessChangeScreen(context);
                 return Container();
               },
             );
         }
       },
-    );
-  }
-
-  Widget _loadingIndicator(BuildContext context) {
-    final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.3;
-    return Center(
-      child: SizedBox(
-        height: sizeLoadingIndicator,
-        width: sizeLoadingIndicator,
-        child: CircularProgressIndicator(
-          strokeWidth: 10,
-        ),
-      ),
     );
   }
 
