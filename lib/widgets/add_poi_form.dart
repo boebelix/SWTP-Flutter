@@ -146,78 +146,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                               // Alles in Ordnung
                               (categories) {
                                 return Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(20.0),
-                                      child: Text("Dynamic Categories"),
-                                    ),
-                                    Column(
-                                      children: createCategoriesList(categories),
-                                    ),
-                                    RadioListTile(
-                                      value: 1,
-                                      groupValue: selectedRadioTile,
-                                      title: Text("Radio 1"),
-                                      subtitle: Text("Radio 1 Subtitile"),
-                                      onChanged: (value) {
-                                        print("Radio Tile pressed ${value}");
-                                        setSelectedRadioTile(value);
-                                      },
-                                      activeColor: Colors.red,
-                                      secondary: OutlineButton(
-                                        child: Text("Say hi"),
-                                        onPressed: () {
-                                          print("Say hello");
-                                        },
-                                      ),
-                                      selected: true,
-                                    ),
-                                    RadioListTile(
-                                      value: 2,
-                                      groupValue: selectedRadioTile,
-                                      title: Text("Radio 2"),
-                                      subtitle: Text("Radio 2 Subtitile"),
-                                      onChanged: (value) {
-                                        print("Radio Tile pressed ${value}");
-                                        setSelectedRadioTile(value);
-                                      },
-                                      activeColor: Colors.red,
-                                      secondary: OutlineButton(
-                                        child: Text("Say hi"),
-                                        onPressed: () {
-                                          print("Say hello");
-                                        },
-                                      ),
-                                      selected: false,
-                                    ),
-                                    Divider(
-                                      height: 20,
-                                      color: Colors.green,
-                                    ),
-                                    ButtonBar(
-                                      alignment: MainAxisAlignment.center,
-                                      children: [
-                                        Radio(
-                                          value: 1,
-                                          groupValue: selectedRadio,
-                                          activeColor: Colors.orange,
-                                          onChanged: (value) {
-                                            print(value);
-                                            setSelectedRadio(value);
-                                          },
-                                        ),
-                                        Radio(
-                                          value: 2,
-                                          groupValue: selectedRadio,
-                                          activeColor: Colors.orange,
-                                          onChanged: (value) {
-                                            print(value);
-                                            setSelectedRadio(value);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  children: createCategoriesList(categories),
                                 );
                               },
                             );
