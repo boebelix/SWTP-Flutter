@@ -54,12 +54,13 @@
   "newPoiDescription": "Description",
   "newPoiCategory": "Category",
   "defaultNameGroup": "Group",
-  "comment": "comment"
+  "comment": "comment",
   "comment": "comment",
   "ownPOI": "Own Poi",
   "ownGroup": "Own group",
   "members": "Members",
   "invited": "Invited Users",
   "inviteUsers": "Invite users",
-  "createGroup": "Create group"
+  "createGroup": "Create group",
+  "invite": "Invite"
 }

@@ -111,7 +111,6 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             );
           },
         ),
-        UserScreenVisualisation(destinationRouteBySuccess: InviteUserScreen.routeName,),
       ],
     );
   }
@@ -120,7 +119,11 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        IconButton(icon: Icon(Icons.person_add), onPressed: _showInvitationScreenAsync(context)),
+        IconButton(icon: Icon(Icons.person_add),
+            onPressed: (){
+              _showInvitationScreen(context);
+              Navigator.pushNamed(context, InviteUserScreen.routeName);
+        }),
       ],
     );
   }
@@ -210,11 +213,6 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   Future<void> _removeUserFromGroup(int userId) async {
     await _groupService.kickUserFromOwnGroup(userId);
-  }
-
-  _showInvitationScreenAsync(context)
-  {
-    _showInvitationScreen(context);
   }
 
   Future<void> _showInvitationScreen(BuildContext context)  async {

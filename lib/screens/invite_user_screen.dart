@@ -24,6 +24,20 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
     body: Column(
       children: [
         _buildUserList(context),
+        TextButton(
+          onPressed: () {
+            //_inviteUsers();
+          },
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.98,
+            child: Card(
+              color: Theme.of(context).buttonColor,
+              elevation: 10,
+              child: Center(child: Text(Language.of(context).invite)),
+            ),
+          ),
+        ),
 
       ],
     ),
@@ -49,5 +63,8 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
             },
           );
         });
+  }
+  _inviteUsers()
+  {
   }
 }
