@@ -30,7 +30,8 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             else {
             children = <Widget>[buildOwnGroupNonExistentWidget()];
           }
-        } else if (snapshot.hasError) {
+        }
+        else if (snapshot.hasError) {
           children = <Widget>[
             const Icon(
               Icons.error_outline,
