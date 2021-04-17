@@ -100,7 +100,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                     return LoadingIndicator();
                     break;
                   default:
-                    return notifier.poiResponse.fold(
+                    return notifier.poiCommentResponse.fold(
                       (failure) {
                         WidgetsBinding.instance.addPostFrameCallback(
                           (_) {
