@@ -68,9 +68,13 @@ class UserEndpointProvider extends ChangeNotifier {
     if (allUsers.isEmpty) {
       await getAllUsers();
     }
-    for (GroupMembership membership in _memberships)
-      if (allUsers.where((element) => element.userId != membership.member.userId).isNotEmpty)
-        usersNotInOwnGroup.add(allUsers.where((element) => element.userId != membership.member.userId).first);
+    for (GroupMembership membership in _memberships) {
+      var userNotInGroup = allUsers.where((element) => element.userId != membership.member.userId);
+
+      if (userNotInGroup.isNotEmpty) {
+        usersNotInOwnGroup.add(userNotInGroup.first);
+      }
+    }
   }
 
   Future<void> getMembersOfOwnGroup() async {
@@ -94,12 +98,15 @@ class UserEndpointProvider extends ChangeNotifier {
     if (allMemberships.isRight()) {
       final tmp = allMemberships.getOrElse(null);
 
-      if (tmp.where((element) => (element.invitationPending)).isNotEmpty) {
-        userInvitedIntoOwnGroup.add(tmp.where((element) => (element.invitationPending)).first.member);
+      var invitationPendingUser = tmp.where((element) => (element.invitationPending));
+
+      for (int i = 0; i < invitationPendingUser.length; i++) {
+        userInvitedIntoOwnGroup.add((invitationPendingUser).elementAt(i).member);
       }
 
-      if (tmp.where((element) => (!element.invitationPending)).isNotEmpty) {
-        usersInOwnGroup.add(tmp.where((element) => (!element.invitationPending)).first.member);
+      var userAlreadyInGroup = tmp.where((element) => (!element.invitationPending));
+      for (int i = 0; i < userAlreadyInGroup.length; i++) {
+        usersInOwnGroup.add(userAlreadyInGroup.elementAt(i).member);
       }
     }
   }
