@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
+import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
-import 'package:swtp_app/widgets/poi_detail_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,6 +23,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PoiServiceProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserEndpointProvider(),
         ),
       ],
       child: MaterialApp(
@@ -44,7 +47,6 @@ class MyApp extends StatelessWidget {
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           Register.routeName: (ctx) => Register(),
-          PoiDetailWidget.routeName: (ctx) => PoiDetailWidget(),
         },
       ),
     );
