@@ -30,5 +30,6 @@ jobs:
           flutter-version: '1.22.4'
       - run: flutter upgrade
       - run: flutter pub get
+      - run: flutter --no-color pub global run intl_utils:generate
       - run: flutter test
       - run: flutter build apk
