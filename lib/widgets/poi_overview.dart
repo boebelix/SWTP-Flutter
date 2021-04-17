@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/models/poi.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 
 class PoiOverview extends StatelessWidget {
   final Poi poi;
 
   PoiOverview({@required this.poi});
+
+  void _getPoiComments(BuildContext context) async {
+    poi.comments = await Provider.of<PoiServiceProvider>(context, listen: false).getCommentsForPoi(poi.poiId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +70,8 @@ class PoiOverview extends StatelessWidget {
                         height: 22,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, PoiDetailWidget.routeName, arguments: poi);
+                            _getPoiComments(context);
+                            Navigator.pushNamed(context, PoiDetailWidget.routeName, arguments: poi.poiId);
                           },
                           child: Text('Details'),
                         ),

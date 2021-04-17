@@ -60,11 +60,7 @@ class GroupService {
 
   Future<void> loadGroupMembershipsOfOwnUserOnly() async {
     _memberships.clear();
-    String response = await _userEndpoint.getMemberships(_authService.user.userId);
-
-    for (dynamic elem in jsonDecode(response)) {
-      _memberships.add(GroupMembership.fromJSON(elem));
-    }
+    _memberships = await _userEndpoint.getMemberships(_authService.user.userId);
   }
 
   Future<void> denyInvitationOrLeaveGroup(int groupId) async {
