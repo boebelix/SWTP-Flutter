@@ -70,31 +70,68 @@ class _AddPoiFormState extends State<AddPoiForm> {
     });
   }
 
-  TextFormField _inputDescription(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: Language.of(context).newPoiDescription,
-        icon: Icon(Icons.text_snippet),
-      ),
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-      validator: (value) {
-        return null;
-      },
-      controller: _descriptionController,
+  Widget _inputDescription(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+            child: Icon(
+              Icons.description_outlined,
+              color: Colors.black45,
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 9,
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: Language.of(context).newPoiDescription,
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 8,
+            validator: (value) {
+              return null;
+            },
+            controller: _descriptionController,
+          ),
+        ),
+      ],
     );
   }
 
-  TextFormField _inputTitle(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: Language.of(context).newPoiTitle,
-        icon: Icon(Icons.account_circle),
-      ),
-      validator: (value) {
-        return null;
-      },
-      controller: _titleController,
+  Widget _inputTitle(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+            child: Icon(
+              Icons.description_outlined,
+              color: Colors.black45,
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 9,
+          child: TextFormField(
+            decoration: InputDecoration(
+              labelText: Language.of(context).newPoiTitle,
+            ),
+            validator: (value) {
+              return null;
+            },
+            controller: _titleController,
+          ),
+        ),
+      ],
     );
   }
 }

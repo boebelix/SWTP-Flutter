@@ -167,7 +167,7 @@ class PoiEndpoint {
       final response = await http.get(
         Uri.http(url, "/api/categories"),
         headers: {
-          "content-type": "application/json",
+          "content-type": "application/json; charset=utf-8",
           "accept": "application/json",
           "Authorization": "Bearer ${userService.token}"
         },
@@ -180,7 +180,7 @@ class PoiEndpoint {
 
         logService.prettyLogger.d(jsonDecode(response.body));
 
-        for (dynamic content in jsonDecode(response.body)) {
+        for (dynamic content in jsonDecode(utf8.decode(response.bodyBytes))) {
           categories.add(Category.fromJSON(content));
         }
         return categories;
