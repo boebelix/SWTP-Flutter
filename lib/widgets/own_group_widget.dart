@@ -116,20 +116,26 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     );
   }
 
-  Text _buildMemberText(BuildContext context) {
-    return Text(Language.of(context).members,
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ));
+  Padding _buildMemberText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(Language.of(context).members,
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          )),
+    );
   }
 
-  Text _buildInvitedText(BuildContext context) {
-    return Text(Language.of(context).invited,
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ));
+  Padding _buildInvitedText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(Language.of(context).invited,
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          )),
+    );
   }
 
   ListView _buildListViewAcceptedMembersOfOwnGroup() {
