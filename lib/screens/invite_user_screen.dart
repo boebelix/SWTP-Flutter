@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/services/group_service.dart';
 
 class InviteUserScreen extends StatefulWidget {
   static const routeName = '/invite';
@@ -26,7 +29,7 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
         _buildUserList(context),
         TextButton(
           onPressed: () {
-            //_inviteUsers();
+            _inviteUsers();
           },
           child: Container(
             height: 50,
@@ -60,11 +63,19 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
             value: userprovider.isUserChoosen(index),
             onChanged: (newValue) {
               userprovider.chooseUser(index, newValue);
+              Navigator.popAndPushNamed(context, TabScreen.routeName);
             },
           );
         });
   }
-  _inviteUsers()
-  {
+  _inviteUsers()async {
+
+    for(User user in userprovider.usersToInvite)
+    {
+        await GroupService().inviteUserToGroup(user.userId);
+    }
+    await GroupService().loadOwnGroup();
+    await userprovider.getAllUsers();
+    await userprovider.getMembersOfOwnGroup();
   }
 }

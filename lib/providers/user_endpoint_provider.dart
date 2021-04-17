@@ -26,7 +26,7 @@ class UserEndpointProvider extends ChangeNotifier {
   List<User> userInvitedIntoOwnGroup = [];
   Either<Failure, List<GroupMembership>> _membershipsResponse;
   List<GroupMembership> _memberships = [];
-  List<User> _usersToInvite=[];
+  List<User> usersToInvite=[];
 
   void _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
     if (memberships.isRight()) {
@@ -135,21 +135,21 @@ class UserEndpointProvider extends ChangeNotifier {
   void chooseUser(int index, bool chosen)
   {
     if(usersNotInOwnGroup.length>index&&index>0) {
-      if (!chosen&&_usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
-        _usersToInvite.remove(usersNotInOwnGroup.elementAt(index));
-      }else if(chosen && !_usersToInvite.contains(usersNotInOwnGroup.elementAt(index)))
+      if (!chosen&&usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
+        usersToInvite.remove(usersNotInOwnGroup.elementAt(index));
+      }else if(chosen && !usersToInvite.contains(usersNotInOwnGroup.elementAt(index)))
       {
-        _usersToInvite.add(usersNotInOwnGroup.elementAt(index));
+        usersToInvite.add(usersNotInOwnGroup.elementAt(index));
       }
     }
   }
 
   bool isUserChoosen(int index)
   {
-      if(_usersToInvite.isEmpty){
+      if(usersToInvite.isEmpty){
         return false;
       }
-      return _usersToInvite.contains(usersNotInOwnGroup.elementAt(index));
+      return usersToInvite.contains(usersNotInOwnGroup.elementAt(index));
   }
 }
 
