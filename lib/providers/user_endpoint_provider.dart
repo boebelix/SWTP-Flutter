@@ -84,16 +84,6 @@ class UserEndpointProvider extends ChangeNotifier {
     for(GroupMembership membership in GroupService().ownGroup.memberships) {
       usersNotInOwnGroup.removeWhere((element)=>membership.member.userId==element.userId);
     }
-    print(usersNotInOwnGroup.length);
-    /*for (GroupMembership membership in _memberships) {
-      var userNotInGroup = allUsers.where((element) => element.userId != membership.member.userId);
-      print("jetzt member: ${membership.member.firstName} id ${membership.member.userId}");
-      print("All users ${allUsers.length}");
-      if (userNotInGroup.isNotEmpty) {
-        print("");
-        usersNotInOwnGroup.add(userNotInGroup.first);
-      }
-    }*/
   }
 
   Future<void> getMembersOfOwnGroup() async {
@@ -134,7 +124,7 @@ class UserEndpointProvider extends ChangeNotifier {
 
   void chooseUser(int index, bool chosen)
   {
-    if(usersNotInOwnGroup.length>index&&index>0) {
+    if(usersNotInOwnGroup.length>index&&index>=0) {
       if (!chosen&&usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
         usersToInvite.remove(usersNotInOwnGroup.elementAt(index));
       }else if(chosen && !usersToInvite.contains(usersNotInOwnGroup.elementAt(index)))

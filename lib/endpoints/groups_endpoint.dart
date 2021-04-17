@@ -78,9 +78,7 @@ class GroupsEndpoint {
           "accept": "application/json",
           "Authorization": "Bearer ${_userService.token}",
         },
-        body: {
-          "userId": "$userId",
-        },
+        body: json.encode({"userId": userId}),
       );
 
       if (response.statusCode == HttpStatus.ok) {

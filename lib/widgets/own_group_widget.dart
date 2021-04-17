@@ -194,7 +194,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text("${membership.member.firstName} ${membership.member.firstName}",
+              child: Text("${membership.member.firstName} ${membership.member.lastName}",
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
