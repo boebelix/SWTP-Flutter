@@ -6,7 +6,6 @@ import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/group_service.dart';
 
 class UserEndpointProvider extends ChangeNotifier {
   static final UserEndpointProvider _instance = UserEndpointProvider._internal();
@@ -19,7 +18,8 @@ class UserEndpointProvider extends ChangeNotifier {
 
   UserEndpoint _userEndpoint = UserEndpoint();
 
-  Either<Failure, List<User>> _allUsers;
+  Either<Failure, List<User>> _allUsersResponse;
+  List<User> _allUsers = [];
   List<User> _usersNotInOwnGroup = [];
   List<User> _usersInOwnGroup = [];
   List<User> _userInvitedIntoOwnGroup = [];
@@ -32,10 +32,14 @@ class UserEndpointProvider extends ChangeNotifier {
   NotifierState get state => _state;
 
   _setAllUsers(Either<Failure, List<User>> value) {
-    _allUsers = value;
+    if (value.isRight()) _allUsers = value.getOrElse(() => null);
+
+    _allUsersResponse = value;
   }
 
-  Either<Failure, List<User>> get allUsers => _allUsers;
+  Either<Failure, List<User>> get allUsersResponse => _allUsersResponse;
+
+  List<User> get allUsers => _allUsers;
 
   List<User> get usersNotInOwnGroup => _usersNotInOwnGroup;
 
@@ -51,24 +55,20 @@ class UserEndpointProvider extends ChangeNotifier {
 
   Future<void> getAllUsers() async {
     setState(NotifierState.loading);
-    await Task(() => _userEndpoint.getUser())
-        .attempt()
-        .mapLeftToFailure()
-        .run()
-        .then((value) => _setAllUsers(value))
-        .then((value) => _setUsersInOwnGroupLists(value));
+    await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
+      _setAllUsers(value);
+    });
+
     setState(NotifierState.loaded);
   }
 
-  _setUsersNotInOwnGroupList(Either<Failure, List<User>> allUsersResponse) {
+  Future<void> _setUsersNotInOwnGroupList() async {
     _usersNotInOwnGroup.clear();
-    if (allUsersResponse.isRight()) {
-      final tmp = allUsersResponse.getOrElse(null);
+    if (_allUsers.isEmpty) await getAllUsers();
 
-      for (GroupMembership member in GroupService().ownGroup.memberships) {
-        _usersNotInOwnGroup.add(tmp.where((element) => (element.userId != member.member.userId)).first);
-      }
-    }
+    for (GroupMembership membership in _memberships.getOrElse(() => null))
+      if (_allUsers.where((element) => element.userId != membership.member.userId).isNotEmpty)
+        _usersNotInOwnGroup.add(_allUsers.where((element) => element.userId != membership.member.userId).first);
   }
 
   Future<void> getMembersOfOwnGroup() async {
@@ -77,9 +77,12 @@ class UserEndpointProvider extends ChangeNotifier {
         .attempt()
         .mapLeftToFailure()
         .run()
-        .then((value) => _setUsersInOwnGroupLists(value))
-        .then((value) => _setUsersNotInOwnGroupList(value))
-        .then((value) => _setMemberships(value));
+        .then((value) async {
+      _setUsersInOwnGroupLists(value);
+      _setMemberships(value);
+      await _setUsersNotInOwnGroupList();
+    });
+
     setState(NotifierState.loaded);
   }
 
@@ -88,16 +91,12 @@ class UserEndpointProvider extends ChangeNotifier {
     _usersInOwnGroup.clear();
     if (allMemberships.isRight()) {
       final tmp = allMemberships.getOrElse(null);
-      for (GroupMembership member in GroupService().ownGroup.memberships) {
-        _userInvitedIntoOwnGroup.add(tmp
-            .where((element) => (element.member.userId != member.member.userId && element.invitationPending))
-            .first
-            .member);
-        _usersInOwnGroup.add(tmp
-            .where((element) => (element.member.userId != member.member.userId && element.invitationPending))
-            .first
-            .member);
-      }
+
+      if (tmp.where((element) => (element.invitationPending)).isNotEmpty)
+        _userInvitedIntoOwnGroup.add(tmp.where((element) => (element.invitationPending)).first.member);
+
+      if (tmp.where((element) => (!element.invitationPending)).isNotEmpty)
+        _usersInOwnGroup.add(tmp.where((element) => (!element.invitationPending)).first.member);
     }
   }
 
