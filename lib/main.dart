@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => PoiServiceProvider(),
         ),
-        ChangeNotifierProvider(create: (_) => UserEndpointProvider())
+        ChangeNotifierProvider(
+          create: (_) => UserEndpointProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'SWTP',
