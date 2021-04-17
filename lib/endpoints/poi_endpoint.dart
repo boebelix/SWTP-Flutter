@@ -34,8 +34,6 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<Poi> pois = [];
 
-        logService.prettyLogger.d(jsonDecode(response.body));
-
         for (dynamic content in jsonDecode(response.body)) {
           pois.add(Poi.fromJSON(content));
         }
@@ -179,8 +177,6 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<Category> categories = [];
 
-        logService.prettyLogger.d(jsonDecode(response.body));
-
         for (dynamic content in jsonDecode(utf8.decode(response.bodyBytes))) {
           categories.add(Category.fromJSON(content));
         }
@@ -207,19 +203,31 @@ class PoiEndpoint {
 
   Future<Poi> createPoi(int categoryId, String title, String description, Position position) async {
     try {
-      final response = await http.post(Uri.http(url, "/api/pois/"),
+      Map<String, double> positionMapping = {"latitude": position.latitude, "longitude": position.longitude};
+
+      LogService().prettyLogger.d(jsonEncode(<String, dynamic>{
+            "position": {"latitude": position.latitude, "longitude": position.longitude},
+            "title": title,
+            "description": description,
+            "authorId": AuthService().user.userId,
+            "categoryId": categoryId,
+          }));
+
+      final response = await http.post(Uri.http(url, "/api/pois"),
           headers: {
             "content-type": "application/json",
             "accept": "application/json",
             "Authorization": "Bearer ${userService.token}"
           },
-          body: jsonEncode(<String, String>{
-            "position": "{\"latitude\": ${position.latitude}, \"longutude\": ${position.longitude}",
-            "title": "$title",
-            "authorId": "${AuthService().user.userId}",
-            "categoryId": "$categoryId"
+          body: jsonEncode(<String, dynamic>{
+            "position": {"latitude": position.latitude, "longitude": position.longitude},
+            "title": title,
+            "description": description,
+            "authorId": AuthService().user.userId,
+            "categoryId": categoryId,
           }));
 
+      print('Create' + response.statusCode.toString());
       if (response.statusCode == HttpStatus.ok) {
         return Poi.fromJSON(jsonDecode(response.body));
       }

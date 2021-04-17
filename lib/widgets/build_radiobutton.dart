@@ -16,9 +16,9 @@ class BuildRadioButtons extends StatefulWidget {
 class _BuildRadioButtonsState extends State<BuildRadioButtons> {
   Category _selectedCategory;
 
-  void setSelectedCategory({BuildContext context, Category category}) {
+  void setSelectedCategory({Category category}) {
     setState(() {
-      Provider.of<CategoriesServiceProvider>(context).setCurrentSeletedCategory(category);
+      Provider.of<CategoriesServiceProvider>(context, listen: false).setCurrentSeletedCategory(category);
       _selectedCategory = category;
     });
   }
@@ -42,7 +42,6 @@ class _BuildRadioButtonsState extends State<BuildRadioButtons> {
       title: Text(categories[index].name),
       onChanged: (currentCategory) {
         setSelectedCategory(
-          context: context,
           category: currentCategory,
         );
       },

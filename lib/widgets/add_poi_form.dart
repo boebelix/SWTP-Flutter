@@ -69,17 +69,13 @@ class _AddPoiFormState extends State<AddPoiForm> {
                   onPressed: () {
                     final String _title = _titleController.text;
                     final String _description = _titleController.text;
-                    final int _categoryId =
-                        Provider.of<CategoriesServiceProvider>(context).currentSeletedCategory.categoryId;
+                    final int _categoryId = Provider.of<CategoriesServiceProvider>(context, listen: false)
+                        .currentSeletedCategory
+                        .categoryId;
                     final Position _position =
                         Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
 
-                    Provider.of<PoiServiceProvider>(context).createPoi(
-                      title: _title,
-                      description: _description,
-                      categoryId: _categoryId,
-                      position: _position,
-                    );
+                    _createPoi(context, _title, _description, _categoryId, _position);
                   },
                   child: Container(
                     height: 50,
@@ -99,10 +95,18 @@ class _AddPoiFormState extends State<AddPoiForm> {
     );
   }
 
+  void _createPoi(BuildContext context, String _title, String _description, int _categoryId, Position _position) async {
+    await Provider.of<PoiServiceProvider>(context, listen: false).createPoi(
+      title: _title,
+      description: _description,
+      categoryId: _categoryId,
+      position: _position,
+    );
+  }
+
   Consumer<CategoriesServiceProvider> _inputCategories(BuildContext context) {
     return Consumer<CategoriesServiceProvider>(builder: (_, notifier, __) {
       if (notifier.state == NotifierState.loaded) {
-        print(notifier.categories.toString());
         var categories = notifier.categories;
         return BuildRadioButtons(
           categories: categories,
