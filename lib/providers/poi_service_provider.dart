@@ -139,7 +139,7 @@ class PoiServiceProvider extends ChangeNotifier {
     setState(NotifierState.loaded);
   }
 
-  Future<void> createPoi(String title, String description, int categoryId, Position position) async {
+  Future<void> createPoi({String title, String description, int categoryId, Position position}) async {
     setState(NotifierState.loading);
 
     await Task(() => PoiEndpoint().createPoi(categoryId, title, description, position))

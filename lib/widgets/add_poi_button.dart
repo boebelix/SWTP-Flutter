@@ -3,8 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
+import 'package:latlong/latlong.dart';
 
 class AddPoiButton extends StatelessWidget {
+  final LatLng currentPosition;
+
+  AddPoiButton(this.currentPosition);
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -26,7 +31,7 @@ class AddPoiButton extends StatelessWidget {
 
               // Lösche alle Kategorien, wenn der Nutzer auf den Zurückbutton drückt, damit beim wiederholten erstellen eines Poi,
               // die Kategorien nicht noch einmal in die Liste angehängt werden und doppelt vorkommen.
-              Navigator.pushNamed(context, AddPoiForm.routeName)
+              Navigator.pushNamed(context, AddPoiForm.routeName, arguments: currentPosition)
                   .whenComplete(() => Provider.of<CategoriesServiceProvider>(context, listen: false).resetState());
             },
             child: Text(

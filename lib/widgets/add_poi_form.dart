@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/build_radiobutton.dart';
+import 'package:latlong/latlong.dart';
 
 class AddPoiForm extends StatefulWidget {
   static const routeName = '/addPoiForm';
@@ -30,6 +33,8 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   @override
   Widget build(BuildContext context) {
+    final LatLng currentPosition = ModalRoute.of(context).settings.arguments as LatLng;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(Language.of(context).addNewPoi),
@@ -37,21 +42,59 @@ class _AddPoiFormState extends State<AddPoiForm> {
       body: Padding(
         padding: const EdgeInsets.all(5.0),
         child: Card(
-            elevation: 20,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(8.0),
-                children: [
-                  _inputTitle(context),
-                  _inputDescription(context),
-                  _inputCategories(context),
-                ],
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Flexible(
+                flex: 8,
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    padding: const EdgeInsets.all(8.0),
+                    children: [
+                      _inputTitle(context),
+                      _inputDescription(context),
+                      _inputCategories(context),
+                    ],
+                  ),
+                ),
               ),
-            )),
+              Spacer(),
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    final String _title = _titleController.text;
+                    final String _description = _titleController.text;
+                    final int _categoryId =
+                        Provider.of<CategoriesServiceProvider>(context).currentSeletedCategory.categoryId;
+                    final Position _position =
+                        Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
+
+                    Provider.of<PoiServiceProvider>(context).createPoi(
+                      title: _title,
+                      description: _description,
+                      categoryId: _categoryId,
+                      position: _position,
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.98,
+                    child: Card(
+                      color: Theme.of(context).buttonColor,
+                      elevation: 10,
+                      child: Center(child: Text("Button")),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -79,7 +122,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
           fit: FlexFit.tight,
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+            padding: const EdgeInsets.fromLTRB(0, 28, 10, 0),
             child: Icon(
               Icons.description_outlined,
               color: Colors.black45,
@@ -91,6 +134,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
           child: TextFormField(
             decoration: InputDecoration(
               labelText: Language.of(context).newPoiDescription,
+              alignLabelWithHint: true,
             ),
             keyboardType: TextInputType.multiline,
             maxLines: 8,

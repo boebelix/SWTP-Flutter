@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/models/category.dart';
+import 'package:swtp_app/providers/categories_service_provider.dart';
 
 // ignore: must_be_immutable
 class BuildRadioButtons extends StatefulWidget {
@@ -14,8 +16,9 @@ class BuildRadioButtons extends StatefulWidget {
 class _BuildRadioButtonsState extends State<BuildRadioButtons> {
   Category _selectedCategory;
 
-  void setSelectedCategory(Category category) {
+  void setSelectedCategory({BuildContext context, Category category}) {
     setState(() {
+      Provider.of<CategoriesServiceProvider>(context).setCurrentSeletedCategory(category);
       _selectedCategory = category;
     });
   }
@@ -38,7 +41,10 @@ class _BuildRadioButtonsState extends State<BuildRadioButtons> {
       groupValue: _selectedCategory,
       title: Text(categories[index].name),
       onChanged: (currentCategory) {
-        setSelectedCategory(currentCategory);
+        setSelectedCategory(
+          context: context,
+          category: currentCategory,
+        );
       },
       selected: _selectedCategory == categories[index],
     );

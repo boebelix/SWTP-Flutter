@@ -18,6 +18,15 @@ class CategoriesServiceProvider extends ChangeNotifier {
 
   List<Category> categories = [];
 
+  Category _currentSeletedCategory;
+
+  Category get currentSeletedCategory => _currentSeletedCategory;
+
+  void setCurrentSeletedCategory(Category value) {
+    _currentSeletedCategory = value;
+    notifyListeners();
+  }
+
   Either<Failure, List<Category>> categoriesResponse;
 
   NotifierState get state => _state;
