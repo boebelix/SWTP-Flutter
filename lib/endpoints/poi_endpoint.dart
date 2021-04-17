@@ -104,11 +104,13 @@ class PoiEndpoint {
 
       if (response.statusCode == HttpStatus.ok) {
         List<Comment> comments = [];
+
         for (dynamic content in jsonDecode(response.body)) {
           comments.add(Comment.fromJson(content));
         }
         return comments;
       }
+
       if (response.statusCode == HttpStatus.notFound) {
         throw Failure(FailureTranslation.text('responsePoiNotFound'));
       } else {
@@ -136,12 +138,15 @@ class PoiEndpoint {
             "authorId": "${userService.user.userId}",
             "poiId": "$poiId",
           }));
+
       if (response.statusCode == HttpStatus.ok) {
         return Comment.fromJson(jsonDecode(response.body));
       }
+
       if (response.statusCode == HttpStatus.internalServerError) {
         throw Failure(FailureTranslation.text('responsePoiIdInvalid'));
       }
+
       if (response.statusCode == HttpStatus.forbidden) {
         throw Failure(FailureTranslation.text('responseUserInvalid'));
       } else {
