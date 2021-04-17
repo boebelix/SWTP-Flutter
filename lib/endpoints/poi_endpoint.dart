@@ -205,12 +205,8 @@ class PoiEndpoint {
     }
   }
 
-  Future<Poi> createPoi(int categoryId, String title,String description, Position position) async{
-    try{
-      Map<String,double> positionargs= {
-        "latitude": position.latitude,
-        "longitude":position.longitude,
-      };
+  Future<Poi> createPoi(int categoryId, String title, String description, Position position) async {
+    try {
       final response = await http.post(Uri.http(url, "/api/pois/"),
           headers: {
             "content-type": "application/json",
@@ -218,7 +214,7 @@ class PoiEndpoint {
             "Authorization": "Bearer ${userService.token}"
           },
           body: jsonEncode(<String, String>{
-            "position": "{$positionargs}",
+            "position": "{\"latitude\": ${position.latitude}, \"longutude\": ${position.longitude}",
             "title": "$title",
             "authorId": "${AuthService().user.userId}",
             "categoryId": "$categoryId"
@@ -228,7 +224,7 @@ class PoiEndpoint {
         return Poi.fromJSON(jsonDecode(response.body));
       }
 
-      if(response.statusCode== HttpStatus.notFound) {
+      if (response.statusCode == HttpStatus.notFound) {
         throw Failure(FailureTranslation.text('responseCategoryIDInvalid'));
       }
 
@@ -243,7 +239,6 @@ class PoiEndpoint {
       throw Failure(FailureTranslation.text('httpRestFailed'));
     } on FormatException {
       throw Failure(FailureTranslation.text('parseFailure'));
-    }
     }
   }
 }
