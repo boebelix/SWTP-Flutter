@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           children: [
             TabBar(
               tabs: [
-                Tab(createOwnGroupText(context)),
+                createOwnGroupTextTab(context),
                 Tab(text: Language.of(context).ownPOI)
               ],
               controller: _controller,
@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     );
   }
 
-  Tab createOwnGroupText(BuildContext context) {
+  Tab createOwnGroupTextTab(BuildContext context) {
     if (_groupService.ownGroup != null &&
         _groupService.ownGroup.groupName != null &&
         _groupService.ownGroup.groupName.isNotEmpty)
