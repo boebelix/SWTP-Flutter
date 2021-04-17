@@ -203,16 +203,6 @@ class PoiEndpoint {
 
   Future<Poi> createPoi(int categoryId, String title, String description, Position position) async {
     try {
-      Map<String, double> positionMapping = {"latitude": position.latitude, "longitude": position.longitude};
-
-      LogService().prettyLogger.d(jsonEncode(<String, dynamic>{
-            "position": {"latitude": position.latitude, "longitude": position.longitude},
-            "title": title,
-            "description": description,
-            "authorId": AuthService().user.userId,
-            "categoryId": categoryId,
-          }));
-
       final response = await http.post(Uri.http(url, "/api/pois"),
           headers: {
             "content-type": "application/json",
