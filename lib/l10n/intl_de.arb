@@ -48,5 +48,10 @@
   "founder": "Gründer",
   "ownPOI": "Eigene Poi",
   "defaultNameGroup": "Gruppe",
+  "addNewPoi": "Neuen Poi erstellen",
+  "newPoiTitle": "Titel",
+  "newPoiDescription": "Beschreibung",
+  "newPoiCategory": "Kategorie",
+  "defaultNameGroup": "Gruppe",
   "comment": "Kommentieren"
 }

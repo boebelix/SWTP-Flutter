@@ -24,8 +24,8 @@ void initState() {
 ```
 @override
 void initState() {
-  username.text = "Test";
-  password.text = "Test;
+  username.text = "test";
+  password.text = "test";
   super.initState();
 }
 ```
