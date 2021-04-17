@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/auth_response.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
@@ -17,24 +18,22 @@ class AuthEndpoint {
           "content-type": "application/json",
           "accept": "application/json",
         },
-        body: jsonEncode(
-          data.toJson(),
-        ),
+        body: jsonEncode(data.toJson()),
       );
 
       if (response.statusCode == HttpStatus.unauthorized) {
-        throw Failure('Authentification failed');
+        throw Failure(FailureTranslation.text('authFail'));
       }
 
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: 100));
 
       return AuthResponse.fromJSON(jsonDecode(response.body));
     } on SocketException {
-      throw Failure('No connection to server 😑');
+      throw Failure(FailureTranslation.text('noConnection'));
     } on HttpException {
-      throw Failure("Couldn't find the post 😱");
+      throw Failure(FailureTranslation.text('httpRestFailed'));
     } on FormatException {
-      throw Failure("Bad response format 👎");
+      throw Failure(FailureTranslation.text('parseFailure'));
     }
   }
 }

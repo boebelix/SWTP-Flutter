@@ -12,11 +12,7 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-GroupService _groupService = GroupService();
-
-class _ProfileScreenState extends State<ProfileScreen>
-    with SingleTickerProviderStateMixin {
-  AuthService _authService = AuthService();
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
   GroupService _groupService = GroupService();
 
   TabController _controller;
@@ -39,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             TabBar(
               tabs: [
-                createOwnGroupText(context),
+                Tab(createOwnGroupText(context)),
                 Tab(text: Language.of(context).ownPOI)
               ],
               controller: _controller,
