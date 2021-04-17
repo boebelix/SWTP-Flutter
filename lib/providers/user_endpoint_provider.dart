@@ -19,32 +19,30 @@ class UserEndpointProvider extends ChangeNotifier {
   UserEndpoint _userEndpoint = UserEndpoint();
 
   Either<Failure, List<User>> _allUsersResponse;
-  List<User> _allUsers = [];
-  List<User> _usersNotInOwnGroup = [];
-  List<User> _usersInOwnGroup = [];
-  List<User> _userInvitedIntoOwnGroup = [];
+  List<User> allUsers = [];
+  List<User> usersNotInOwnGroup = [];
+  List<User> usersInOwnGroup = [];
+  List<User> userInvitedIntoOwnGroup = [];
   Either<Failure, List<GroupMembership>> _membershipsResponse;
   List<GroupMembership> _memberships = [];
 
-  _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
-    if (memberships.isRight()) _memberships = memberships.getOrElse(() => null);
-
+  void _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
+    if (memberships.isRight()) {
+      _memberships = memberships.getOrElse(() => null);
+    }
     _membershipsResponse = memberships;
   }
 
   NotifierState get state => _state;
 
-  _setAllUsers(Either<Failure, List<User>> value) {
-    if (value.isRight()) _allUsers = value.getOrElse(() => null);
-
+  void _setAllUsers(Either<Failure, List<User>> value) {
+    if (value.isRight()) {
+      allUsers = value.getOrElse(() => null);
+    }
     _allUsersResponse = value;
   }
 
   Either<Failure, List<User>> get allUsersResponse => _allUsersResponse;
-
-  List<User> get allUsers => _allUsers;
-
-  List<User> get usersNotInOwnGroup => _usersNotInOwnGroup;
 
   void _setState(NotifierState state) {
     _state = state;
@@ -66,12 +64,13 @@ class UserEndpointProvider extends ChangeNotifier {
   }
 
   Future<void> _setUsersNotInOwnGroupList() async {
-    _usersNotInOwnGroup.clear();
-    if (_allUsers.isEmpty) await getAllUsers();
-
+    usersNotInOwnGroup.clear();
+    if (allUsers.isEmpty) {
+      await getAllUsers();
+    }
     for (GroupMembership membership in _memberships)
-      if (_allUsers.where((element) => element.userId != membership.member.userId).isNotEmpty)
-        _usersNotInOwnGroup.add(_allUsers.where((element) => element.userId != membership.member.userId).first);
+      if (allUsers.where((element) => element.userId != membership.member.userId).isNotEmpty)
+        usersNotInOwnGroup.add(allUsers.where((element) => element.userId != membership.member.userId).first);
   }
 
   Future<void> getMembersOfOwnGroup() async {
@@ -90,24 +89,20 @@ class UserEndpointProvider extends ChangeNotifier {
   }
 
   _setUsersInOwnGroupLists(Either<Failure, List<GroupMembership>> allMemberships) {
-    _userInvitedIntoOwnGroup.clear();
-    _usersInOwnGroup.clear();
+    userInvitedIntoOwnGroup.clear();
+    usersInOwnGroup.clear();
     if (allMemberships.isRight()) {
       final tmp = allMemberships.getOrElse(null);
 
-      if (tmp.where((element) => (element.invitationPending)).isNotEmpty)
-        _userInvitedIntoOwnGroup.add(tmp.where((element) => (element.invitationPending)).first.member);
+      if (tmp.where((element) => (element.invitationPending)).isNotEmpty) {
+        userInvitedIntoOwnGroup.add(tmp.where((element) => (element.invitationPending)).first.member);
+      }
 
-      if (tmp.where((element) => (!element.invitationPending)).isNotEmpty)
-        _usersInOwnGroup.add(tmp.where((element) => (!element.invitationPending)).first.member);
+      if (tmp.where((element) => (!element.invitationPending)).isNotEmpty) {
+        usersInOwnGroup.add(tmp.where((element) => (!element.invitationPending)).first.member);
+      }
     }
   }
-
-  List<User> get usersInOwnGroup => _usersInOwnGroup;
-
-  List<User> get userInvitedIntoOwnGroup => _userInvitedIntoOwnGroup;
-
-  List<GroupMembership> get memberships => _memberships;
 }
 
 extension TaskX<T extends Either<Object, U>, U> on Task<T> {
