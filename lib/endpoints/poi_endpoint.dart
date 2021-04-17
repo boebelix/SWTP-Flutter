@@ -16,7 +16,6 @@ import 'package:swtp_app/models/comment.dart';
 class PoiEndpoint {
   var url = Properties.url;
   AuthService userService = AuthService();
-  LogService logService = LogService();
 
   Future<List<Poi>> getPoiForUser(int userId) async {
     try {
