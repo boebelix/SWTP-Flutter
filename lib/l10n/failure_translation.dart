@@ -49,7 +49,7 @@ class FailureTranslation {
     'responseUnknownError_en': 'Unknown Error occurred',
     'responsePoiIdInvalid_de': 'Poi existiert nicht',
     'responsePoiIdInvalid_en': 'Poi does not exist',
-    'responseCategoryIDInvalid_de': 'Diese Kategory gibt es nicht',
+    'responseCategoryIDInvalid_de': 'Diese Kategorie gibt es nicht',
     'responseCategoryIDInvalid_en': 'this Category does not exist'
   };
 }
