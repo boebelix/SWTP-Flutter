@@ -32,8 +32,6 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<Poi> pois = [];
 
-        logService.prettyLogger.d(jsonDecode(response.body));
-
         for (dynamic content in jsonDecode(response.body)) {
           pois.add(Poi.fromJSON(content));
         }

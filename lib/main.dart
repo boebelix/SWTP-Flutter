@@ -5,7 +5,9 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
+import 'package:swtp_app/screens/profile_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
 
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget {
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           Register.routeName: (ctx) => Register(),
+          InviteUserScreen.routeName: (ctx) => InviteUserScreen(),
+          ProfileScreen.routeName: (ctx) => ProfileScreen(),
         },
       ),
     );

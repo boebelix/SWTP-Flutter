@@ -1,13 +1,13 @@
 class User {
-  int userId = 0;
-  String userName = "";
-  String firstName = "";
-  String lastName = "";
-  String email = "";
-  String city = "";
-  String street = "";
-  String streetNr = "";
-  String zip = "";
+  int userId;
+  String userName;
+  String firstName;
+  String lastName;
+  String email;
+  String city;
+  String street;
+  String streetNr;
+  String zip;
 
   User(
       {this.userId,
@@ -32,6 +32,11 @@ class User {
         zip: json['zip'],
       );
 
+  @override
+  String toString() {
+    return 'User{userId: $userId, userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, city: $city, street: $street, streetNr: $streetNr, zip: $zip}';
+  }
+
   Map<String, dynamic> toJSON() => {
         "userId": userId,
         "userName": userName,
@@ -45,7 +50,6 @@ class User {
       };
 
   @override
-  String toString() {
-    return 'User{userId: $userId, userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, city: $city, street: $street, streetNr: $streetNr, zip: $zip}';
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) || other is User && runtimeType == other.runtimeType && userId == other.userId;
 }

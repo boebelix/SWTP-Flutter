@@ -54,5 +54,6 @@
   "ownGroup": "Own group",
   "members": "Members",
   "invited": "Invited Users",
+  "inviteUsers": "Invite users",
   "createGroup": "Create group"
 }

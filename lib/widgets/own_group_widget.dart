@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/group_membership.dart';
+import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/services/group_service.dart';
+import 'package:swtp_app/widgets/user_endpoint_visualisation.dart';
 
 class OwnGroupWidget extends StatefulWidget {
   @override
@@ -65,45 +69,50 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Widget buildOwnGroupWidget() {
-    return FutureBuilder<void>(
-      future: _groupService.loadOwnGroup(),
-      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        List<Widget> children;
-        if (snapshot.connectionState == ConnectionState.done) {
-          children = <Widget>[
-            _buildMemberText(context),
-            _buildListViewAcceptedMembersOfOwnGroup(),
-            _buildInvitedText(context),
-            _buildListViewOfInvitedMembersOfOwnGroup(),
-            _createInviteUserButton()
-          ];
-        } else if (snapshot.hasError) {
-          children = <Widget>[
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 60,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Text('Error: ${snapshot.error}'),
-            )
-          ];
-        } else {
-          children = const <Widget>[
-            SizedBox(
-              child: CircularProgressIndicator(),
-              width: 60,
-              height: 60,
-            ),
-          ];
-        }
-        return Center(
-          child: Column(
-            children: children,
-          ),
-        );
-      },
+    return Stack(
+      children: [
+        FutureBuilder<void>(
+          future: _groupService.loadOwnGroup(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            List<Widget> children;
+            if (snapshot.connectionState == ConnectionState.done) {
+              children = <Widget>[
+                _buildMemberText(context),
+                _buildListViewAcceptedMembersOfOwnGroup(),
+                _buildInvitedText(context),
+                _buildListViewOfInvitedMembersOfOwnGroup(),
+                _createInviteUserButton()
+              ];
+            } else if (snapshot.hasError) {
+              children = <Widget>[
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                )
+              ];
+            } else {
+              children = const <Widget>[
+                SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+              ];
+            }
+            return Center(
+              child: Column(
+                children: children,
+              ),
+            );
+          },
+        ),
+        UserScreenVisualisation(destinationRouteBySuccess: InviteUserScreen.routeName,),
+      ],
     );
   }
 
@@ -111,7 +120,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        IconButton(icon: Icon(Icons.person_add), onPressed: _showInvitationScreen),
+        IconButton(icon: Icon(Icons.person_add), onPressed: _showInvitationScreenAsync(context)),
       ],
     );
   }
@@ -203,7 +212,15 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     await _groupService.kickUserFromOwnGroup(userId);
   }
 
-  void _showInvitationScreen() {}
+  _showInvitationScreenAsync(context)
+  {
+    _showInvitationScreen(context);
+  }
+
+  Future<void> _showInvitationScreen(BuildContext context)  async {
+     await Provider.of<UserEndpointProvider>(context,listen: false).getAllUsers();
+     await Provider.of<UserEndpointProvider>(context,listen: false).getAllUsers();
+  }
 
   String _validatorGroupnameIsNotEmpty(value) {
     if (value == null || value.isEmpty) {

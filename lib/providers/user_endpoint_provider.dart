@@ -6,6 +6,7 @@ import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/services/auth_service.dart';
+import 'package:swtp_app/services/group_service.dart';
 
 class UserEndpointProvider extends ChangeNotifier {
   static final UserEndpointProvider _instance = UserEndpointProvider._internal();
@@ -25,6 +26,7 @@ class UserEndpointProvider extends ChangeNotifier {
   List<User> userInvitedIntoOwnGroup = [];
   Either<Failure, List<GroupMembership>> _membershipsResponse;
   List<GroupMembership> _memberships = [];
+  List<User> _usersToInvite=[];
 
   void _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
     if (memberships.isRight()) {
@@ -72,14 +74,26 @@ class UserEndpointProvider extends ChangeNotifier {
     usersNotInOwnGroup.clear();
     if (allUsers.isEmpty) {
       await getAllUsers();
-    }
-    for (GroupMembership membership in _memberships) {
-      var userNotInGroup = allUsers.where((element) => element.userId != membership.member.userId);
 
+    }
+
+    await GroupService().loadOwnGroup();
+
+    usersNotInOwnGroup=[... allUsers];
+
+    for(GroupMembership membership in GroupService().ownGroup.memberships) {
+      usersNotInOwnGroup.removeWhere((element)=>membership.member.userId==element.userId);
+    }
+    print(usersNotInOwnGroup.length);
+    /*for (GroupMembership membership in _memberships) {
+      var userNotInGroup = allUsers.where((element) => element.userId != membership.member.userId);
+      print("jetzt member: ${membership.member.firstName} id ${membership.member.userId}");
+      print("All users ${allUsers.length}");
       if (userNotInGroup.isNotEmpty) {
+        print("");
         usersNotInOwnGroup.add(userNotInGroup.first);
       }
-    }
+    }*/
   }
 
   Future<void> getMembersOfOwnGroup() async {
@@ -115,7 +129,27 @@ class UserEndpointProvider extends ChangeNotifier {
       }
     }
   }
+  void chooseUser(int index, bool chosen)
+  {
+    if(usersNotInOwnGroup.length>index&&index>0) {
+      if (!chosen&&_usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
+        _usersToInvite.remove(usersNotInOwnGroup.elementAt(index));
+      }else if(chosen && !_usersToInvite.contains(usersNotInOwnGroup.elementAt(index)))
+      {
+        _usersToInvite.add(usersNotInOwnGroup.elementAt(index));
+      }
+    }
+  }
+
+  bool isUserChoosen(int index)
+  {
+      if(_usersToInvite.isEmpty){
+        return false;
+      }
+      return _usersToInvite.contains(usersNotInOwnGroup.elementAt(index));
+  }
 }
+
 
 extension TaskX<T extends Either<Object, U>, U> on Task<T> {
   Task<Either<Failure, U>> mapLeftToFailure() {
