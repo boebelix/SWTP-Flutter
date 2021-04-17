@@ -7,6 +7,8 @@ import 'package:swtp_app/providers/categories_service_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/build_radiobutton.dart';
 import 'package:latlong/latlong.dart';
+import 'package:swtp_app/widgets/loading_indicator.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class AddPoiForm extends StatefulWidget {
   static const routeName = '/addPoiForm';
@@ -39,59 +41,90 @@ class _AddPoiFormState extends State<AddPoiForm> {
       appBar: AppBar(
         title: Text(Language.of(context).addNewPoi),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Card(
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: 8,
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    padding: const EdgeInsets.all(8.0),
-                    children: [
-                      _inputTitle(context),
-                      _inputDescription(context),
-                      _inputCategories(context),
-                    ],
-                  ),
-                ),
-              ),
-              Spacer(),
-              Expanded(
-                child: TextButton(
-                  onPressed: () {
-                    final String _title = _titleController.text;
-                    final String _description = _titleController.text;
-                    final int _categoryId = Provider.of<CategoriesServiceProvider>(context, listen: false)
-                        .currentSeletedCategory
-                        .categoryId;
-                    final Position _position =
-                        Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
-
-                    _createPoi(context, _title, _description, _categoryId, _position);
-                  },
-                  child: Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width * 0.98,
-                    child: Card(
-                      color: Theme.of(context).buttonColor,
-                      elevation: 10,
-                      child: Center(child: Text("Button")),
+      body: Stack(children: [
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Card(
+            elevation: 20,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 8,
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      padding: const EdgeInsets.all(8.0),
+                      children: [
+                        _inputTitle(context),
+                        _inputDescription(context),
+                        _inputCategories(context),
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+                Spacer(),
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      final String _title = _titleController.text;
+                      final String _description = _titleController.text;
+                      final int _categoryId = Provider.of<CategoriesServiceProvider>(context, listen: false)
+                          .currentSeletedCategory
+                          .categoryId;
+                      final Position _position =
+                          Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
+
+                      _createPoi(context, _title, _description, _categoryId, _position);
+                    },
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.98,
+                      child: Card(
+                        color: Theme.of(context).buttonColor,
+                        elevation: 10,
+                        child: Center(child: Text("Button")),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        Consumer<CategoriesServiceProvider>(
+          builder: (_, notifier, __) {
+            switch (notifier.state) {
+              case NotifierState.initial:
+                return Container();
+                break;
+              case NotifierState.loading:
+                return LoadingIndicator();
+                break;
+              default:
+                return notifier.categoriesResponse.fold(
+                  (failure) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      notifier.resetState();
+                    });
+                    return PopUpWarningDialog(
+                      context: context,
+                      failure: failure,
+                    );
+                  },
+                  (r) {
+                    return Container();
+                  },
+                );
+            }
+
+            {}
+          },
+        ),
+      ]),
     );
   }
 

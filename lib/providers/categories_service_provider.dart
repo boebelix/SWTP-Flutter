@@ -53,6 +53,7 @@ class CategoriesServiceProvider extends ChangeNotifier {
 
   Future<void> getAllCategories() async {
     setState(NotifierState.loading);
+    categories.clear();
 
     await Task(() => _poiEndpoint.getAllCategories())
         .attempt()
