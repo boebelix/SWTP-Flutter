@@ -89,7 +89,6 @@ class UserEndpoint {
         for (dynamic elem in jsonDecode(response.body)) {
           memberships.add(GroupMembership.fromJSON(elem));
         }
-        print(memberships.length);
         return memberships;
       }
 
