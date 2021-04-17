@@ -56,7 +56,12 @@ class UserEndpointProvider extends ChangeNotifier {
 
   Future<void> getAllUsers() async {
     _setState(NotifierState.loading);
-    await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
+    await Task(() => _userEndpoint
+        .getUser())
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) {
       _setAllUsers(value);
     });
 
