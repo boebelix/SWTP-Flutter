@@ -8,12 +8,9 @@ import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/log_service.dart';
 
 class UserEndpoint {
   var url = Properties.url;
-  AuthService userService = AuthService();
-  LogService logService = LogService();
 
   Future<Map<String, dynamic>> getUserById(int userId) async {
     try {
@@ -22,7 +19,7 @@ class UserEndpoint {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
-          "Authorization": "Bearer ${userService.token}"
+          "Authorization": "Bearer ${AuthService().token}"
         },
       );
 
@@ -47,14 +44,12 @@ class UserEndpoint {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
-          "Authorization": "Bearer ${userService.token}"
+          "Authorization": "Bearer ${AuthService().token}"
         },
       );
 
       if (response.statusCode == HttpStatus.ok) {
         List<User> allUsers = [];
-
-        logService.prettyLogger.d(jsonDecode(response.body));
 
         for (dynamic elem in jsonDecode(response.body)) {
           allUsers.add(User.fromJSON(elem));
@@ -84,7 +79,7 @@ class UserEndpoint {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
-          "Authorization": "Bearer ${userService.token}"
+          "Authorization": "Bearer ${AuthService().token}"
         },
       );
 
@@ -119,7 +114,7 @@ class UserEndpoint {
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
-          "Authorization": "Bearer ${userService.token}"
+          "Authorization": "Bearer ${AuthService().token}"
         },
       );
 
