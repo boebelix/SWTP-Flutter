@@ -46,7 +46,7 @@ class UserEndpointProvider extends ChangeNotifier {
 
   List<User> get usersNotInOwnGroup => _usersNotInOwnGroup;
 
-  void setState(NotifierState state) {
+  void _setState(NotifierState state) {
     _state = state;
     notifyListeners();
   }
@@ -57,12 +57,12 @@ class UserEndpointProvider extends ChangeNotifier {
   }
 
   Future<void> getAllUsers() async {
-    setState(NotifierState.loading);
+    _setState(NotifierState.loading);
     await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
       _setAllUsers(value);
     });
 
-    setState(NotifierState.loaded);
+    _setState(NotifierState.loaded);
   }
 
   Future<void> _setUsersNotInOwnGroupList() async {
@@ -75,7 +75,7 @@ class UserEndpointProvider extends ChangeNotifier {
   }
 
   Future<void> getMembersOfOwnGroup() async {
-    setState(NotifierState.loading);
+    _setState(NotifierState.loading);
     await Task(() => _userEndpoint.getMemberships(AuthService().user.userId))
         .attempt()
         .mapLeftToFailure()
@@ -86,7 +86,7 @@ class UserEndpointProvider extends ChangeNotifier {
       await _setUsersNotInOwnGroupList();
     });
 
-    setState(NotifierState.loaded);
+    _setState(NotifierState.loaded);
   }
 
   _setUsersInOwnGroupLists(Either<Failure, List<GroupMembership>> allMemberships) {
