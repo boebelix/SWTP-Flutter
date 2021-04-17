@@ -8,6 +8,9 @@ import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
+import 'package:swtp_app/widgets/poi_detail_widget.dart';
+import 'package:swtp_app/widgets/add_poi_form.dart';
+import 'package:swtp_app/providers/categories_service_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +30,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => UserEndpointProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => CategoriesServiceProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'SWTP',
@@ -41,12 +47,15 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           accentColor: Colors.amber,
           canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
+          buttonColor: Color.fromRGBO(255, 186, 53, 1.0),
         ),
         routes: {
           '/': (ctx) => LoginScreen(),
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           Register.routeName: (ctx) => Register(),
+          PoiDetailWidget.routeName: (ctx) => PoiDetailWidget(),
+          AddPoiForm.routeName: (ctx) => AddPoiForm(),
         },
       ),
     );

@@ -4,6 +4,7 @@ import 'package:swtp_app/endpoints/poi_endpoint.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/models/comment.dart';
 
@@ -16,13 +17,15 @@ class PoiServiceProvider extends ChangeNotifier {
 
   NotifierState _state = NotifierState.initial;
 
-  PoiEndpoint _poiEndpoint = PoiEndpoint();
-
   List<Poi> pois = [];
 
   LogService logService = LogService();
 
   Either<Failure, List<Poi>> poiResponse;
+  Either<Failure, Image> poiImageResponse;
+  Either<Failure, List<Comment>> poiCommentResponse;
+  Either<Failure, Comment> poiCreateCommentResponse;
+  Either<Failure, Poi> poiCreatePoiResponse;
 
   NotifierState get state => _state;
 
@@ -52,6 +55,8 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.image = poiImageResponse.getOrElse(null);
     }
+
+    this.poiImageResponse=poiImageResponse;
   }
 
   _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
@@ -60,6 +65,8 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.comments.addAll(poiCommentResponse.getOrElse(null));
     }
+
+    this.poiCommentResponse=poiCommentResponse;
   }
 
   _addPoiComment(Either<Failure, Comment> poiCreateCommentResponse, int poiId) {
@@ -68,13 +75,23 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.comments.add(poiCreateCommentResponse.getOrElse(null));
     }
+
+    this.poiCreateCommentResponse=poiCreateCommentResponse;
+  }
+
+  _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
+    if (poiCreatePoiResponse.isRight()) {
+      pois.add(poiCreatePoiResponse.getOrElse(null));
+    }
+
+    this.poiCreatePoiResponse=poiCreatePoiResponse;
   }
 
   Future<void> getAllVisiblePois(List<int> userIds) async {
     setState(NotifierState.loading);
 
     for (int i in userIds) {
-      await Task(() => _poiEndpoint.getPoiForUser(i))
+      await Task(() => PoiEndpoint().getPoiForUser(i))
           .attempt()
           .mapLeftToFailure()
           .run()
@@ -82,7 +99,7 @@ class PoiServiceProvider extends ChangeNotifier {
     }
 
     for (Poi i in pois) {
-      await Task(() => _poiEndpoint.getPoiImage(i.poiId))
+      await Task(() => PoiEndpoint().getPoiImage(i.poiId))
           .attempt()
           .mapLeftToFailure()
           .run()
@@ -99,7 +116,7 @@ class PoiServiceProvider extends ChangeNotifier {
       poi.comments.clear();
     }
 
-    await Task(() => _poiEndpoint.getCommentsForPoi(poiId))
+    await Task(() => PoiEndpoint().getCommentsForPoi(poiId))
         .attempt()
         .mapLeftToFailure()
         .run()
@@ -113,11 +130,23 @@ class PoiServiceProvider extends ChangeNotifier {
   Future<void> createCommentForPoi(int poiId, String comment) async {
     setState(NotifierState.loading);
 
-    await Task(() => _poiEndpoint.createCommentForPoi(poiId, comment))
+    await Task(() => PoiEndpoint().createCommentForPoi(poiId, comment))
         .attempt()
         .mapLeftToFailure()
         .run()
         .then((value) => _addPoiComment(value, poiId));
+
+    setState(NotifierState.loaded);
+  }
+
+  Future<void> createPoi({String title, String description, int categoryId, Position position}) async {
+    setState(NotifierState.loading);
+
+    await Task(() => PoiEndpoint().createPoi(categoryId, title, description, position))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _setNewPoi(value));
 
     setState(NotifierState.loaded);
   }
