@@ -24,6 +24,10 @@ class PoiServiceProvider extends ChangeNotifier {
   LogService logService = LogService();
 
   Either<Failure, List<Poi>> poiResponse;
+  Either<Failure, Image> poiImageResponse;
+  Either<Failure, List<Comment>> poiCommentResponse;
+  Either<Failure, Comment> poiCreateCommentResponse;
+  Either<Failure, Poi> poiCreatePoiResponse;
 
   NotifierState get state => _state;
 
@@ -53,6 +57,8 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.image = poiImageResponse.getOrElse(null);
     }
+
+    this.poiImageResponse=poiImageResponse;
   }
 
   _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
@@ -61,6 +67,8 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.comments.addAll(poiCommentResponse.getOrElse(null));
     }
+
+    this.poiCommentResponse=poiCommentResponse;
   }
 
   _addPoiComment(Either<Failure, Comment> poiCreateCommentResponse, int poiId) {
@@ -69,12 +77,16 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.comments.add(poiCreateCommentResponse.getOrElse(null));
     }
+
+    this.poiCreateCommentResponse=poiCreateCommentResponse;
   }
 
   _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
     if (poiCreatePoiResponse.isRight()) {
       pois.add(poiCreatePoiResponse.getOrElse(null));
     }
+
+    this.poiCreatePoiResponse=poiCreatePoiResponse;
   }
 
   Future<void> getAllVisiblePois(List<int> userIds) async {
@@ -138,6 +150,7 @@ class PoiServiceProvider extends ChangeNotifier {
         .run()
         .then((value) => _setNewPoi(value));
 
+    setState(NotifierState.loaded);
   }
 }
 
