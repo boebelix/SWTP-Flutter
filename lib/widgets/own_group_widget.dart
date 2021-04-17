@@ -237,9 +237,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             IconButton(
                 icon: Icon(Icons.person_remove_outlined),
                 onPressed: () {
-                  setState(() {
                     _removeUserFromGroup(membership.member.userId);
-                  });
                 })
           ],
         ));
@@ -266,6 +264,8 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     if (_formKey.currentState.validate()) {
       await GroupService().createGroup(_groupNameTextController.text);
     }
-    _groupNameTextController.clear();
+    setState(() {
+      _groupNameTextController.clear();
+    });
   }
 }
