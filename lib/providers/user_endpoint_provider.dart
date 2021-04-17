@@ -23,10 +23,13 @@ class UserEndpointProvider extends ChangeNotifier {
   List<User> _usersNotInOwnGroup = [];
   List<User> _usersInOwnGroup = [];
   List<User> _userInvitedIntoOwnGroup = [];
-  Either<Failure, List<GroupMembership>> _memberships;
+  Either<Failure, List<GroupMembership>> _membershipsResponse;
+  List<GroupMembership> _memberships = [];
 
   _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
-    _memberships = memberships;
+    if (memberships.isRight()) _memberships = memberships.getOrElse(() => null);
+
+    _membershipsResponse = memberships;
   }
 
   NotifierState get state => _state;
@@ -66,7 +69,7 @@ class UserEndpointProvider extends ChangeNotifier {
     _usersNotInOwnGroup.clear();
     if (_allUsers.isEmpty) await getAllUsers();
 
-    for (GroupMembership membership in _memberships.getOrElse(() => null))
+    for (GroupMembership membership in _memberships)
       if (_allUsers.where((element) => element.userId != membership.member.userId).isNotEmpty)
         _usersNotInOwnGroup.add(_allUsers.where((element) => element.userId != membership.member.userId).first);
   }
@@ -104,7 +107,7 @@ class UserEndpointProvider extends ChangeNotifier {
 
   List<User> get userInvitedIntoOwnGroup => _userInvitedIntoOwnGroup;
 
-  Either<Failure, List<GroupMembership>> get memberships => _memberships;
+  List<GroupMembership> get memberships => _memberships;
 }
 
 extension TaskX<T extends Either<Object, U>, U> on Task<T> {
