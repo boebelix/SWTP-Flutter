@@ -21,7 +21,9 @@ class _CreateCommentState extends State<CreateComment> {
   final TextEditingController commentController = TextEditingController();
 
   void _createPoiComment() async {
-    await Provider.of<PoiServiceProvider>(context, listen: false).createCommentForPoi(poiId, commentController.text);
+    if (_formKey.currentState.validate()) {
+      await Provider.of<PoiServiceProvider>(context, listen: false).createCommentForPoi(poiId, commentController.text);
+    }
   }
 
   String _validatorComment(value) {
