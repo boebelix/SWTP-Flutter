@@ -4,6 +4,7 @@ import 'package:swtp_app/endpoints/poi_endpoint.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/models/comment.dart';
 
@@ -70,6 +71,12 @@ class PoiServiceProvider extends ChangeNotifier {
     }
   }
 
+  _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
+    if (poiCreatePoiResponse.isRight()) {
+      pois.add(poiCreatePoiResponse.getOrElse(null));
+    }
+  }
+
   Future<void> getAllVisiblePois(List<int> userIds) async {
     setState(NotifierState.loading);
 
@@ -120,6 +127,17 @@ class PoiServiceProvider extends ChangeNotifier {
         .then((value) => _addPoiComment(value, poiId));
 
     setState(NotifierState.loaded);
+  }
+
+  Future<void> createPoi(String title, String description, int categoryId, Position position) async {
+    setState(NotifierState.loading);
+
+    await Task(() => _poiEndpoint.createPoi(categoryId, title, description, position))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _setNewPoi(value));
+
   }
 }
 

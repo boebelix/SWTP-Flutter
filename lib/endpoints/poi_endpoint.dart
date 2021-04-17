@@ -7,6 +7,7 @@ import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
+import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/log_service.dart';
@@ -201,6 +202,48 @@ class PoiEndpoint {
       throw Failure(FailureTranslation.text('httpRestFailed'));
     } on FormatException {
       throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
+  Future<Poi> createPoi(int categoryId, String title,String description, Position position) async{
+    try{
+      Map<String,double> positionargs= {
+        "latitude": position.latitude,
+        "longitude":position.longitude,
+      };
+      final response = await http.post(Uri.http(url, "/api/pois/"),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer ${userService.token}"
+          },
+          body: jsonEncode(<String, String>{
+            "position": "{$positionargs}",
+            "title": "$title",
+            "authorId": "${AuthService().user.userId}",
+            "categoryId": "$categoryId"
+          }));
+
+      if (response.statusCode == HttpStatus.ok) {
+        return Poi.fromJSON(jsonDecode(response.body));
+      }
+
+      if(response.statusCode== HttpStatus.notFound) {
+        throw Failure(FailureTranslation.text('responseCategoryIDInvalid'));
+      }
+
+      if (response.statusCode == HttpStatus.forbidden) {
+        throw Failure(FailureTranslation.text('responseUserInvalid'));
+      } else {
+        throw Failure(FailureTranslation.text('responseUnknownError'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
     }
   }
 }
