@@ -10,7 +10,6 @@ import 'package:swtp_app/services/log_service.dart';
 
 class RegisterEndpoint {
   var url = Properties.url;
-  LogService logger = LogService();
 
   Future<Map<String, dynamic>> register(RegisterCredentials credentials) async {
     try {

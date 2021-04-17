@@ -19,8 +19,6 @@ class PoiServiceProvider extends ChangeNotifier {
 
   List<Poi> pois = [];
 
-  LogService logService = LogService();
-
   Either<Failure, List<Poi>> poiResponse;
   Either<Failure, Image> poiImageResponse;
   Either<Failure, List<Comment>> poiCommentResponse;
