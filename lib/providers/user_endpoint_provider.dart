@@ -112,6 +112,7 @@ class UserEndpointProvider extends ChangeNotifier {
   }
 
   _setUsersInOwnGroupLists(Either<Failure, List<GroupMembership>> allMemberships) {
+    _setState(NotifierState.loading);
     userInvitedIntoOwnGroup.clear();
     usersInOwnGroup.clear();
     if (allMemberships.isRight()) {
@@ -128,7 +129,9 @@ class UserEndpointProvider extends ChangeNotifier {
         usersInOwnGroup.add(userAlreadyInGroup.elementAt(i).member);
       }
     }
+    _setState(NotifierState.loaded);
   }
+
   void chooseUser(int index, bool chosen)
   {
     if(usersNotInOwnGroup.length>index&&index>0) {
