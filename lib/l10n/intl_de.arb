@@ -35,6 +35,7 @@
   "warning_email_NN": "Bitte geben Sie Ihre E-Mailadresse ein",
   "warning_email_not_hskl": "Die Hochschule E-Mail muss die Form abcd1234@stud.hs-kl.de haben",
   "warning_password": "Sie müssen ein Passwort wählen",
+  "warning_comment_NN": "Sie müssen einen Kommentar eintragen",
   "password_level_not_save": "Passwort nicht sicher",
   "password_repeat": "Passwort wiederholen",
   "password_empty": "Wiederholen Sie das Passwort",
@@ -46,5 +47,6 @@
   "invitations": "Einladungen",
   "founder": "Gründer",
   "ownPOI": "Eigene Poi",
-  "defaultNameGroup": "Gruppe"
+  "defaultNameGroup": "Gruppe",
+  "comment": "Kommentieren"
 }
