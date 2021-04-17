@@ -31,7 +31,7 @@ class _MapScreenState extends State<MapScreen> {
         return PoiOverview(poi: _poi);
         break;
       case clickDetection.newPoiClicked:
-        return AddPoiButton();
+        return AddPoiButton(_setPoiAtThisPosition);
         break;
       default:
         return Container();
