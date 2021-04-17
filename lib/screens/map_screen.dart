@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:provider/provider.dart';
+import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/poi.dart';
-import 'package:swtp_app/services/poi_service.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
+import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/poi_overview.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -11,52 +15,77 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  PoiService _poiService = PoiService();
   bool poiSelected = false;
 
-  String _title;
-  String _description;
-  String _category;
-  Image _image;
+  Poi _poi;
+
   LatLng _setPoiAtThisPosition;
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    Marker _setPoiHere =
-        _createPoiAtPositionLatLng(context, _setPoiAtThisPosition);
+    Marker _setPoiHere = _createPoiAtPositionLatLng(context, _setPoiAtThisPosition);
 
-    return Stack(
-      children: [
-        FlutterMap(
-          options: MapOptions(
-            center: LatLng(49.260152, 7.360296),
-            zoom: 10.0,
-            maxZoom: 18,
-            minZoom: 5,
-            onTap: _setTabbedPostion,
-          ),
-          layers: [
-            TileLayerOptions(
-              urlTemplate: "https://tile.openstreetmap.de/{z}/{x}/{y}.png",
-              additionalOptions: {
-                'id': 'mapbox.streets',
+    return Consumer<PoiServiceProvider>(
+      builder: (_, notifier, __) {
+        switch (notifier.state) {
+          case NotifierState.initial:
+            return Container();
+            break;
+          case NotifierState.loading:
+            return LoadingIndicator();
+            break;
+          default:
+            return notifier.poiResponse.fold(
+              (failure) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) {
+                    notifier.resetState();
+                  },
+                );
+
+                return PopUpWarningDialog(
+                  context: context,
+                  failure: failure,
+                );
               },
-            ),
-            MarkerLayerOptions(
-              markers: [
-                ...(_poiService.pois).map((poi) {
-                  return _poiAtPositionLatLng(context, poi);
-                }).toList(),
-                _setPoiHere
-              ],
-            ),
-          ],
-        ),
-        poiSelected == true
-            ? PoiOverview(title: _title, description: _description, image: _image)
-            : Container(),
-      ],
+              (_) {
+                return Stack(children: [
+                  FlutterMap(
+                    options: MapOptions(
+                      center: LatLng(49.260152, 7.360296),
+                      zoom: 10.0,
+                      maxZoom: 18,
+                      minZoom: 5,
+                      onTap: _setTabbedPostion,
+                    ),
+                    layers: [
+                      TileLayerOptions(
+                        urlTemplate: "https://tile.openstreetmap.de/{z}/{x}/{y}.png",
+                        additionalOptions: {
+                          'id': 'mapbox.streets',
+                        },
+                      ),
+                      MarkerLayerOptions(
+                        markers: [
+                          ...(Provider.of<PoiServiceProvider>(context, listen: false).pois).map((poi) {
+                            return _poiAtPositionLatLng(context, poi);
+                          }).toList(),
+                          _setPoiHere
+                        ],
+                      ),
+                    ],
+                  ),
+                  poiSelected == true
+                      ? PoiOverview(
+                          poi: _poi,
+                        )
+                      : Container(),
+                ]);
+              },
+            );
+        }
+      },
     );
   }
 
@@ -73,8 +102,7 @@ class _MapScreenState extends State<MapScreen> {
             size: 50,
           ),
           onTap: () {
-            _onPoiClicked(
-                title: poi.title, description: poi.description, category: poi.category.name, image: poi.image);
+            _onPoiClicked(poi: poi);
           },
         ),
       ),
@@ -105,14 +133,10 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void _onPoiClicked(
-  {String title, String description, String category, Image image}) {
+  void _onPoiClicked({@required Poi poi}) {
     setState(() {
-      this._title = title;
-      this._description = description;
-      this._category = category;
-      this._image = image;
-      poiSelected = true;
+      this._poi = poi;
+      this.poiSelected = true;
     });
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:swtp_app/models/poi.dart';
+import 'package:swtp_app/widgets/poi_detail_widget.dart';
 
 class PoiOverview extends StatelessWidget {
-  final String title;
-  final String description;
-  final Image image;
+  final Poi poi;
 
-  PoiOverview({@required this.title, @required this.description, this.image});
+  PoiOverview({@required this.poi});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,9 @@ class PoiOverview extends StatelessWidget {
                 flex: 1,
                 child: Container(
                   color: Colors.amber,
-                  child: image != null
+                  child: poi.image != null
                       ? Image(
-                          image: image.image,
+                          image: poi.image.image,
                         )
                       : Container(),
                 ),
@@ -39,7 +39,7 @@ class PoiOverview extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        poi.title,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -51,7 +51,7 @@ class PoiOverview extends StatelessWidget {
                       SizedBox(
                         height: 32,
                         child: Text(
-                          description,
+                          poi.description,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
@@ -63,7 +63,9 @@ class PoiOverview extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         height: 22,
                         child: ElevatedButton(
-                          onPressed: null,
+                          onPressed: () {
+                            Navigator.pushNamed(context, PoiDetailWidget.routeName, arguments: poi);
+                          },
                           child: Text('Details'),
                         ),
                       ),

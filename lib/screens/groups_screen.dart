@@ -13,7 +13,6 @@ class GroupsScreen extends StatefulWidget {
 GroupService _groupService = GroupService();
 
 class _GroupsScreenState extends State<GroupsScreen> {
-
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
@@ -36,7 +35,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 Icons.error_outline,
                 color: Colors.red,
                 size: 60,
-
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
@@ -99,8 +97,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _groupService.acceptedGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(
-            _groupService.acceptedGroups.elementAt(index), false));
+        itemBuilder: (context, index) => _createGroupCard(_groupService.acceptedGroups.elementAt(index), false));
   }
 
   Card _createGroupCard(Group group, bool isInvited) {
@@ -127,8 +124,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-                  child: Text(
-                      "${Language.of(context).founder}: ${group.admin.firstName} ${group.admin.firstName}",
+                  child: Text("${Language.of(context).founder}: ${group.admin.firstName} ${group.admin.firstName}",
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.normal,

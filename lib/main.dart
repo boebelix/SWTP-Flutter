@@ -3,11 +3,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/providers/poi_endpoint_provider.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
+import 'package:swtp_app/widgets/poi_detail_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +26,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => PoiEndpointProvider(),
         ),
-        ChangeNotifierProvider(create: (_) => UserEndpointProvider()),
       ],
       child: MaterialApp(
         title: 'SWTP',

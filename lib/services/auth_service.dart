@@ -7,6 +7,9 @@ import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/services/poi_service.dart';
+import 'package:swtp_app/providers/poi_service_provider.dart';
+
+import 'information_pre_loader_service.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
@@ -22,7 +25,6 @@ class AuthService {
     user = null;
     token = null;
     Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
-    Provider.of<UserEndpointProvider>(context, listen: false).resetState();
   }
 
   bool isSignedIn() {
@@ -51,5 +53,10 @@ class AuthService {
     }
 
     await poiService.loadPoisAfterSuccesfullAuthentication(context);
+    if(await AuthService().isSignedIn()){
+      var allUserIdsOfMembershipsOwner = await InformationPreLoaderService().userIds;
+      var poiEndpointProvider = await Provider.of<PoiServiceProvider>(context, listen: false);
+      await poiEndpointProvider.getAllVisiblePois(allUserIdsOfMembershipsOwner);
+    }
   }
 }

@@ -4,7 +4,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/group_service.dart';
-import 'package:swtp_app/services/poi_service.dart';
 
 class InformationPreLoaderService {
   static final InformationPreLoaderService _instance = InformationPreLoaderService._internal();
@@ -14,7 +13,6 @@ class InformationPreLoaderService {
   InformationPreLoaderService._internal();
 
   GroupService groupService = GroupService();
-  PoiService poiService = PoiService();
   BuildContext context;
 
   /// Alle NutzerIds der Admins von allen angehörigen Gruppen
