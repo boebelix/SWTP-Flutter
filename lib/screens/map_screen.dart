@@ -11,18 +11,32 @@ import 'package:swtp_app/widgets/warning_dialog.dart';
 import 'package:swtp_app/widgets/add_poi_button.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
 
+enum clickDetection { nothingClicked, poiClicked, newPoiClicked }
+
 class MapScreen extends StatefulWidget {
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  bool _poiSelected = false;
-  bool _isOwnPoiSet = false;
+  clickDetection _detection = clickDetection.nothingClicked;
 
   Poi _poi;
 
   LatLng _setPoiAtThisPosition;
+
+  Widget detectionHandler() {
+    switch (_detection) {
+      case clickDetection.poiClicked:
+        return PoiOverview(poi: _poi);
+        break;
+      case clickDetection.newPoiClicked:
+        return AddPoiButton();
+        break;
+      default:
+        return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +71,7 @@ class _MapScreenState extends State<MapScreen> {
                   children: [
                     _showMap(context, _setPoiHere),
 
-                    _poiSelected == true ? PoiOverview(poi: _poi) : Container(),
-
-                    _isOwnPoiSet == true ? AddPoiButton() : Container(),
+                    detectionHandler(),
 
                     // Beim klicken auf neuen Poi erstellen werden die Kategorien geladen
                     _showLoadingIndicatorWhileGetCategories(),
@@ -93,7 +105,7 @@ class _MapScreenState extends State<MapScreen> {
             ...(Provider.of<PoiServiceProvider>(context, listen: false).pois).map((poi) {
               return _poiAtPositionLatLng(context, poi);
             }).toList(),
-            _setPoiHere
+            _detection == clickDetection.poiClicked ? Marker() : _setPoiHere
           ],
         ),
       ],
@@ -152,14 +164,14 @@ class _MapScreenState extends State<MapScreen> {
   void _setTabbedPostion(LatLng latLng) {
     setState(() {
       _setPoiAtThisPosition = latLng;
-      _isOwnPoiSet = true;
+      _detection = clickDetection.newPoiClicked;
     });
   }
 
   void _onPoiClicked({@required Poi poi}) {
     setState(() {
       this._poi = poi;
-      this._poiSelected = true;
+      _detection = clickDetection.poiClicked;
     });
   }
 }
