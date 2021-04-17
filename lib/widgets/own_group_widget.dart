@@ -19,10 +19,45 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_groupService.ownGroup != null)
-      return buildOwnGroupWidget();
-    else
-      return buildOwnGroupNonExistentWidget();
+    return FutureBuilder<void>(
+      future: _groupService.loadOwnGroup(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        List<Widget> children;
+        if (snapshot.connectionState == ConnectionState.done) {
+            if (_groupService.ownGroup != null){
+              children = <Widget>[buildOwnGroupWidget()];
+            }
+            else {
+            children = <Widget>[buildOwnGroupNonExistentWidget()];
+          }
+        } else if (snapshot.hasError) {
+          children = <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text('Error: ${snapshot.error}'),
+            )
+          ];
+        } else {
+          children = const <Widget>[
+            SizedBox(
+              child: CircularProgressIndicator(),
+              width: 60,
+              height: 60,
+            ),
+          ];
+        }
+        return Center(
+          child: Column(
+            children: children,
+          ),
+        );
+      },
+    );
   }
 
   Widget buildOwnGroupNonExistentWidget() {
@@ -47,7 +82,6 @@ class _OwnGroupState extends State<OwnGroupWidget> {
               child: TextButton(
                 onPressed: () => setState(() {
                   _createGroupWithName();
-
                 }),
                 child: Container(
                   height: 50,
