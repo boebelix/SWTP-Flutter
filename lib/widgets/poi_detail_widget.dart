@@ -25,7 +25,6 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     final int poiId = ModalRoute.of(context).settings.arguments as int;
 
     final Poi poi =
@@ -37,9 +36,11 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
       ),
       body: Column(
         children: [
-          Image(
-            image: poi.image.image,
-          ),
+          poi.image == null
+              ? Container()
+              : Image(
+                  image: poi.image.image,
+                ),
           Wrap(
             children: [
               Container(
@@ -100,7 +101,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                     return LoadingIndicator();
                     break;
                   default:
-                    return notifier.poiResponse.fold(
+                    return notifier.poiCommentResponse.fold(
                       (failure) {
                         WidgetsBinding.instance.addPostFrameCallback(
                           (_) {

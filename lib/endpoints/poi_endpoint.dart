@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/l10n/failure_translation.dart';
+import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
+import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/log_service.dart';
@@ -143,6 +145,85 @@ class PoiEndpoint {
 
       if (response.statusCode == HttpStatus.internalServerError) {
         throw Failure(FailureTranslation.text('responsePoiIdInvalid'));
+      }
+
+      if (response.statusCode == HttpStatus.forbidden) {
+        throw Failure(FailureTranslation.text('responseUserInvalid'));
+      } else {
+        throw Failure(FailureTranslation.text('responseUnknownError'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
+  Future<List<Category>> getAllCategories() async {
+    try {
+      final response = await http.get(
+        Uri.http(url, "/api/categories"),
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+          "accept": "application/json",
+          "Authorization": "Bearer ${userService.token}"
+        },
+      );
+
+      await Future.delayed(Duration(milliseconds: 100));
+
+      if (response.statusCode == HttpStatus.ok) {
+        List<Category> categories = [];
+
+        for (dynamic content in jsonDecode(utf8.decode(response.bodyBytes))) {
+          categories.add(Category.fromJSON(content));
+        }
+        return categories;
+      }
+
+      if (response.statusCode == HttpStatus.notFound) {
+        throw Failure(FailureTranslation.text('responseNotFound'));
+      }
+
+      if (response.statusCode == HttpStatus.forbidden) {
+        throw Failure(FailureTranslation.text('responseNoAccess'));
+      } else {
+        throw Failure(FailureTranslation.text('responseUserInvalid'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
+  Future<Poi> createPoi(int categoryId, String title, String description, Position position) async {
+    try {
+      final response = await http.post(Uri.http(url, "/api/pois"),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer ${userService.token}"
+          },
+          body: jsonEncode(<String, dynamic>{
+            "position": {"latitude": position.latitude, "longitude": position.longitude},
+            "title": title,
+            "description": description,
+            "authorId": AuthService().user.userId,
+            "categoryId": categoryId,
+          }));
+
+      print('Create' + response.statusCode.toString());
+      if (response.statusCode == HttpStatus.ok) {
+        return Poi.fromJSON(jsonDecode(response.body));
+      }
+
+      if (response.statusCode == HttpStatus.notFound) {
+        throw Failure(FailureTranslation.text('responseCategoryIDInvalid'));
       }
 
       if (response.statusCode == HttpStatus.forbidden) {

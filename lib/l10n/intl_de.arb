@@ -54,4 +54,10 @@
   "invited": "Eingeladene Nutzer",
   "inviteUsers": "Lade Nutzer ein",
   "createGroup": "Gruppe erstellen"
+  "addNewPoi": "Neuen Poi erstellen",
+  "newPoiTitle": "Titel",
+  "newPoiDescription": "Beschreibung",
+  "newPoiCategory": "Kategorie",
+  "defaultNameGroup": "Gruppe",
+  "comment": "Kommentieren"
 }
