@@ -64,5 +64,6 @@
   "newPoiTitle": "Titel",
   "newPoiDescription": "Beschreibung",
   "newPoiCategory": "Kategorie",
-  "inivite": "Einladen"
+  "inivite": "Einladen",
+  "create": "Erstellen"
 }

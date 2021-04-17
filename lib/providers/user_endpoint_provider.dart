@@ -26,7 +26,7 @@ class UserEndpointProvider extends ChangeNotifier {
   List<User> userInvitedIntoOwnGroup = [];
   Either<Failure, List<GroupMembership>> _membershipsResponse;
   List<GroupMembership> _memberships = [];
-  List<User> usersToInvite=[];
+  List<User> usersToInvite = [];
 
   void _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
     if (memberships.isRight()) {
@@ -58,12 +58,7 @@ class UserEndpointProvider extends ChangeNotifier {
 
   Future<void> getAllUsers() async {
     _setState(NotifierState.loading);
-    await Task(() => _userEndpoint
-        .getUser())
-        .attempt()
-        .mapLeftToFailure()
-        .run()
-        .then((value) {
+    await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
       _setAllUsers(value);
     });
 
@@ -74,15 +69,16 @@ class UserEndpointProvider extends ChangeNotifier {
     usersNotInOwnGroup.clear();
     if (allUsers.isEmpty) {
       await getAllUsers();
-
     }
 
     await GroupService().loadOwnGroup();
 
-    usersNotInOwnGroup=[... allUsers];
+    usersNotInOwnGroup = [...allUsers];
 
-    for(GroupMembership membership in GroupService().ownGroup.memberships) {
-      usersNotInOwnGroup.removeWhere((element)=>membership.member.userId==element.userId);
+    if (GroupService().ownGroup!=null) {
+      for (GroupMembership membership in GroupService().ownGroup.memberships) {
+        usersNotInOwnGroup.removeWhere((element) => membership.member.userId == element.userId);
+      }
     }
   }
 
@@ -122,27 +118,23 @@ class UserEndpointProvider extends ChangeNotifier {
     _setState(NotifierState.loaded);
   }
 
-  void chooseUser(int index, bool chosen)
-  {
-    if(usersNotInOwnGroup.length>index&&index>=0) {
-      if (!chosen&&usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
+  void chooseUser(int index, bool chosen) {
+    if (usersNotInOwnGroup.length > index && index >= 0) {
+      if (!chosen && usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
         usersToInvite.remove(usersNotInOwnGroup.elementAt(index));
-      }else if(chosen && !usersToInvite.contains(usersNotInOwnGroup.elementAt(index)))
-      {
+      } else if (chosen && !usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
         usersToInvite.add(usersNotInOwnGroup.elementAt(index));
       }
     }
   }
 
-  bool isUserChoosen(int index)
-  {
-      if(usersToInvite.isEmpty){
-        return false;
-      }
-      return usersToInvite.contains(usersNotInOwnGroup.elementAt(index));
+  bool isUserChoosen(int index) {
+    if (usersToInvite.isEmpty) {
+      return false;
+    }
+    return usersToInvite.contains(usersNotInOwnGroup.elementAt(index));
   }
 }
-
 
 extension TaskX<T extends Either<Object, U>, U> on Task<T> {
   Task<Either<Failure, U>> mapLeftToFailure() {

@@ -56,9 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   }
 
   Tab createOwnGroupTextTab(BuildContext context) {
-    if (_groupService.ownGroup != null &&
-        _groupService.ownGroup.groupName != null &&
-        _groupService.ownGroup.groupName.isNotEmpty)
+    if (_groupService.ownGroup != null)
       return Tab(text: _groupService.ownGroup.groupName);
     else
       return Tab(text: Language.of(context).ownGroup);

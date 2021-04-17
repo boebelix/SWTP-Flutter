@@ -6,10 +6,6 @@ import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class UserScreenVisualisation extends StatefulWidget {
-  final String destinationRouteBySuccess;
-
-  UserScreenVisualisation({this.destinationRouteBySuccess});
-
   @override
   _UserScreenVisualisationState createState() => _UserScreenVisualisationState();
 }
@@ -41,19 +37,12 @@ class _UserScreenVisualisationState extends State<UserScreenVisualisation> {
                 );
               },
                   (_) {
-                _getUserDataSuccessChangeScreen(context);
                 return Container();
               },
             );
         }
       },
     );
-  }
-
-  void _getUserDataSuccessChangeScreen(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushNamed(context, widget.destinationRouteBySuccess);
-    });
   }
 }
 

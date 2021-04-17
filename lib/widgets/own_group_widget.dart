@@ -6,7 +6,6 @@ import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/services/group_service.dart';
-import 'package:swtp_app/widgets/user_endpoint_visualisation.dart';
 
 class OwnGroupWidget extends StatefulWidget {
   @override
@@ -20,52 +19,51 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_groupService.ownGroup.groupName.isNotEmpty)
+    if (_groupService.ownGroup != null)
       return buildOwnGroupWidget();
     else
       return buildOwnGroupNonExistentWidget();
   }
 
   Widget buildOwnGroupNonExistentWidget() {
-    return Expanded(
-        key: UniqueKey(),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: Language.of(context).ownGroup,
-                ),
-                controller: _groupNameTextController,
-                validator: _validatorGroupnameIsNotEmpty,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.02, 0, 0),
-                  child: ElevatedButton(
-                    onPressed: () => setState(() => _createGroupWithName()),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        (Colors.black12),
-                      ),
-                    ),
-                    child: Text(
-                      Language.of(context).createGroup,
-                      style: TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: Language.of(context).ownGroup,
+            ),
+            controller: _groupNameTextController,
+            validator: _validatorGroupnameIsNotEmpty,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.1,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.02, 0, 0),
+              child: TextButton(
+                onPressed: () => setState(() {
+                  _createGroupWithName();
+
+                }),
+                child: Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.98,
+                  child: Card(
+                    color: Theme.of(context).buttonColor,
+                    elevation: 10,
+                    child: Center(child: Text(Language.of(context).create)),
                   ),
                 ),
-              )
-            ],
+              ),
+            ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 
   Widget buildOwnGroupWidget() {
@@ -119,11 +117,12 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        IconButton(icon: Icon(Icons.person_add),
-            onPressed: (){
+        IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: () {
               _showInvitationScreen(context);
               Navigator.pushNamed(context, InviteUserScreen.routeName);
-        }),
+            }),
       ],
     );
   }
@@ -201,7 +200,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
                   )),
             ),
             IconButton(
-                icon: Icon(Icons.delete_forever),
+                icon: Icon(Icons.person_remove_outlined),
                 onPressed: () {
                   setState(() {
                     _removeUserFromGroup(membership.member.userId);
@@ -215,9 +214,9 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     await _groupService.kickUserFromOwnGroup(userId);
   }
 
-  Future<void> _showInvitationScreen(BuildContext context)  async {
-     await Provider.of<UserEndpointProvider>(context,listen: false).getAllUsers();
-     await Provider.of<UserEndpointProvider>(context,listen: false).getAllUsers();
+  Future<void> _showInvitationScreen(BuildContext context) async {
+    await Provider.of<UserEndpointProvider>(context, listen: false).getAllUsers();
+    await Provider.of<UserEndpointProvider>(context, listen: false).getAllUsers();
   }
 
   String _validatorGroupnameIsNotEmpty(value) {
@@ -230,7 +229,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   Future<void> _createGroupWithName() async {
     if (_formKey.currentState.validate()) {
-      //TODO createGroup in Endpoint erstellen und aufrufen
+      await GroupService().createGroup(_groupNameTextController.text);
     }
     _groupNameTextController.clear();
   }

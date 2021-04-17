@@ -62,5 +62,6 @@
   "invited": "Invited Users",
   "inviteUsers": "Invite users",
   "createGroup": "Create group",
-  "invite": "Invite"
+  "invite": "Invite",
+  "create": "Create"
 }

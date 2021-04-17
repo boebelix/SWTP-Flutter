@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
+import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
 
@@ -40,7 +41,7 @@ class GroupsEndpoint {
     }
   }
 
-  Future<Map<String, dynamic>> createGroup(int adminId, String groupName) async {
+  Future<Group> createGroup(String groupName) async {
     try {
       final response = await http.post(
         Uri.http(_url, "/api/groups/"),
@@ -49,14 +50,11 @@ class GroupsEndpoint {
           "accept": "application/json",
           "Authorization": "Bearer ${_userService.token}"
         },
-        body: {
-          "adminId": "$adminId",
-          "groupName": "$groupName",
-        },
+        body: jsonEncode({"adminId": "${AuthService().user.userId}", "groupName": "$groupName"}),
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        return Group.fromJSON(json.decode(response.body));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }

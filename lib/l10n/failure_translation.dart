@@ -22,7 +22,7 @@ class FailureTranslation {
     'authFail_de': 'Fehler beim Anmelden',
     'authFail_en': 'Authentication failed',
     'groupNotFound_de': 'Die Gruppe konnte nicht gefunden werden',
-    'groupNotFound_en': 'The Group could\'t found',
+    'groupNotFound_en': 'The Group couldn\'t be found',
     'unknownFailure_de': 'Unbekannter Fehler',
     'unknownFailure_en': 'Unknown Failure',
     'removeUserGroup_de': 'Fehler beim löschen des Nutzer aus der Gruppe',
