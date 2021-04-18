@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
 import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/services/group_service.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class OwnGroupWidget extends StatefulWidget {
   @override
@@ -22,40 +23,35 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     return FutureBuilder<void>(
       future: _groupService.loadOwnGroup(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        List<Widget> children;
+        Widget children;
         if (snapshot.connectionState == ConnectionState.done) {
-            if (_groupService.ownGroup != null){
-              children = <Widget>[buildOwnGroupWidget()];
-            }
-            else {
-            children = <Widget>[buildOwnGroupNonExistentWidget()];
+          if (_groupService.ownGroup != null) {
+            children = buildOwnGroupWidget();
+          } else {
+            children = buildOwnGroupNonExistentWidget();
           }
-        }
-        else if (snapshot.hasError) {
-          children = <Widget>[
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 60,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Text('Error: ${snapshot.error}'),
-            )
-          ];
+        } else if (snapshot.hasError) {
+          children = PopUpWarningDialog(context: context, failure: Failure('egal'));
+
+//            const Icon(
+//              Icons.error_outline,
+//              color: Colors.red,
+//              size: 60,
+//            );
+//            Padding(
+//              padding: const EdgeInsets.only(top: 16),
+//              child: Text('Error: ${snapshot.error}'),
+//            )
+
         } else {
-          children = const <Widget>[
-            SizedBox(
-              child: CircularProgressIndicator(),
-              width: 60,
-              height: 60,
-            ),
-          ];
+          children = SizedBox(
+            child: CircularProgressIndicator(),
+            width: 60,
+            height: 60,
+          );
         }
-        return Center(
-          child: Column(
-            children: children,
-          ),
+        return Container(
+          child: children,
         );
       },
     );
@@ -102,48 +98,14 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Widget buildOwnGroupWidget() {
-    return Stack(
+    return Column(
+      mainAxisSize: MainAxisSize.max,
       children: [
-        FutureBuilder<void>(
-          future: _groupService.loadOwnGroup(),
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-            List<Widget> children;
-            if (snapshot.connectionState == ConnectionState.done) {
-              children = <Widget>[
-                _buildMemberText(context),
-                _buildListViewAcceptedMembersOfOwnGroup(),
-                _buildInvitedText(context),
-                _buildListViewOfInvitedMembersOfOwnGroup(),
-                _createInviteUserButton()
-              ];
-            } else if (snapshot.hasError) {
-              children = <Widget>[
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text('Error: ${snapshot.error}'),
-                )
-              ];
-            } else {
-              children = const <Widget>[
-                SizedBox(
-                  child: CircularProgressIndicator(),
-                  width: 60,
-                  height: 60,
-                ),
-              ];
-            }
-            return Center(
-              child: Column(
-                children: children,
-              ),
-            );
-          },
-        ),
+        _buildMemberText(context),
+        _buildListViewAcceptedMembersOfOwnGroup(),
+        _buildInvitedText(context),
+        _buildListViewOfInvitedMembersOfOwnGroup(),
+        _createInviteUserButton()
       ],
     );
   }
@@ -185,35 +147,28 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   ListView _buildListViewAcceptedMembersOfOwnGroup() {
+    List<GroupMembership> group = _groupService.ownGroup.memberships;
+    List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
+
+    return buildList(inGroup);
+  }
+
+  ListView buildList(List<GroupMembership> explicitList) {
     return ListView.builder(
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.ownGroup.memberships.length,
+        itemCount: explicitList.length,
         itemBuilder: (context, index) {
-          if (!_groupService.ownGroup.memberships.elementAt(index).invitationPending)
-            return _createMemberCard(_groupService.ownGroup.memberships.elementAt(index));
-          return Container(
-            height: 0.0,
-            width: 0.0,
-          );
+          return _createMemberCard(explicitList.elementAt(index));
         });
   }
 
   ListView _buildListViewOfInvitedMembersOfOwnGroup() {
-    return ListView.builder(
-        padding: EdgeInsets.all(5),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: _groupService.ownGroup.memberships.length,
-        itemBuilder: (context, index) {
-          if (_groupService.ownGroup.memberships.elementAt(index).invitationPending)
-            return _createMemberCard(_groupService.ownGroup.memberships.elementAt(index));
-          return Container(
-            height: 0.0,
-            width: 0.0,
-          );
-        });
+    List<GroupMembership> group = _groupService.ownGroup.memberships;
+    List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
+
+    return buildList(notInGroup);
   }
 
   Card _createMemberCard(GroupMembership membership) {
@@ -237,7 +192,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             IconButton(
                 icon: Icon(Icons.person_remove_outlined),
                 onPressed: () {
-                    _removeUserFromGroup(membership.member.userId);
+                  _removeUserFromGroup(membership.member.userId);
                 })
           ],
         ));
@@ -248,7 +203,6 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Future<void> _showInvitationScreen(BuildContext context) async {
-    await Provider.of<UserEndpointProvider>(context, listen: false).getAllUsers();
     await Provider.of<UserEndpointProvider>(context, listen: false).getAllUsers();
   }
 
