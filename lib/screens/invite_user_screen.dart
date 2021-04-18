@@ -28,24 +28,26 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
       ),
       body: Stack(
         children: [
-          Column(
-            children: [
-              _buildUserList(context),
-              TextButton(
-                onPressed: () {
-                  _inviteUsers();
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.98,
-                  child: Card(
-                    color: Theme.of(context).buttonColor,
-                    elevation: 10,
-                    child: Center(child: Text(Language.of(context).invite)),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildUserList(context),
+                TextButton(
+                  onPressed: () {
+                    _inviteUsers();
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.98,
+                    child: Card(
+                      color: Theme.of(context).buttonColor,
+                      elevation: 10,
+                      child: Center(child: Text(Language.of(context).invite)),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Consumer<UserEndpointProvider>(
             builder: (_, notifier, __) {
@@ -87,6 +89,7 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: userprovider.usersNotInOwnGroup.length,
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return CheckboxListTile(
             title: Text(
