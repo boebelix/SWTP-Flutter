@@ -96,28 +96,23 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   Widget buildOwnGroupWidget() {
     return Column(
       children: [
-        Container(
-          child: Column(
-            children: [
-              _buildMemberText(context),
-              _buildListViewAcceptedMembersOfOwnGroup(),
-            ],
-          ),
+        _buildMemberText(context),
+        Expanded(
+          child: _buildListViewAcceptedMembersOfOwnGroup(),
         ),
-        Container(
-          child: Column(
-            children: [
-              _buildInvitedText(context),
-              _buildListViewOfInvitedMembersOfOwnGroup(),
-              _createInviteUserButton(),
-            ],
-          ),
+        _buildInvitedText(context),
+        Expanded(
+          child: _buildListViewOfInvitedMembersOfOwnGroup(),
+        ),
+        Align(
+          alignment: FractionalOffset.bottomLeft,
+          child: _createInviteUserButton(),
         ),
       ],
     );
   }
 
-  Row _createInviteUserButton() {
+  Widget _createInviteUserButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -157,13 +152,13 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     List<GroupMembership> group = _groupService.ownGroup.memberships;
     List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
 
-    return buildList(inGroup);
+    return buildList(inGroup,true);
   }
 
-  ListView buildList(List<GroupMembership> explicitList) {
+  ListView buildList(List<GroupMembership> explicitList, bool shrink) {
     return ListView.builder(
         padding: EdgeInsets.all(5),
-        shrinkWrap: true,
+        shrinkWrap: shrink,
         scrollDirection: Axis.vertical,
         itemCount: explicitList.length,
         itemBuilder: (context, index) {
@@ -175,7 +170,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     List<GroupMembership> group = _groupService.ownGroup.memberships;
     List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
 
-    return buildList(notInGroup);
+    return buildList(notInGroup,false);
   }
 
   Card _createMemberCard(GroupMembership membership) {
