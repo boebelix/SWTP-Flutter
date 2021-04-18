@@ -95,7 +95,7 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
             title: Text(
                 "${userprovider.usersNotInOwnGroup.elementAt(index).firstName} ${userprovider.usersNotInOwnGroup.elementAt(index).lastName}"),
             tristate: false,
-            value: userprovider.isUserChoosen(index),
+            value: userprovider.isUserChosen(index),
             onChanged: (newValue) {
               setState(() {
                 userprovider.chooseUser(index, newValue);

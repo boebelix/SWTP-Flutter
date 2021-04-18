@@ -128,7 +128,7 @@ class UserServiceProvider extends ChangeNotifier {
     }
   }
 
-  bool isUserChoosen(int index) {
+  bool isUserChosen(int index) {
     if (usersToInvite.isEmpty) {
       return false;
     }
