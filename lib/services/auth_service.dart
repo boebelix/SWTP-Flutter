@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/endpoints/register_endpoint.dart';
+import 'package:swtp_app/l10n/failure_translation.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/models/user.dart';
@@ -40,7 +42,11 @@ class AuthService {
     }
   }
 
-  Future<void> logIn({@required BuildContext context, @required String username, @required String password}) async {
+  Future<void> logIn({
+    @required BuildContext context,
+    @required String username,
+    @required String password,
+  }) async {
     var authEndpointProvider = Provider.of<AuthEndpointProvider>(context, listen: false);
     await authEndpointProvider.logIn(LoginCredentials(username, password));
 
@@ -50,10 +56,17 @@ class AuthService {
       await userEndpointProvider.getMembersOfOwnGroup();
     }
 
-    if(await AuthService().isSignedIn()){
-      var allUserIdsOfMembershipsOwner = await InformationPreLoaderService().userIds;
-      var poiEndpointProvider = await Provider.of<PoiServiceProvider>(context, listen: false);
-      await poiEndpointProvider.getAllVisiblePois(allUserIdsOfMembershipsOwner);
+    if (AuthService().isSignedIn()) {
+      var allUserIdsOfMembershipsOwner = InformationPreLoaderService().userIds;
+      var poiEndpointProvider = Provider.of<PoiServiceProvider>(context, listen: false);
+
+      try {
+        await poiEndpointProvider.getAllVisiblePois(allUserIdsOfMembershipsOwner);
+      } catch (e) {
+        if (FailureTranslation.text('responseNoAccess') != e.toString()) {
+          throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
+        }
+      }
     }
   }
 }
