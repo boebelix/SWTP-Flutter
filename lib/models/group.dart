@@ -3,7 +3,7 @@ import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/user.dart';
 
 class Group {
-  User admin=User();
+  User admin = User();
   int groupId;
   String groupName = "";
 
