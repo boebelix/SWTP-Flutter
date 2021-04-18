@@ -1,14 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/models/login_credentials.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/register_credentials.dart';
-import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
+import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class Register extends StatefulWidget {
   static const routeName = "/register";
@@ -34,11 +34,11 @@ class _RegisterStage extends State<Register> {
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
 
-  void _sendRegisterData() async {
+  Future<void> _sendRegisterData() async {
     try {
-      AuthService userService = AuthService();
+      AuthService authService = AuthService();
       if (_formKey.currentState.validate()) {
-        await userService.registerUser(
+        bool succesfullSignUp = await authService.registerUser(
           credentials: RegisterCredentials(
             username.text,
             password.text,
@@ -52,13 +52,45 @@ class _RegisterStage extends State<Register> {
           ),
         );
 
-        Provider.of<AuthEndpointProvider>(context, listen: false)
-            .logIn(LoginCredentials(username.text, password.text));
-        Navigator.pushNamed(context, TabScreen.routeName);
+        if (succesfullSignUp) {
+          await authService.logIn(
+            context: context,
+            username: username.text,
+            password: password.text,
+          );
+
+          if (authService.isSignedIn()) {
+            // Lösche den Stack der bei der Navigation hier enstand
+            Navigator.pop(context);
+
+            // Verbietet, das zurück navigieren im TabScreen
+            Navigator.popAndPushNamed(context, TabScreen.routeName);
+          }
+        }
       }
-    } catch (error) {
-      print(error);
+    } on Failure catch (error) {
+      print(error.toString());
+
+      PopUpWarningDialog(
+        context: context,
+        failure: error,
+      );
     }
+  }
+
+  @override
+  void initState() {
+    username.text = "Bob";
+    password.text = "\$Test1234";
+    repeatPassword.text = "\$Test1234";
+    email.text = "abef1234@stud.hs-kl.de";
+    firstname.text = "Bob";
+    lastname.text = "Der";
+    street.text = "Baumeister";
+    streetNr.text = "1";
+    zip.text = "11111";
+    city.text = "Berlin";
+    super.initState();
   }
 
   @override
@@ -78,7 +110,8 @@ class _RegisterStage extends State<Register> {
             ),
             child: _formElements(deviceSize),
           ),
-          AuthEndpointVisualisation(
+          AuthEndpointVisualisation(),
+          PoiEndpointVisualisation(
             destinationRouteBySuccess: TabScreen.routeName,
           ),
         ]),
@@ -143,9 +176,8 @@ class _RegisterStage extends State<Register> {
               Flexible(
                 flex: 5,
                 child: TextFormField(
-                  decoration: InputDecoration(
-                      labelText: Language.of(context).postcode,
-                      icon: Icon(Icons.location_city)),
+                  decoration:
+                      InputDecoration(labelText: Language.of(context).postcode, icon: Icon(Icons.location_city)),
                   validator: _validatorPostcode,
                   controller: zip,
                 ),
@@ -273,7 +305,7 @@ class _RegisterStage extends State<Register> {
     );
 
     if (!regexStreetNr.hasMatch(value)) {
-      return Language.of(context).warning_house_number_UperThenLower;
+      return Language.of(context).warning_house_number_UpperThenLower;
     }
 
     return null;
@@ -363,19 +395,12 @@ class _RegisterStage extends State<Register> {
     bool hasSpecialSign = regexHasSpecialSign.hasMatch(value);
     bool hasUpperAndLowerCase = regexUpperAndLowerCase.hasMatch(value);
 
-    if (hasMinLen &&
-        hasUpperAndLowerCase &&
-        hasNumber &&
-        hasSpecialSign &&
-        hasLenBigger7) {
+    if (hasMinLen && hasUpperAndLowerCase && hasNumber && hasSpecialSign && hasLenBigger7) {
       // TODO Passwortstärke Visual darstellen siehe SWTP Projekt
       // sehr sicher
 
       return null;
-    } else if (hasMinLen &&
-        hasUpperAndLowerCase &&
-        hasNumber &&
-        hasSpecialSign) {
+    } else if (hasMinLen && hasUpperAndLowerCase && hasNumber && hasSpecialSign) {
       // TODO siehe oben
       // sicher
 

@@ -1,24 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/models/user.dart';
+import 'package:swtp_app/models/comment.dart';
 
 class Poi {
   User author;
   Category category;
-  String createDate;
-  String description;
+  String createDate = "";
+  String description = "";
   int poiId;
   Position position;
-  String title;
+  String title = "";
+  Image image;
+  List<Comment> comments = [];
 
-  Poi(
-      {this.author,
-      this.category,
-      this.createDate,
-      this.description,
-      this.poiId,
-      this.position,
-      this.title});
+  Poi({this.author, this.category, this.createDate, this.description, this.poiId, this.position, this.title});
 
   factory Poi.fromJSON(Map<String, dynamic> json) => Poi(
         author: User.fromJSON(json['author']),

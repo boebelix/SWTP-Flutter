@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class AuthEndpointVisualisation extends StatefulWidget {
-  final String destinationRouteBySuccess;
-
-  AuthEndpointVisualisation({@required this.destinationRouteBySuccess});
-
   @override
   _AuthEndpointVisualisationState createState() =>
       _AuthEndpointVisualisationState();
@@ -27,7 +25,7 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
 
           case NotifierState.loading:
             {
-              return _loadingIndicator(context);
+              return LoadingIndicator();
             }
             break;
 
@@ -39,7 +37,6 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     notifier.resetState();
                   });
-
                   return PopUpWarningDialog(
                     context: context,
                     failure: failure,
@@ -47,7 +44,6 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
                 },
                 // Alles in Ordnung
                 (userService) {
-                  _loginSuccessChangeScreen(context);
                   return Container();
                 },
               );
@@ -55,24 +51,5 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
         }
       },
     );
-  }
-
-  Widget _loadingIndicator(BuildContext context) {
-    final sizeLoadingIndicator = MediaQuery.of(context).size.shortestSide * 0.7;
-    return Center(
-      child: SizedBox(
-        height: sizeLoadingIndicator,
-        width: sizeLoadingIndicator,
-        child: CircularProgressIndicator(
-          strokeWidth: 10,
-        ),
-      ),
-    );
-  }
-
-  void _loginSuccessChangeScreen(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.popAndPushNamed(context, widget.destinationRouteBySuccess);
-    });
   }
 }

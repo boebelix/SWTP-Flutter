@@ -13,7 +13,6 @@ class GroupsScreen extends StatefulWidget {
 GroupService _groupService = GroupService();
 
 class _GroupsScreenState extends State<GroupsScreen> {
-
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
@@ -88,9 +87,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.invitetIntoGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(
-            _groupService.invitetIntoGroups.elementAt(index), true));
+        itemCount: _groupService.invitedIntoGroups.length,
+        itemBuilder: (context, index) => _createGroupCard(_groupService.invitedIntoGroups.elementAt(index), true));
   }
 
   ListView _buildListViewAcceptedGroups() {
@@ -99,11 +97,10 @@ class _GroupsScreenState extends State<GroupsScreen> {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _groupService.acceptedGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(
-            _groupService.acceptedGroups.elementAt(index), false));
+        itemBuilder: (context, index) => _createGroupCard(_groupService.acceptedGroups.elementAt(index), false));
   }
 
-  Card _createGroupCard(Group group, bool isInvitet) {
+  Card _createGroupCard(Group group, bool isInvited) {
     return Card(
         key: UniqueKey(),
         elevation: 8,
@@ -127,8 +124,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-                  child: Text(
-                      "${Language.of(context).founder}: ${group.admin.firstName} ${group.admin.firstName}",
+                  child: Text("${Language.of(context).founder}: ${group.admin.firstName} ${group.admin.firstName}",
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.normal,
@@ -140,7 +136,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               children: [
                 Visibility(
                   key: GlobalKey(),
-                  visible: isInvitet,
+                  visible: isInvited,
                   child: IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
