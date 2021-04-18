@@ -24,9 +24,9 @@ class _UserScreenVisualisationState extends State<UserScreenVisualisation> {
             break;
           default:
             return notifier.allUsersResponse.fold(
-                  (failure) {
+              (failure) {
                 WidgetsBinding.instance.addPostFrameCallback(
-                      (_) {
+                  (_) {
                     notifier.resetState();
                   },
                 );
@@ -36,7 +36,7 @@ class _UserScreenVisualisationState extends State<UserScreenVisualisation> {
                   failure: failure,
                 );
               },
-                  (_) {
+              (_) {
                 return Container();
               },
             );
@@ -45,4 +45,3 @@ class _UserScreenVisualisationState extends State<UserScreenVisualisation> {
     );
   }
 }
-

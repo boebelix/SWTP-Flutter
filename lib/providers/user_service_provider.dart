@@ -75,7 +75,7 @@ class UserServiceProvider extends ChangeNotifier {
 
     usersNotInOwnGroup = [...allUsers];
 
-    if (GroupService().ownGroup!=null) {
+    if (GroupService().ownGroup != null) {
       for (GroupMembership membership in GroupService().ownGroup.memberships) {
         usersNotInOwnGroup.removeWhere((element) => membership.member.userId == element.userId);
       }

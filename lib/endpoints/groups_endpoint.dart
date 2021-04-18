@@ -41,18 +41,15 @@ class GroupsEndpoint {
     }
   }
 
-  Future<Group> createGroup( String groupName) async {
+  Future<Group> createGroup(String groupName) async {
     try {
-      final response = await http.post(
-        Uri.http(_url, "/api/groups/"),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": "Bearer ${_userService.token}"
-        },
-        body:
-          json.encode(<String, dynamic>{"adminId": AuthService().user.userId , "name": "$groupName"})
-      );
+      final response = await http.post(Uri.http(_url, "/api/groups/"),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer ${_userService.token}"
+          },
+          body: json.encode(<String, dynamic>{"adminId": AuthService().user.userId, "name": "$groupName"}));
 
       if (response.statusCode == HttpStatus.ok) {
         return Group.fromJSON(json.decode(response.body));

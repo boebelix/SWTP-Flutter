@@ -153,7 +153,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     List<GroupMembership> group = _groupService.ownGroup.memberships;
     List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
 
-    return buildList(inGroup,true);
+    return buildList(inGroup, true);
   }
 
   ListView buildList(List<GroupMembership> explicitList, bool shrink) {
@@ -171,7 +171,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     List<GroupMembership> group = _groupService.ownGroup.memberships;
     List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
 
-    return buildList(notInGroup,false);
+    return buildList(notInGroup, false);
   }
 
   Card _createMemberCard(GroupMembership membership) {

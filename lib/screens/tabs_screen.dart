@@ -97,7 +97,7 @@ class _TabScreenState extends State<TabScreen> {
             AuthService().logOut(context);
             Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
             Provider.of<PoiServiceProvider>(context, listen: false).resetState();
-            Provider.of<UserServiceProvider>(context,listen: false).resetState();
+            Provider.of<UserServiceProvider>(context, listen: false).resetState();
             Navigator.popAndPushNamed(context, LoginScreen.routeName);
           });
         });
