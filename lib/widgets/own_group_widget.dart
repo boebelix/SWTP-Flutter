@@ -23,15 +23,14 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     return FutureBuilder<void>(
       future: _groupService.loadOwnGroup(),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        Widget children;
         if (snapshot.connectionState == ConnectionState.done) {
           if (_groupService.ownGroup != null) {
-            children = buildOwnGroupWidget();
+            return buildOwnGroupWidget();
           } else {
-            children = buildOwnGroupNonExistentWidget();
+            return buildOwnGroupNonExistentWidget();
           }
         } else if (snapshot.hasError) {
-          children = PopUpWarningDialog(context: context, failure: Failure('egal'));
+          return PopUpWarningDialog(context: context, failure: Failure('egal'));
 
 //            const Icon(
 //              Icons.error_outline,
@@ -44,15 +43,12 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 //            )
 
         } else {
-          children = SizedBox(
+          return SizedBox(
             child: CircularProgressIndicator(),
             width: 60,
             height: 60,
           );
         }
-        return Container(
-          child: children,
-        );
       },
     );
   }
@@ -99,13 +95,24 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   Widget buildOwnGroupWidget() {
     return Column(
-      mainAxisSize: MainAxisSize.max,
       children: [
-        _buildMemberText(context),
-        _buildListViewAcceptedMembersOfOwnGroup(),
-        _buildInvitedText(context),
-        _buildListViewOfInvitedMembersOfOwnGroup(),
-        _createInviteUserButton()
+        Container(
+          child: Column(
+            children: [
+              _buildMemberText(context),
+              _buildListViewAcceptedMembersOfOwnGroup(),
+            ],
+          ),
+        ),
+        Container(
+          child: Column(
+            children: [
+              _buildInvitedText(context),
+              _buildListViewOfInvitedMembersOfOwnGroup(),
+              _createInviteUserButton(),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -146,7 +153,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
     );
   }
 
-  ListView _buildListViewAcceptedMembersOfOwnGroup() {
+  Widget _buildListViewAcceptedMembersOfOwnGroup() {
     List<GroupMembership> group = _groupService.ownGroup.memberships;
     List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
 
@@ -164,7 +171,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
         });
   }
 
-  ListView _buildListViewOfInvitedMembersOfOwnGroup() {
+  Widget _buildListViewOfInvitedMembersOfOwnGroup() {
     List<GroupMembership> group = _groupService.ownGroup.memberships;
     List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
 
