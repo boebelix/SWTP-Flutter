@@ -6,6 +6,7 @@ import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/services/auth_service.dart';
+import 'package:swtp_app/services/group_service.dart';
 
 class UserServiceProvider extends ChangeNotifier {
   static final UserServiceProvider _instance = UserServiceProvider._internal();
@@ -25,6 +26,7 @@ class UserServiceProvider extends ChangeNotifier {
   List<User> userInvitedIntoOwnGroup = [];
   Either<Failure, List<GroupMembership>> _membershipsResponse;
   List<GroupMembership> _memberships = [];
+  List<User> usersToInvite = [];
 
   void _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
     if (memberships.isRight()) {
@@ -56,12 +58,7 @@ class UserServiceProvider extends ChangeNotifier {
 
   Future<void> getAllUsers() async {
     _setState(NotifierState.loading);
-    await Task(() => _userEndpoint
-        .getUser())
-        .attempt()
-        .mapLeftToFailure()
-        .run()
-        .then((value) {
+    await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
       _setAllUsers(value);
     });
 
@@ -73,11 +70,14 @@ class UserServiceProvider extends ChangeNotifier {
     if (allUsers.isEmpty) {
       await getAllUsers();
     }
-    for (GroupMembership membership in _memberships) {
-      var userNotInGroup = allUsers.where((element) => element.userId != membership.member.userId);
 
-      if (userNotInGroup.isNotEmpty) {
-        usersNotInOwnGroup.add(userNotInGroup.first);
+    await GroupService().loadOwnGroup();
+
+    usersNotInOwnGroup = [...allUsers];
+
+    if (GroupService().ownGroup != null) {
+      for (GroupMembership membership in GroupService().ownGroup.memberships) {
+        usersNotInOwnGroup.removeWhere((element) => membership.member.userId == element.userId);
       }
     }
   }
@@ -98,6 +98,7 @@ class UserServiceProvider extends ChangeNotifier {
   }
 
   _setUsersInOwnGroupLists(Either<Failure, List<GroupMembership>> allMemberships) {
+    _setState(NotifierState.loading);
     userInvitedIntoOwnGroup.clear();
     usersInOwnGroup.clear();
     if (allMemberships.isRight()) {
@@ -114,6 +115,24 @@ class UserServiceProvider extends ChangeNotifier {
         usersInOwnGroup.add(userAlreadyInGroup.elementAt(i).member);
       }
     }
+    _setState(NotifierState.loaded);
+  }
+
+  void chooseUser(int index, bool chosen) {
+    if (usersNotInOwnGroup.length > index && index >= 0) {
+      if (!chosen && usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
+        usersToInvite.remove(usersNotInOwnGroup.elementAt(index));
+      } else if (chosen && !usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
+        usersToInvite.add(usersNotInOwnGroup.elementAt(index));
+      }
+    }
+  }
+
+  bool isUserChosen(int index) {
+    if (usersToInvite.isEmpty) {
+      return false;
+    }
+    return usersToInvite.contains(usersNotInOwnGroup.elementAt(index));
   }
 }
 

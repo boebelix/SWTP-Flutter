@@ -5,9 +5,11 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
+import 'package:swtp_app/widgets/user_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class Register extends StatefulWidget {
@@ -111,9 +113,11 @@ class _RegisterStage extends State<Register> {
             child: _formElements(deviceSize),
           ),
           AuthEndpointVisualisation(),
+          UserScreenVisualisation(),
           PoiEndpointVisualisation(
             destinationRouteBySuccess: TabScreen.routeName,
           ),
+
         ]),
       ),
     );

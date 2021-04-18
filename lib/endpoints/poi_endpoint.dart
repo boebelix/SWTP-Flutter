@@ -10,7 +10,6 @@ import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/models/comment.dart';
 
 class PoiEndpoint {

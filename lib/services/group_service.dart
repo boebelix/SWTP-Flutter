@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:swtp_app/endpoints/groups_endpoint.dart';
 import 'package:swtp_app/endpoints/user_endpoint.dart';
+import 'package:swtp_app/l10n/failure_translation.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/services/auth_service.dart';
@@ -11,7 +13,7 @@ class GroupService {
 
   factory GroupService() => _instance;
 
-  Group _ownGroup;
+  Group _ownGroup = null;
   List<Group> _acceptedGroups;
   List<GroupMembership> _memberships;
   List<Group> _invitedIntoGroups;
@@ -38,9 +40,15 @@ class GroupService {
   }
 
   Future<void> loadOwnGroup() async {
-    Map<String, dynamic> response = await _groupsEndpoint.getGroupById(_authService.user.userId);
-
-    _ownGroup = _readGroupFromJson(response);
+    try {
+      Map<String, dynamic> response = await _groupsEndpoint.getGroupById(_authService.user.userId);
+      _ownGroup = _readGroupFromJson(response);
+    } catch (e) {
+      if (FailureTranslation.text('groupNotFound') != e.toString()) {
+        throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
+      }
+      _ownGroup = null;
+    }
   }
 
   Future<void> loadGroups() async {
@@ -100,5 +108,9 @@ class GroupService {
     group.memberships = groupMemberships;
 
     return group;
+  }
+
+  Future<void> createGroup(String name) async {
+    _ownGroup = await _groupsEndpoint.createGroup(name);
   }
 }

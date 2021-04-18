@@ -2,9 +2,9 @@ import 'package:swtp_app/models/group_membership_Id.dart';
 import 'package:swtp_app/models/user.dart';
 
 class GroupMembership {
-  GroupMembershipId id;
-  User member;
-  bool invitationPending;
+  GroupMembershipId id = GroupMembershipId();
+  User member = User();
+  bool invitationPending = false;
 
   GroupMembership({this.id, this.member, this.invitationPending});
 
