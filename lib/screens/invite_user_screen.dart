@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
-import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
@@ -17,11 +17,11 @@ class InviteUserScreen extends StatefulWidget {
 }
 
 class _InviteUserScreenState extends State<InviteUserScreen> {
-  UserEndpointProvider userprovider;
+  UserServiceProvider userprovider;
 
   @override
   Widget build(BuildContext context) {
-    userprovider = Provider.of<UserEndpointProvider>(context, listen: false);
+    userprovider = Provider.of<UserServiceProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(Language.of(context).inviteUsers),
@@ -49,7 +49,7 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
               ],
             ),
           ),
-          Consumer<UserEndpointProvider>(
+          Consumer<UserServiceProvider>(
             builder: (_, notifier, __) {
               switch (notifier.state) {
                 case NotifierState.initial:

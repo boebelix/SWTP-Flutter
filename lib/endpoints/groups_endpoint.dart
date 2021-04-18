@@ -43,7 +43,6 @@ class GroupsEndpoint {
 
   Future<Group> createGroup( String groupName) async {
     try {
-      print(json.encode(<String, dynamic>{"adminId": AuthService().user.userId , "name": "$groupName"}));
       final response = await http.post(
         Uri.http(_url, "/api/groups/"),
         headers: {

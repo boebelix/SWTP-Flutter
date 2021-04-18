@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/models/notifier_state.dart';
-import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
@@ -13,7 +13,7 @@ class UserScreenVisualisation extends StatefulWidget {
 class _UserScreenVisualisationState extends State<UserScreenVisualisation> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserEndpointProvider>(
+    return Consumer<UserServiceProvider>(
       builder: (_, notifier, __) {
         switch (notifier.state) {
           case NotifierState.initial:
