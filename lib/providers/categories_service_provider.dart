@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:swtp_app/endpoints/poi_endpoint.dart';
 import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/failure.dart';
