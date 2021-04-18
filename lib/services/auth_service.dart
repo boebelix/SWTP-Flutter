@@ -7,7 +7,7 @@ import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
-import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
 
 import 'information_pre_loader_service.dart';
@@ -51,7 +51,7 @@ class AuthService {
     await authEndpointProvider.logIn(LoginCredentials(username, password));
 
     if (AuthService().isSignedIn()) {
-      var userEndpointProvider = Provider.of<UserEndpointProvider>(context, listen: false);
+      var userEndpointProvider = Provider.of<UserServiceProvider>(context, listen: false);
       await userEndpointProvider.getAllUsers();
       await userEndpointProvider.getMembersOfOwnGroup();
     }

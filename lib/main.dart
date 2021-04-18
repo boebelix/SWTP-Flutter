@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
-import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/widgets/register.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           create: (_) => PoiServiceProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => UserEndpointProvider(),
+          create: (_) => UserServiceProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => CategoriesServiceProvider(),
