@@ -43,14 +43,12 @@ class GroupService {
     try {
       Map<String, dynamic> response = await _groupsEndpoint.getGroupById(_authService.user.userId);
       _ownGroup = _readGroupFromJson(response);
-    }
-    catch(e){
+    } catch (e) {
       if (FailureTranslation.text('groupNotFound') != e.toString()) {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
       }
-      _ownGroup=null;
+      _ownGroup = null;
     }
-
   }
 
   Future<void> loadGroups() async {
@@ -78,13 +76,13 @@ class GroupService {
   }
 
   Future<void> kickUserFromOwnGroup(int userId) async {
-      await _groupsEndpoint.removeUserFromGroup(_ownGroup.groupId, userId);
-      await loadOwnGroup();
+    await _groupsEndpoint.removeUserFromGroup(_ownGroup.groupId, userId);
+    await loadOwnGroup();
   }
 
   Future<void> inviteUserToGroup(int userId) async {
-      await _groupsEndpoint.inviteUserToGroup(_ownGroup.groupId, userId);
-      await loadOwnGroup();
+    await _groupsEndpoint.inviteUserToGroup(_ownGroup.groupId, userId);
+    await loadOwnGroup();
   }
 
   Future<void> acceptGroupInvitation(int groupId) async {
@@ -113,6 +111,6 @@ class GroupService {
   }
 
   Future<void> createGroup(String name) async {
-    _ownGroup=await _groupsEndpoint.createGroup(name);
+    _ownGroup = await _groupsEndpoint.createGroup(name);
   }
 }
