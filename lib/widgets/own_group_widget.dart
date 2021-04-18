@@ -4,7 +4,7 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group_membership.dart';
-import 'package:swtp_app/providers/user_endpoint_provider.dart';
+import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
@@ -206,7 +206,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Future<void> _showInvitationScreen(BuildContext context) async {
-    await Provider.of<UserEndpointProvider>(context, listen: false).getAllUsers();
+    await Provider.of<UserServiceProvider>(context, listen: false).getAllUsers();
   }
 
   String _validatorGroupnameIsNotEmpty(value) {

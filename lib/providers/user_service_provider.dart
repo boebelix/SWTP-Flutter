@@ -8,12 +8,12 @@ import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/group_service.dart';
 
-class UserEndpointProvider extends ChangeNotifier {
-  static final UserEndpointProvider _instance = UserEndpointProvider._internal();
+class UserServiceProvider extends ChangeNotifier {
+  static final UserServiceProvider _instance = UserServiceProvider._internal();
 
-  factory UserEndpointProvider() => _instance;
+  factory UserServiceProvider() => _instance;
 
-  UserEndpointProvider._internal();
+  UserServiceProvider._internal();
 
   NotifierState _state = NotifierState.initial;
 

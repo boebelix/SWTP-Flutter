@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/user.dart';
 
