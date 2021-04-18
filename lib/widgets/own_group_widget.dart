@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/providers/user_endpoint_provider.dart';
@@ -30,7 +31,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             return buildOwnGroupNonExistentWidget();
           }
         } else if (snapshot.hasError) {
-          return PopUpWarningDialog(context: context, failure: Failure('egal'));
+          return PopUpWarningDialog(context: context, failure: Failure(FailureTranslation.text('ownGroupLoadFailed')));
 
 //            const Icon(
 //              Icons.error_outline,

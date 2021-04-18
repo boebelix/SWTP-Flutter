@@ -25,6 +25,8 @@ class FailureTranslation {
     'groupNotFound_en': 'The Group couldn\'t be found',
     'unknownFailure_de': 'Unbekannter Fehler',
     'unknownFailure_en': 'Unknown Failure',
+    'ownGroupLoadFailed_de': 'Das Laden der eigenen Gruppe ist fehlgeschlagen',
+    'ownGroupLoadFailed_en': 'loading your own group failed',
     'removeUserGroup_de': 'Fehler beim löschen des Nutzer aus der Gruppe',
     'removeUserGroup_en': 'Failure while remove user from group',
     'responseNotFound_de': 'Keine Pois für Nutzer gefunden',
