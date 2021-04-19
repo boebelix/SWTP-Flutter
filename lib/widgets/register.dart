@@ -5,7 +5,6 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
@@ -81,21 +80,6 @@ class _RegisterStage extends State<Register> {
   }
 
   @override
-  void initState() {
-    username.text = "Bob";
-    password.text = "\$Test1234";
-    repeatPassword.text = "\$Test1234";
-    email.text = "abef1234@stud.hs-kl.de";
-    firstname.text = "Bob";
-    lastname.text = "Der";
-    street.text = "Baumeister";
-    streetNr.text = "1";
-    zip.text = "11111";
-    city.text = "Berlin";
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
@@ -117,7 +101,6 @@ class _RegisterStage extends State<Register> {
           PoiEndpointVisualisation(
             destinationRouteBySuccess: TabScreen.routeName,
           ),
-
         ]),
       ),
     );

@@ -80,6 +80,8 @@ class UserServiceProvider extends ChangeNotifier {
         usersNotInOwnGroup.removeWhere((element) => membership.member.userId == element.userId);
       }
     }
+
+    usersNotInOwnGroup.remove(GroupService().ownGroup.admin);
   }
 
   Future<void> getMembersOfOwnGroup() async {

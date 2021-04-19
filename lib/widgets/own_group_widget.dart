@@ -32,17 +32,6 @@ class _OwnGroupState extends State<OwnGroupWidget> {
           }
         } else if (snapshot.hasError) {
           return PopUpWarningDialog(context: context, failure: Failure(FailureTranslation.text('ownGroupLoadFailed')));
-
-//            const Icon(
-//              Icons.error_outline,
-//              color: Colors.red,
-//              size: 60,
-//            );
-//            Padding(
-//              padding: const EdgeInsets.only(top: 16),
-//              child: Text('Error: ${snapshot.error}'),
-//            )
-
         } else {
           return SizedBox(
             child: CircularProgressIndicator(),
