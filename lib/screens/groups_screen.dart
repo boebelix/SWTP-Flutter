@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/group.dart';
-import 'package:swtp_app/models/group_membership.dart';
-import 'package:swtp_app/models/user.dart';
+import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/providers/group_service_provider.dart';
-import 'package:swtp_app/services/group_service.dart';
+import 'package:swtp_app/widgets/loading_indicator.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class GroupsScreen extends StatefulWidget {
   static const routeName = '/groups';
@@ -19,47 +19,45 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    groupServiceProvider=Provider.of<GroupServiceProvider>(context,listen: false);
+    groupServiceProvider = Provider.of<GroupServiceProvider>(context, listen: false);
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline6,
       textAlign: TextAlign.center,
-      child: FutureBuilder<void>(
-        future: groupServiceProvider.loadAllGroups(),
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          List<Widget> children;
-          if (snapshot.connectionState == ConnectionState.done) {
-            children = <Widget>[
-              _buildAcceptedGroupsText(context),
-              _buildListViewAcceptedGroups(),
-              _buildGroupInvitationsText(context),
-              _buildListViewInvitedGroups()
-            ];
-          } else if (snapshot.hasError) {
-            children = <Widget>[
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              )
-            ];
-          } else {
-            children = const <Widget>[
-              SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
-              ),
-            ];
+      child: Consumer<GroupServiceProvider>(
+        builder: (_, notifier, __) {
+          switch (notifier.state) {
+            case NotifierState.initial:
+              return Container();
+              break;
+            case NotifierState.loading:
+              return LoadingIndicator();
+              break;
+            default:
+              return notifier.ownMembershipsResponse.fold(
+                (failure) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) {
+                      notifier.resetState();
+                    },
+                  );
+
+                  return PopUpWarningDialog(
+                    context: context,
+                    failure: failure,
+                  );
+                },
+                (_) {
+                  return Column(
+                    children: [
+                      _buildAcceptedGroupsText(context),
+                      _buildListViewAcceptedGroups(),
+                      _buildGroupInvitationsText(context),
+                      _buildListViewInvitedGroups(),
+                    ],
+                  );
+                },
+              );
           }
-          return Center(
-            child: Column(
-              children: children,
-            ),
-          );
         },
       ),
     );
@@ -93,7 +91,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: groupServiceProvider.invitedIntoGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(groupServiceProvider.invitedIntoGroups.elementAt(index), true));
+        itemBuilder: (context, index) =>
+            _createGroupCard(groupServiceProvider.invitedIntoGroups.elementAt(index), true));
   }
 
   ListView _buildListViewAcceptedGroups() {
@@ -165,9 +164,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   Future<void> _acceptGroupInvitation(Group group) async {
     await groupServiceProvider.acceptGroupInvitation(group.groupId);
+    await groupServiceProvider.loadAllGroups();
   }
 
   Future<void> _denyInvitationOrLeaveGroup(Group group) async {
     await groupServiceProvider.denyInvitationOrLeaveGroup(group.groupId);
+    await groupServiceProvider.loadAllGroups();
   }
 }

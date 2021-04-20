@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/group_service_provider.dart';
-import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/widgets/own_group_widget.dart';
 import 'package:swtp_app/widgets/own_pois_widget.dart';
 

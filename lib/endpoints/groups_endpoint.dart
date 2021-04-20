@@ -30,14 +30,14 @@ class GroupsEndpoint {
         }
 
         if (response.statusCode == HttpStatus.ok) {
-          Map<String,dynamic> json=jsonDecode(response.body);
-          Group group=Group.fromJSON(jsonDecode(response.body));
+          Map<String, dynamic> json = jsonDecode(response.body);
+          Group group = Group.fromJSON(jsonDecode(response.body));
 
-          List<GroupMembership> memberships=[];
-          for(dynamic elem in json['memberships']){
+          List<GroupMembership> memberships = [];
+          for (dynamic elem in json['memberships']) {
             memberships.add(GroupMembership.fromJSON(elem));
           }
-          group.memberships=memberships;
+          group.memberships = memberships;
           groups.add(group);
         } else {
           throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
@@ -53,7 +53,6 @@ class GroupsEndpoint {
     }
   }
 
-
   //TODO WICHTIG, NURNOCH OWNGROUP
   Future<Group> getOwnGroup() async {
     try {
@@ -65,20 +64,19 @@ class GroupsEndpoint {
           "Authorization": "Bearer ${_userService.token}"
         },
       );
-
       if (response.statusCode == HttpStatus.notFound) {
         throw Failure(FailureTranslation.text('groupNotFound'));
       }
 
       if (response.statusCode == HttpStatus.ok) {
-        Map<String,dynamic> json=jsonDecode(response.body);
-        Group group=Group.fromJSON(jsonDecode(response.body));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        Group group = Group.fromJSON(jsonDecode(response.body));
 
-        List<GroupMembership> memberships=[];
-        for(dynamic elem in json['memberships']){
+        List<GroupMembership> memberships = [];
+        for (dynamic elem in json['memberships']) {
           memberships.add(GroupMembership.fromJSON(elem));
         }
-        group.memberships=memberships;
+        group.memberships = memberships;
 
         return group;
       } else {

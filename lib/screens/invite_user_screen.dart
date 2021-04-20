@@ -22,34 +22,13 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
   @override
   Widget build(BuildContext context) {
     userProvider = Provider.of<UserServiceProvider>(context, listen: false);
-    groupProvider=Provider.of<GroupServiceProvider>(context,listen: false);
+    groupProvider = Provider.of<GroupServiceProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(Language.of(context).inviteUsers),
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildUserList(context),
-                TextButton(
-                  onPressed: () {
-                    _inviteUsers();
-                  },
-                  child: Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width * 0.98,
-                    child: Card(
-                      color: Theme.of(context).buttonColor,
-                      elevation: 10,
-                      child: Center(child: Text(Language.of(context).invite)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
           Consumer<UserServiceProvider>(
             builder: (_, notifier, __) {
               switch (notifier.state) {
@@ -71,7 +50,27 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
                       );
                     },
                     (r) {
-                      return Container();
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _buildUserList(context),
+                            TextButton(
+                              onPressed: () {
+                                _inviteUsers();
+                              },
+                              child: Container(
+                                height: 50,
+                                width: MediaQuery.of(context).size.width * 0.98,
+                                child: Card(
+                                  color: Theme.of(context).buttonColor,
+                                  elevation: 10,
+                                  child: Center(child: Text(Language.of(context).invite)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   );
               }

@@ -15,7 +15,6 @@ class GroupServiceProvider extends ChangeNotifier {
 
   GroupServiceProvider._internal();
 
-
   NotifierState _state = NotifierState.initial;
 
   Either<Failure, List<GroupMembership>> ownMembershipsResponse;
@@ -29,10 +28,10 @@ class GroupServiceProvider extends ChangeNotifier {
   Either<Failure, Group> ownGroupResponse;
 
   Group ownGroup;
-  List<Group> allGroupsExceptOwn=[];
-  List<Group> invitedIntoGroups=[];
-  List<Group> acceptedGroups=[];
-  List<GroupMembership> ownMemberships=[];
+  List<Group> allGroupsExceptOwn = [];
+  List<Group> invitedIntoGroups = [];
+  List<Group> acceptedGroups = [];
+  List<GroupMembership> ownMemberships = [];
 
   NotifierState get state => _state;
 
@@ -64,11 +63,11 @@ class GroupServiceProvider extends ChangeNotifier {
   _setAllGroups(Either<Failure, List<Group>> allRelevantGroupsResponse) {
     if (allRelevantGroupsResponse.isRight()) {
       allGroupsExceptOwn = allRelevantGroupsResponse.getOrElse(null);
-      for(GroupMembership membership in ownMemberships){
-        Group group=allGroupsExceptOwn.where((element) => element.groupId==membership.id.groupId).first;
-        if(membership.invitationPending){
+      for (GroupMembership membership in ownMemberships) {
+        Group group = allGroupsExceptOwn.where((element) => element.groupId == membership.id.groupId).first;
+        if (membership.invitationPending) {
           invitedIntoGroups.add(group);
-        }else{
+        } else {
           acceptedGroups.add(group);
         }
       }
@@ -117,45 +116,41 @@ class GroupServiceProvider extends ChangeNotifier {
   Future<void> loadAllGroups() async {
     _setState(NotifierState.loading);
 
-    if(allGroupsExceptOwn.isNotEmpty){
+    if (allGroupsExceptOwn.isNotEmpty) {
       allGroupsExceptOwn.clear();
     }
-    if(invitedIntoGroups.isNotEmpty){
+    if (invitedIntoGroups.isNotEmpty) {
       invitedIntoGroups.clear();
     }
-    if(acceptedGroups.isNotEmpty){
+    if (acceptedGroups.isNotEmpty) {
       acceptedGroups.clear();
     }
-    if(ownMemberships.isNotEmpty){
+    if (ownMemberships.isNotEmpty) {
       ownMemberships.clear();
     }
-
-
-
 
     await Task(() => UserEndpoint().getMemberships(AuthService().user.userId))
         .attempt()
         .mapLeftToFailure()
         .run()
         .then((value) => _setOwnMemberships(value));
-
-    await Task(() => GroupsEndpoint().getOwnGroup())
-        .attempt()
-        .mapLeftToFailure()
-        .run()
-        .then((value) => _setOwnGroup(value));
-
-    if (ownMemberships.isNotEmpty) {
-      List<int> groupIds = [];
-      for (GroupMembership membership in ownMemberships) {
-        groupIds.add(membership.id.groupId);
-      }
-      await Task(() => GroupsEndpoint().getAllRelevantGroups(groupIds))
+    if (ownMembershipsResponse.isRight()) {
+      await Task(() => GroupsEndpoint().getOwnGroup())
           .attempt()
           .mapLeftToFailure()
           .run()
-          .then((value) => _setAllGroups(value));
+          .then((value) => _setOwnGroup(value));
     }
+
+    List<int> groupIds = [];
+    for (GroupMembership membership in ownMemberships) {
+      groupIds.add(membership.id.groupId);
+    }
+    await Task(() => GroupsEndpoint().getAllRelevantGroups(groupIds))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _setAllGroups(value));
 
     _setState(NotifierState.loaded);
   }

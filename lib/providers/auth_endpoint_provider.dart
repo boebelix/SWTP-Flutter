@@ -6,7 +6,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/information_pre_loader_service.dart';
 
 class AuthEndpointProvider extends ChangeNotifier {
   static final AuthEndpointProvider _instance = AuthEndpointProvider._internal();

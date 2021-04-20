@@ -6,8 +6,6 @@ import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
-import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/group_service.dart';
 
 class UserServiceProvider extends ChangeNotifier {
   static final UserServiceProvider _instance = UserServiceProvider._internal();
@@ -21,7 +19,7 @@ class UserServiceProvider extends ChangeNotifier {
   UserEndpoint _userEndpoint = UserEndpoint();
 
   Either<Failure, List<User>> allUsersResponse;
-  List<User> allUsers=[];
+  List<User> allUsers = [];
   List<User> usersNotInOwnGroup = [];
   List<User> usersInOwnGroup = [];
   List<User> userInvitedIntoOwnGroup = [];
@@ -39,37 +37,37 @@ class UserServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setAllUsers(Either<Failure, List<User>> allUsersResponse,Group ownGroup) {
+  void _setAllUsers(Either<Failure, List<User>> allUsersResponse, Group ownGroup) {
     if (allUsersResponse.isRight()) {
       allUsers = allUsersResponse.getOrElse(() => null);
-      if(ownGroup!=null){
-        print(1);
-
+      if (ownGroup != null) {
         allUsers.remove(ownGroup.admin);
-        print(2);
-
         usersNotInOwnGroup.addAll(allUsers);
-        print(3);
-
-        for(GroupMembership membership in ownGroup.memberships){
+        for (GroupMembership membership in ownGroup.memberships) {
           usersInOwnGroup.add(membership.member);
-          print(4);
         }
         usersNotInOwnGroup.removeWhere((element) => usersInOwnGroup.contains(element));
-        print(5);
       }
-
     }
 
     this.allUsersResponse = allUsersResponse;
   }
 
-
-
   Future<void> getAllUsers(Group ownGroup) async {
     _setState(NotifierState.loading);
+
+    if (allUsers.isNotEmpty) {
+      allUsers.clear();
+    }
+    if (usersInOwnGroup.isNotEmpty) {
+      usersInOwnGroup.clear();
+    }
+    if (usersNotInOwnGroup.isNotEmpty) {
+      usersNotInOwnGroup.clear();
+    }
+
     await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
-      _setAllUsers(value,ownGroup);
+      _setAllUsers(value, ownGroup);
     });
 
     _setState(NotifierState.loaded);
