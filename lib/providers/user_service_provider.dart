@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:swtp_app/endpoints/user_endpoint.dart';
 import 'package:swtp_app/models/failure.dart';
+import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
@@ -19,32 +20,14 @@ class UserServiceProvider extends ChangeNotifier {
 
   UserEndpoint _userEndpoint = UserEndpoint();
 
-  Either<Failure, List<User>> _allUsersResponse;
-  List<User> allUsers = [];
+  Either<Failure, List<User>> allUsersResponse;
+  List<User> allUsers=[];
   List<User> usersNotInOwnGroup = [];
   List<User> usersInOwnGroup = [];
   List<User> userInvitedIntoOwnGroup = [];
-  Either<Failure, List<GroupMembership>> _membershipsResponse;
-  List<GroupMembership> _memberships = [];
   List<User> usersToInvite = [];
 
-  void _setMemberships(Either<Failure, List<GroupMembership>> memberships) {
-    if (memberships.isRight()) {
-      _memberships = memberships.getOrElse(() => null);
-    }
-    _membershipsResponse = memberships;
-  }
-
   NotifierState get state => _state;
-
-  void _setAllUsers(Either<Failure, List<User>> value) {
-    if (value.isRight()) {
-      allUsers = value.getOrElse(() => null);
-    }
-    _allUsersResponse = value;
-  }
-
-  Either<Failure, List<User>> get allUsersResponse => _allUsersResponse;
 
   void _setState(NotifierState state) {
     _state = state;
@@ -56,67 +39,39 @@ class UserServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllUsers() async {
+  void _setAllUsers(Either<Failure, List<User>> allUsersResponse,Group ownGroup) {
+    if (allUsersResponse.isRight()) {
+      allUsers = allUsersResponse.getOrElse(() => null);
+      if(ownGroup!=null){
+        print(1);
+
+        allUsers.remove(ownGroup.admin);
+        print(2);
+
+        usersNotInOwnGroup.addAll(allUsers);
+        print(3);
+
+        for(GroupMembership membership in ownGroup.memberships){
+          usersInOwnGroup.add(membership.member);
+          print(4);
+        }
+        usersNotInOwnGroup.removeWhere((element) => usersInOwnGroup.contains(element));
+        print(5);
+      }
+
+    }
+
+    this.allUsersResponse = allUsersResponse;
+  }
+
+
+
+  Future<void> getAllUsers(Group ownGroup) async {
     _setState(NotifierState.loading);
     await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
-      _setAllUsers(value);
+      _setAllUsers(value,ownGroup);
     });
 
-    _setState(NotifierState.loaded);
-  }
-
-  Future<void> _setUsersNotInOwnGroupList() async {
-    usersNotInOwnGroup.clear();
-    if (allUsers.isEmpty) {
-      await getAllUsers();
-    }
-
-    await GroupService().loadOwnGroup();
-
-    usersNotInOwnGroup = [...allUsers];
-
-    if (GroupService().ownGroup != null) {
-      for (GroupMembership membership in GroupService().ownGroup.memberships) {
-        usersNotInOwnGroup.removeWhere((element) => membership.member.userId == element.userId);
-      }
-    }
-
-    usersNotInOwnGroup.remove(GroupService().ownGroup.admin);
-  }
-
-  Future<void> getMembersOfOwnGroup() async {
-    _setState(NotifierState.loading);
-    await Task(() => _userEndpoint.getMemberships(AuthService().user.userId))
-        .attempt()
-        .mapLeftToFailure()
-        .run()
-        .then((value) async {
-      _setUsersInOwnGroupLists(value);
-      _setMemberships(value);
-      await _setUsersNotInOwnGroupList();
-    });
-
-    _setState(NotifierState.loaded);
-  }
-
-  _setUsersInOwnGroupLists(Either<Failure, List<GroupMembership>> allMemberships) {
-    _setState(NotifierState.loading);
-    userInvitedIntoOwnGroup.clear();
-    usersInOwnGroup.clear();
-    if (allMemberships.isRight()) {
-      final tmp = allMemberships.getOrElse(null);
-
-      var invitationPendingUser = tmp.where((element) => (element.invitationPending));
-
-      for (int i = 0; i < invitationPendingUser.length; i++) {
-        userInvitedIntoOwnGroup.add((invitationPendingUser).elementAt(i).member);
-      }
-
-      var userAlreadyInGroup = tmp.where((element) => (!element.invitationPending));
-      for (int i = 0; i < userAlreadyInGroup.length; i++) {
-        usersInOwnGroup.add(userAlreadyInGroup.elementAt(i).member);
-      }
-    }
     _setState(NotifierState.loaded);
   }
 

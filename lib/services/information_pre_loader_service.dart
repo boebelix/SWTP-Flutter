@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
+/*
 import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/services/group_service.dart';
@@ -11,8 +12,6 @@ class InformationPreLoaderService {
   factory InformationPreLoaderService() => _instance;
 
   InformationPreLoaderService._internal();
-
-  GroupService groupService = GroupService();
   BuildContext context;
 
   /// Alle NutzerIds der Admins von allen angehörigen Gruppen
@@ -44,3 +43,4 @@ class InformationPreLoaderService {
     }
   }
 }
+*/

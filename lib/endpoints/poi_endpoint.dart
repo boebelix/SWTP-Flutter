@@ -215,7 +215,6 @@ class PoiEndpoint {
             "categoryId": categoryId,
           }));
 
-      print('Create' + response.statusCode.toString());
       if (response.statusCode == HttpStatus.ok) {
         return Poi.fromJSON(jsonDecode(response.body));
       }

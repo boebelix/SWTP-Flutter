@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/group.dart';
+import 'package:swtp_app/models/group_membership.dart';
+import 'package:swtp_app/models/user.dart';
+import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/services/group_service.dart';
 
 class GroupsScreen extends StatefulWidget {
@@ -10,16 +14,17 @@ class GroupsScreen extends StatefulWidget {
   _GroupsScreenState createState() => _GroupsScreenState();
 }
 
-GroupService _groupService = GroupService();
-
 class _GroupsScreenState extends State<GroupsScreen> {
+  GroupServiceProvider groupServiceProvider;
+
   @override
   Widget build(BuildContext context) {
+    groupServiceProvider=Provider.of<GroupServiceProvider>(context,listen: false);
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline6,
       textAlign: TextAlign.center,
       child: FutureBuilder<void>(
-        future: _groupService.reloadAll(),
+        future: groupServiceProvider.loadAllGroups(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           List<Widget> children;
           if (snapshot.connectionState == ConnectionState.done) {
@@ -87,8 +92,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.invitedIntoGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(_groupService.invitedIntoGroups.elementAt(index), true));
+        itemCount: groupServiceProvider.invitedIntoGroups.length,
+        itemBuilder: (context, index) => _createGroupCard(groupServiceProvider.invitedIntoGroups.elementAt(index), true));
   }
 
   ListView _buildListViewAcceptedGroups() {
@@ -96,8 +101,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.acceptedGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(_groupService.acceptedGroups.elementAt(index), false));
+        itemCount: groupServiceProvider.acceptedGroups.length,
+        itemBuilder: (context, index) => _createGroupCard(groupServiceProvider.acceptedGroups.elementAt(index), false));
   }
 
   Card _createGroupCard(Group group, bool isInvited) {
@@ -159,10 +164,10 @@ class _GroupsScreenState extends State<GroupsScreen> {
   }
 
   Future<void> _acceptGroupInvitation(Group group) async {
-    await _groupService.acceptGroupInvitation(group.groupId);
+    await groupServiceProvider.acceptGroupInvitation(group.groupId);
   }
 
   Future<void> _denyInvitationOrLeaveGroup(Group group) async {
-    await _groupService.denyInvitationOrLeaveGroup(group.groupId);
+    await groupServiceProvider.denyInvitationOrLeaveGroup(group.groupId);
   }
 }

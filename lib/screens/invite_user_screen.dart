@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
+import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
-import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/widgets/loading_indicator.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
@@ -17,11 +16,13 @@ class InviteUserScreen extends StatefulWidget {
 }
 
 class _InviteUserScreenState extends State<InviteUserScreen> {
-  UserServiceProvider userprovider;
+  UserServiceProvider userProvider;
+  GroupServiceProvider groupProvider;
 
   @override
   Widget build(BuildContext context) {
-    userprovider = Provider.of<UserServiceProvider>(context, listen: false);
+    userProvider = Provider.of<UserServiceProvider>(context, listen: false);
+    groupProvider=Provider.of<GroupServiceProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(Language.of(context).inviteUsers),
@@ -88,17 +89,17 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: userprovider.usersNotInOwnGroup.length,
+        itemCount: userProvider.usersNotInOwnGroup.length,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return CheckboxListTile(
             title: Text(
-                "${userprovider.usersNotInOwnGroup.elementAt(index).firstName} ${userprovider.usersNotInOwnGroup.elementAt(index).lastName}"),
+                "${userProvider.usersNotInOwnGroup.elementAt(index).firstName} ${userProvider.usersNotInOwnGroup.elementAt(index).lastName}"),
             tristate: false,
-            value: userprovider.isUserChosen(index),
+            value: userProvider.isUserChosen(index),
             onChanged: (newValue) {
               setState(() {
-                userprovider.chooseUser(index, newValue);
+                userProvider.chooseUser(index, newValue);
               });
             },
           );
@@ -106,11 +107,10 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
   }
 
   _inviteUsers() async {
-    for (User user in userprovider.usersToInvite) {
-      await GroupService().inviteUserToGroup(user.userId);
+    for (User user in userProvider.usersToInvite) {
+      await groupProvider.inviteUserToGroup(user.userId);
     }
-    await userprovider.getAllUsers();
-    await userprovider.getMembersOfOwnGroup();
+    await userProvider.getAllUsers(groupProvider.ownGroup);
 
     Navigator.pop(context);
   }

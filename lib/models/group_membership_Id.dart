@@ -8,4 +8,9 @@ class GroupMembershipId {
         groupId: json['groupId'],
         userId: json['userId'],
       );
+
+  @override
+  String toString() {
+    return 'GroupMembershipId{groupId: $groupId, userId: $userId}';
+  }
 }
