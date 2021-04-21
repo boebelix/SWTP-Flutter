@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
@@ -26,30 +25,9 @@ class _AddPoiFormState extends State<AddPoiForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
+
   File _image;
   final _imagePicker = ImagePicker();
-
-  Future<void> getImageFromGallery() async {
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future<void> getImageFromCamera() async {
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
 
   @override
   void dispose() {
@@ -82,44 +60,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    height: MediaQuery.of(context).size.shortestSide * 0.66,
-                    width: MediaQuery.of(context).size.shortestSide * 0.66,
-                    child: GestureDetector(
-                      onTap: () async {
-                        print('clicked');
-                        choseSource();
-                      },
-                      child: _image == null
-                          ? Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                //color: Colors.amber,
-                                border: Border.all(
-                                  color: Colors.black45,
-                                  width: 4,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.camera_alt_outlined,
-                                size: 80,
-                              ),
-                            )
-                          : Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                child: Image.file(
-                                  _image,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                    ),
-                  ),
+                  _buildImageBox(context),
                   Spacer(),
                   Flexible(
                     flex: 8,
@@ -136,28 +77,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                   ),
                   Spacer(),
                   Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        final String _title = _titleController.text;
-                        final String _description = _titleController.text;
-                        final int _categoryId = Provider.of<CategoriesServiceProvider>(context, listen: false)
-                            .currentSeletedCategory
-                            .categoryId;
-                        final Position _position =
-                            Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
-
-                        _createPoi(context, _title, _description, _categoryId, _position);
-                      },
-                      child: Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.98,
-                        child: Card(
-                          color: Theme.of(context).buttonColor,
-                          elevation: 10,
-                          child: Center(child: Text("Button")),
-                        ),
-                      ),
-                    ),
+                    child: _buttonAddNewPoi(context, currentPosition),
                   ),
                 ],
               ),
@@ -197,34 +117,145 @@ class _AddPoiFormState extends State<AddPoiForm> {
     );
   }
 
-  void choseSource() async {
-    return showDialog(
+  Future<void> getImageFromGallery() async {
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<void> getImageFromCamera() async {
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Container _buildImageBox(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.shortestSide * 0.66,
+      width: MediaQuery.of(context).size.shortestSide * 0.66,
+      child: GestureDetector(
+        onTap: () async {
+          _choseSourceDialog();
+        },
+        child: _image == null ? _defaultImageBox() : _loadImageBox(),
+      ),
+    );
+  }
+
+  TextButton _buttonAddNewPoi(BuildContext context, LatLng currentPosition) {
+    return TextButton(
+      onPressed: () {
+        final String _title = _titleController.text;
+        final String _description = _titleController.text;
+        final int _categoryId =
+            Provider.of<CategoriesServiceProvider>(context, listen: false).currentSeletedCategory.categoryId;
+        final Position _position = Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
+
+        _createPoi(context, _title, _description, _categoryId, _position);
+      },
+      child: Container(
+        height: 50,
+        width: MediaQuery.of(context).size.width * 0.98,
+        child: Card(
+          color: Theme.of(context).buttonColor,
+          elevation: 10,
+          child: Center(child: Text("Button")),
+        ),
+      ),
+    );
+  }
+
+  Container _loadImageBox() {
+    return Container(
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        child: Image.file(
+          _image,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Container _defaultImageBox() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+        //color: Colors.amber,
+        border: Border.all(
+          color: Colors.black45,
+          width: 4,
+        ),
+      ),
+      child: Icon(
+        Icons.camera_alt_outlined,
+        size: 80,
+      ),
+    );
+  }
+
+  Future<void> _choseSourceDialog() async {
+    showDialog(
         barrierDismissible: false,
         useRootNavigator: true,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Title'),
-            content: Text('Content'),
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.camera_alt_outlined),
-                  onPressed: () async {
-                    await getImageFromCamera();
-                    Navigator.of(context).pop();
-                  }),
-              IconButton(
-                icon: Icon(Icons.image_search_outlined),
-                onPressed: () async {
-                  await getImageFromGallery();
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                Center(
+                  heightFactor: 2,
+                  child: Text(Language.of(context).choseSource),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        icon: Icon(Icons.camera_alt_outlined),
+                        iconSize: 80,
+                        onPressed: () async {
+                          await getImageFromCamera();
+                          Navigator.of(context).pop();
+                        }),
+                    IconButton(
+                      icon: Icon(Icons.image_search_outlined),
+                      iconSize: 80,
+                      onPressed: () async {
+                        await getImageFromGallery();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
           );
-        }).then((value) {
-      print('Close please');
-    });
+        });
   }
 
   void _createPoi(BuildContext context, String _title, String _description, int _categoryId, Position _position) async {

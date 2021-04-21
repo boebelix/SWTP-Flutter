@@ -58,5 +58,6 @@
   "inviteUsers": "Nutzer einladen",
   "createGroup": "Gruppe erstellen",
   "invite": "Einladen",
-  "create": "Erstellen"
+  "create": "Erstellen",
+  "choseSource": "Wähle deine Quelle"
 }
