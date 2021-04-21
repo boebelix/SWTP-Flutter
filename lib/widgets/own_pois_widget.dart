@@ -79,13 +79,16 @@ class _OwnPOIWidgetState extends State<OwnPOIWidget> {
           children: [
             Flexible(
               flex: 1,
-              child: Container(
-                color: Colors.amber,
-                child: poi.image != null
-                    ? Image(
-                  image: poi.image.image,
-                )
-                    : Container(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  color: Colors.amber,
+                  child: poi.image != null
+                      ? Image(
+                    image: poi.image.image,
+                  )
+                      : Container(),
+                ),
               ),
             ),
             Flexible(
