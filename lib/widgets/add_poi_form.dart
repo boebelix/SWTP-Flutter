@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
@@ -22,6 +25,19 @@ class _AddPoiFormState extends State<AddPoiForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
+  File _image;
+  final picker = ImagePicker();
+
+  Future<void> getImage() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -49,49 +65,87 @@ class _AddPoiFormState extends State<AddPoiForm> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: 8,
-                  child: Form(
-                    key: _formKey,
-                    child: ListView(
-                      padding: const EdgeInsets.all(8.0),
-                      children: [
-                        _inputTitle(context),
-                        _inputDescription(context),
-                        _inputCategories(context),
-                      ],
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.shortestSide * 0.66,
+                    width: MediaQuery.of(context).size.shortestSide * 0.66,
+                    child: GestureDetector(
+                      onTap: getImage,
+                      child: _image == null
+                          ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                //color: Colors.amber,
+                                border: Border.all(
+                                  color: Colors.black45,
+                                  width: 4,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                size: 80,
+                              ),
+                            )
+                          : Container(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                child: Image.file(
+                                  _image,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                     ),
                   ),
-                ),
-                Spacer(),
-                Expanded(
-                  child: TextButton(
-                    onPressed: () {
-                      final String _title = _titleController.text;
-                      final String _description = _titleController.text;
-                      final int _categoryId = Provider.of<CategoriesServiceProvider>(context, listen: false)
-                          .currentSeletedCategory
-                          .categoryId;
-                      final Position _position =
-                          Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
-
-                      _createPoi(context, _title, _description, _categoryId, _position);
-                    },
-                    child: Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width * 0.98,
-                      child: Card(
-                        color: Theme.of(context).buttonColor,
-                        elevation: 10,
-                        child: Center(child: Text("Button")),
+                  Spacer(),
+                  Flexible(
+                    flex: 8,
+                    child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          _inputTitle(context),
+                          _inputDescription(context),
+                          _inputCategories(context),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Spacer(),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        final String _title = _titleController.text;
+                        final String _description = _titleController.text;
+                        final int _categoryId = Provider.of<CategoriesServiceProvider>(context, listen: false)
+                            .currentSeletedCategory
+                            .categoryId;
+                        final Position _position =
+                            Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
+
+                        _createPoi(context, _title, _description, _categoryId, _position);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.98,
+                        child: Card(
+                          color: Theme.of(context).buttonColor,
+                          elevation: 10,
+                          child: Center(child: Text("Button")),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -106,7 +160,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                 break;
               default:
                 return notifier.categoriesResponse.fold(
-                  (failure) {
+                      (failure) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       notifier.resetState();
                     });
@@ -115,7 +169,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                       failure: failure,
                     );
                   },
-                  (r) {
+                      (r) {
                     return Container();
                   },
                 );
