@@ -12,7 +12,6 @@ import 'package:swtp_app/services/auth_service.dart';
 class UserEndpoint {
   var url = Properties.url;
 
-  //not used
   Future<Map<String, dynamic>> getUserById(int userId) async {
     try {
       final response = await http.get(
@@ -38,8 +37,7 @@ class UserEndpoint {
     }
   }
 
-  //holt alle nutzer die existieren inklusive sich selbst
-  Future<List<User>> getUser() async {
+  Future<List<User>> getUsers() async {
     try {
       final response = await http.get(
         Uri.http(url, "/api/users/"),
@@ -74,12 +72,10 @@ class UserEndpoint {
     }
   }
 
-  //holt alle memberships eines nutzers
-  //kann nut für sich selbst holen also TODO
-  Future<List<GroupMembership>> getMemberships(int userId) async {
+  Future<List<GroupMembership>> getMemberships() async {
     try {
       final response = await http.get(
-        Uri.http(url, "/api/users/$userId/memberships"),
+        Uri.http(url, "/api/users/${AuthService().user.userId}/memberships"),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",

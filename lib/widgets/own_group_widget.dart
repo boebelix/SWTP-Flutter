@@ -18,11 +18,11 @@ class OwnGroupWidget extends StatefulWidget {
 class _OwnGroupState extends State<OwnGroupWidget> {
   final TextEditingController _groupNameTextController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
-  GroupServiceProvider groupServiceProvider;
+  GroupServiceProvider _groupServiceProvider;
 
   @override
   Widget build(BuildContext context) {
-    groupServiceProvider = Provider.of<GroupServiceProvider>(context, listen: false);
+    _groupServiceProvider = Provider.of<GroupServiceProvider>(context, listen: false);
     return Consumer<GroupServiceProvider>(
       builder: (_, notifier, __) {
         switch (notifier.state) {
@@ -47,7 +47,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
                 );
               },
               (_) {
-                if (groupServiceProvider.ownGroup != null) {
+                if (_groupServiceProvider.ownGroup != null) {
                   return buildOwnGroupWidget();
                 } else {
                   return buildOwnGroupNonExistentWidget();
@@ -155,7 +155,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Widget _buildListViewAcceptedMembersOfOwnGroup() {
-    List<GroupMembership> group = groupServiceProvider.ownGroup.memberships;
+    List<GroupMembership> group = _groupServiceProvider.ownGroup.memberships;
     if (group != null) {
       List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
       return buildList(inGroup, true);
@@ -175,7 +175,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Widget _buildListViewOfInvitedMembersOfOwnGroup() {
-    List<GroupMembership> group = groupServiceProvider.ownGroup.memberships;
+    List<GroupMembership> group = _groupServiceProvider.ownGroup.memberships;
     if (group.isNotEmpty) {
       List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
       return buildList(notInGroup, false);
@@ -211,11 +211,11 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Future<void> _removeUserFromGroup(int userId) async {
-    await groupServiceProvider.kickUserFromOwnGroup(userId);
+    await _groupServiceProvider.kickUserFromOwnGroup(userId);
   }
 
   Future<void> _showInvitationScreen(BuildContext context) async {
-    await Provider.of<UserServiceProvider>(context, listen: false).getAllUsers(groupServiceProvider.ownGroup);
+    await Provider.of<UserServiceProvider>(context, listen: false).getAllUsers(_groupServiceProvider.ownGroup);
   }
 
   String _validatorGroupnameIsNotEmpty(value) {
@@ -228,8 +228,8 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   Future<void> _createGroupWithName() async {
     if (_formKey.currentState.validate()) {
-      await groupServiceProvider.createGroup(_groupNameTextController.text);
-      await groupServiceProvider.loadAllGroups();
+      await _groupServiceProvider.createGroup(_groupNameTextController.text);
+      await _groupServiceProvider.loadAllGroups();
     }
   }
 }

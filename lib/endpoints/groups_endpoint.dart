@@ -53,7 +53,6 @@ class GroupsEndpoint {
     }
   }
 
-  //TODO WICHTIG, NURNOCH OWNGROUP
   Future<Group> getOwnGroup() async {
     try {
       final response = await http.get(
@@ -74,8 +73,11 @@ class GroupsEndpoint {
 
         List<GroupMembership> memberships = [];
         for (dynamic elem in json['memberships']) {
+
           memberships.add(GroupMembership.fromJSON(elem));
+
         }
+
         group.memberships = memberships;
 
         return group;
@@ -115,7 +117,6 @@ class GroupsEndpoint {
     }
   }
 
-  //TODO
   Future<GroupMembership> inviteUserToGroup(int userId) async {
     try {
       final response = await http.post(
@@ -142,7 +143,6 @@ class GroupsEndpoint {
     }
   }
 
-  //ok
   Future<void> removeUserFromGroup(int groupId, int userId) async {
     try {
       final response = await http.delete(

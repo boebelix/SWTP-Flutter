@@ -7,7 +7,7 @@ class Group {
   int groupId;
   String groupName = "";
 
-  List<GroupMembership> memberships=[];
+  List<GroupMembership> memberships = [];
 
   Group({this.admin, this.groupId, this.groupName, this.memberships});
 

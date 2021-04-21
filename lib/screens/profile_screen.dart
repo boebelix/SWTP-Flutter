@@ -16,7 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
   TabController _controller;
 
-  GroupServiceProvider groupServiceProvider;
+  GroupServiceProvider _groupServiceProvider;
 
   @override
   void initState() {
@@ -26,10 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    groupServiceProvider=Provider.of<GroupServiceProvider>(context,listen: false);
-    final deviceSice = MediaQuery.of(context).size;
+    _groupServiceProvider=Provider.of<GroupServiceProvider>(context,listen: false);
+    final deviceSize = MediaQuery.of(context).size;
     return SizedBox(
-      height: deviceSice.height,
+      height: deviceSize.height,
       child: Column(
           key: UniqueKey(),
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,8 +58,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   }
 
   Tab createOwnGroupTextTab() {
-    if (groupServiceProvider.ownGroup != null)
-      return Tab(text: groupServiceProvider.ownGroup.groupName);
+    if (_groupServiceProvider.ownGroup != null)
+      return Tab(text: _groupServiceProvider.ownGroup.groupName);
     else
       return Tab(text: Language.of(context).ownGroup);
   }

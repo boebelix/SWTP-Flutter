@@ -60,10 +60,14 @@ class AuthService {
     }
 
     if (AuthService().isSignedIn()) {
+
       List<int> allUserIdsOfMembershipsOwner = [];
       allUserIdsOfMembershipsOwner.add(AuthService().user.userId);
+
       for (Group group in groupServiceProvider.allGroupsExceptOwn) {
+
         allUserIdsOfMembershipsOwner.add(group.admin.userId);
+
       }
 
       var poiEndpointProvider = Provider.of<PoiServiceProvider>(context, listen: false);

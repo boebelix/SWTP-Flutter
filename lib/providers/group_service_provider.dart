@@ -9,11 +9,6 @@ import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/services/auth_service.dart';
 
 class GroupServiceProvider extends ChangeNotifier {
-  static final GroupServiceProvider _instance = GroupServiceProvider._internal();
-
-  factory GroupServiceProvider() => _instance;
-
-  GroupServiceProvider._internal();
 
   NotifierState _state = NotifierState.initial;
 
@@ -24,7 +19,6 @@ class GroupServiceProvider extends ChangeNotifier {
   Either<Failure, GroupMembership> inviteUserToGroupResponse;
   Either<Failure, GroupMembership> acceptGroupInvitationResponse;
 
-  //own group gibt nen 404 failure wenn keine eigene gruppe existiert => TODO Fangen
   Either<Failure, Group> ownGroupResponse;
 
   Group ownGroup;
@@ -129,7 +123,7 @@ class GroupServiceProvider extends ChangeNotifier {
       ownMemberships.clear();
     }
 
-    await Task(() => UserEndpoint().getMemberships(AuthService().user.userId))
+    await Task(() => UserEndpoint().getMemberships())
         .attempt()
         .mapLeftToFailure()
         .run()

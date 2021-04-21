@@ -38,6 +38,10 @@ class UserServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // aus der Liste aller zurückgegebenen Nutzer werden hier 3 Listen geformt:
+  // 1: alle Nutzer (allUsers)
+  // 2: Nutzer in eigener Gruppe (usersInOwnGroup)
+  // 3: Nutzer die nicht in der eigenen Gruppe sind (usersNotInOwnGroup)
   void _setAllUsers(Either<Failure, List<User>> allUsersResponse, Group ownGroup) {
     if (allUsersResponse.isRight()) {
       allUsers = allUsersResponse.getOrElse(() => null);
@@ -67,7 +71,7 @@ class UserServiceProvider extends ChangeNotifier {
       usersNotInOwnGroup.clear();
     }
 
-    await Task(() => _userEndpoint.getUser()).attempt().mapLeftToFailure().run().then((value) {
+    await Task(() => _userEndpoint.getUsers()).attempt().mapLeftToFailure().run().then((value) {
       _setAllUsers(value, ownGroup);
     });
 
