@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
@@ -26,10 +27,21 @@ class _AddPoiFormState extends State<AddPoiForm> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
   File _image;
-  final picker = ImagePicker();
+  final _imagePicker = ImagePicker();
 
-  Future<void> getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+  Future<void> getImageFromGallery() async {
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<void> getImageFromCamera() async {
+    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -74,7 +86,10 @@ class _AddPoiFormState extends State<AddPoiForm> {
                     height: MediaQuery.of(context).size.shortestSide * 0.66,
                     width: MediaQuery.of(context).size.shortestSide * 0.66,
                     child: GestureDetector(
-                      onTap: getImage,
+                      onTap: () async {
+                        print('clicked');
+                        choseSource();
+                      },
                       child: _image == null
                           ? Container(
                               decoration: BoxDecoration(
@@ -180,6 +195,36 @@ class _AddPoiFormState extends State<AddPoiForm> {
         ),
       ]),
     );
+  }
+
+  void choseSource() async {
+    return showDialog(
+        barrierDismissible: false,
+        useRootNavigator: true,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Title'),
+            content: Text('Content'),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.camera_alt_outlined),
+                  onPressed: () async {
+                    await getImageFromCamera();
+                    Navigator.of(context).pop();
+                  }),
+              IconButton(
+                icon: Icon(Icons.image_search_outlined),
+                onPressed: () async {
+                  await getImageFromGallery();
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        }).then((value) {
+      print('Close please');
+    });
   }
 
   void _createPoi(BuildContext context, String _title, String _description, int _categoryId, Position _position) async {
