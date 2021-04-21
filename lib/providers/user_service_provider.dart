@@ -81,7 +81,6 @@ class UserServiceProvider extends ChangeNotifier {
       } else if (chosen && !usersToInvite.contains(usersNotInOwnGroup.elementAt(index))) {
         usersToInvite.add(usersNotInOwnGroup.elementAt(index));
       }
-      usersToInvite.remove(AuthService().user);
     }
   }
 
