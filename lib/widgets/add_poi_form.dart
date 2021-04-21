@@ -46,6 +46,13 @@ class _AddPoiFormState extends State<AddPoiForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Language.of(context).addNewPoi),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.edit_outlined),
+              onPressed: () {
+                _choseSourceDialog();
+              })
+        ],
       ),
       body: Stack(children: [
         Padding(
