@@ -57,29 +57,17 @@ class _AddPoiFormState extends State<AddPoiForm> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildImageBox(context),
-                  Spacer(),
-                  Flexible(
-                    flex: 8,
-                    child: Form(
-                      key: _formKey,
-                      child: ListView(
-                        children: [
-                          _inputTitle(context),
-                          _inputDescription(context),
-                          _inputCategories(context),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    child: _buttonAddNewPoi(context, currentPosition),
-                  ),
-                ],
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    _buildImageBox(context),
+                    _inputTitle(context),
+                    _inputDescription(context),
+                    _inputCategories(context),
+                    _buttonAddNewPoi(context, currentPosition)
+                  ],
+                ),
               ),
             ),
           ),
@@ -109,8 +97,6 @@ class _AddPoiFormState extends State<AddPoiForm> {
                   },
                 );
             }
-
-            {}
           },
         ),
       ]),
@@ -162,6 +148,8 @@ class _AddPoiFormState extends State<AddPoiForm> {
         final Position _position = Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
 
         _createPoi(context, _title, _description, _categoryId, _position);
+
+        Navigator.of(context).pop();
       },
       child: Container(
         height: 50,
@@ -323,7 +311,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
           fit: FlexFit.tight,
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+            padding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
             child: Icon(
               Icons.description_outlined,
               color: Colors.black45,
