@@ -170,8 +170,6 @@ class PoiEndpoint {
         },
       );
 
-      await Future.delayed(Duration(milliseconds: 100));
-
       if (response.statusCode == HttpStatus.ok) {
         List<Category> categories = [];
 
@@ -215,7 +213,6 @@ class PoiEndpoint {
             "categoryId": categoryId,
           }));
 
-      print('Create' + response.statusCode.toString());
       if (response.statusCode == HttpStatus.ok) {
         return Poi.fromJSON(jsonDecode(response.body));
       }
