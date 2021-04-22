@@ -23,6 +23,8 @@ class _CreateCommentState extends State<CreateComment> {
   void _createPoiComment() async {
     if (_formKey.currentState.validate()) {
       await Provider.of<PoiServiceProvider>(context, listen: false).createCommentForPoi(poiId, commentController.text);
+
+      commentController.clear();
     }
   }
 

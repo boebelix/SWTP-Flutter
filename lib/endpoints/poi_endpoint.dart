@@ -159,6 +159,25 @@ class PoiEndpoint {
     }
   }
 
+  Future<void> deleteComment(int commentId) async {
+    try {
+      final response = await http.delete(
+        Uri.http(url, "/api/comments/$commentId"),
+        headers: {"accept": "application/json", "Authorization": "Bearer ${AuthService().token}"},
+      );
+
+      if (response.statusCode != HttpStatus.noContent) {
+        throw Failure(FailureTranslation.text('noConnection'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
   Future<List<Category>> getAllCategories() async {
     try {
       final response = await http.get(

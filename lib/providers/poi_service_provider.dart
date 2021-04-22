@@ -77,6 +77,14 @@ class PoiServiceProvider extends ChangeNotifier {
     this.poiCreateCommentResponse=poiCreateCommentResponse;
   }
 
+  _deleteComment(Either<Failure,void> deleteCommentResponse, int poiId, int commentId){
+    if(deleteCommentResponse.isRight()){
+      var poiAtId =pois.where((element) => element.poiId==poiId).first;
+
+      poiAtId.comments.removeWhere((element) => element.commentId==commentId);
+    }
+  }
+
   _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
     if (poiCreatePoiResponse.isRight()) {
       pois.add(poiCreatePoiResponse.getOrElse(null));
@@ -133,6 +141,14 @@ class PoiServiceProvider extends ChangeNotifier {
         .mapLeftToFailure()
         .run()
         .then((value) => _addPoiComment(value, poiId));
+
+    setState(NotifierState.loaded);
+  }
+
+  Future<void> deleteComment(int poiId, int commentId) async {
+    setState(NotifierState.loading);
+
+    await Task(()=>PoiEndpoint().deleteComment(commentId)).attempt().mapLeftToFailure().run().then((value) => _deleteComment(value, poiId, commentId));
 
     setState(NotifierState.loaded);
   }

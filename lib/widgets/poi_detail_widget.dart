@@ -5,6 +5,7 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
+import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 import 'package:swtp_app/models/comment.dart';
 import 'package:swtp_app/widgets/create_comment.dart';
@@ -18,17 +19,27 @@ class PoiDetailWidget extends StatefulWidget {
 }
 
 class _PoiDetailWidgetState extends State<PoiDetailWidget> {
+  PoiServiceProvider _poiServiceProvider;
+
   String _formatDate(String date) {
     final DateTime dateTime = DateTime.parse(date);
     return DateFormat.yMMMd().add_Hm().format(dateTime);
+  }
+
+  void _deleteComment(int poiId, int commentId) async {
+    await _poiServiceProvider.deleteComment(poiId, commentId);
   }
 
   @override
   Widget build(BuildContext context) {
     final int poiId = ModalRoute.of(context).settings.arguments as int;
 
+    final FocusNode focusNode=FocusNode();
+
     final Poi poi =
         Provider.of<PoiServiceProvider>(context, listen: false).pois.where((element) => element.poiId == poiId).first;
+
+    _poiServiceProvider = Provider.of<PoiServiceProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -128,7 +139,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                           shrinkWrap: false,
                           scrollDirection: Axis.vertical,
                           itemCount: itemCount,
-                          itemBuilder: (context, index) => _buildCommentCard(comments.elementAt(index)),
+                          itemBuilder: (context, index) => _buildCommentCard(comments.elementAt(index), poi),
                         );
                       },
                     );
@@ -147,7 +158,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
     );
   }
 
-  Card _buildCommentCard(Comment comment) {
+  Card _buildCommentCard(Comment comment, Poi poi) {
     return Card(
       key: UniqueKey(),
       elevation: 0,
@@ -167,7 +178,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                 width: 18,
               ),
               Flexible(
-                flex: 4,
+                flex: 6,
                 child: Container(
                   width: double.infinity,
                   color: Colors.black38,
@@ -194,6 +205,17 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
                     ),
                   ),
                 ),
+              ),
+              Flexible(
+                flex: 1,
+                child: comment.author.userId == AuthService().user.userId
+                    ? IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          _deleteComment(poi.poiId, comment.commentId);
+                        },
+                      )
+                    : Container(),
               ),
             ],
           ),
