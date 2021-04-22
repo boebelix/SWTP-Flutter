@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/group.dart';
-import 'package:swtp_app/services/group_service.dart';
+import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/providers/group_service_provider.dart';
+import 'package:swtp_app/widgets/loading_indicator.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class GroupsScreen extends StatefulWidget {
   static const routeName = '/groups';
@@ -10,51 +14,50 @@ class GroupsScreen extends StatefulWidget {
   _GroupsScreenState createState() => _GroupsScreenState();
 }
 
-GroupService _groupService = GroupService();
-
 class _GroupsScreenState extends State<GroupsScreen> {
+  GroupServiceProvider groupServiceProvider;
+
   @override
   Widget build(BuildContext context) {
+    groupServiceProvider = Provider.of<GroupServiceProvider>(context, listen: false);
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline6,
       textAlign: TextAlign.center,
-      child: FutureBuilder<void>(
-        future: _groupService.reloadAll(),
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          List<Widget> children;
-          if (snapshot.connectionState == ConnectionState.done) {
-            children = <Widget>[
-              _buildAcceptedGroupsText(context),
-              _buildListViewAcceptedGroups(),
-              _buildGroupInvitationsText(context),
-              _buildListViewInvitedGroups()
-            ];
-          } else if (snapshot.hasError) {
-            children = <Widget>[
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              )
-            ];
-          } else {
-            children = const <Widget>[
-              SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
-              ),
-            ];
+      child: Consumer<GroupServiceProvider>(
+        builder: (_, notifier, __) {
+          switch (notifier.state) {
+            case NotifierState.initial:
+              return Container();
+              break;
+            case NotifierState.loading:
+              return LoadingIndicator();
+              break;
+            default:
+              return notifier.ownMembershipsResponse.fold(
+                (failure) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) {
+                      notifier.resetState();
+                    },
+                  );
+
+                  return PopUpWarningDialog(
+                    context: context,
+                    failure: failure,
+                  );
+                },
+                (_) {
+                  return Column(
+                    children: [
+                      _buildAcceptedGroupsText(context),
+                      _buildListViewAcceptedGroups(),
+                      _buildGroupInvitationsText(context),
+                      _buildListViewInvitedGroups(),
+                    ],
+                  );
+                },
+              );
           }
-          return Center(
-            child: Column(
-              children: children,
-            ),
-          );
         },
       ),
     );
@@ -87,8 +90,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.invitedIntoGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(_groupService.invitedIntoGroups.elementAt(index), true));
+        itemCount: groupServiceProvider.invitedIntoGroups.length,
+        itemBuilder: (context, index) =>
+            _createGroupCard(groupServiceProvider.invitedIntoGroups.elementAt(index), true));
   }
 
   ListView _buildListViewAcceptedGroups() {
@@ -96,8 +100,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
         padding: EdgeInsets.all(5),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: _groupService.acceptedGroups.length,
-        itemBuilder: (context, index) => _createGroupCard(_groupService.acceptedGroups.elementAt(index), false));
+        itemCount: groupServiceProvider.acceptedGroups.length,
+        itemBuilder: (context, index) => _createGroupCard(groupServiceProvider.acceptedGroups.elementAt(index), false));
   }
 
   Card _createGroupCard(Group group, bool isInvited) {
@@ -159,10 +163,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
   }
 
   Future<void> _acceptGroupInvitation(Group group) async {
-    await _groupService.acceptGroupInvitation(group.groupId);
+    await groupServiceProvider.acceptGroupInvitation(group.groupId);
+    await groupServiceProvider.loadAllGroups();
   }
 
   Future<void> _denyInvitationOrLeaveGroup(Group group) async {
-    await _groupService.denyInvitationOrLeaveGroup(group.groupId);
+    await groupServiceProvider.denyInvitationOrLeaveGroup(group.groupId);
+    await groupServiceProvider.loadAllGroups();
   }
 }

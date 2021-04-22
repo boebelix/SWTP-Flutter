@@ -12,4 +12,9 @@ class GroupMembership {
       id: json['id'] == null ? null : GroupMembershipId.fromJSON(json['id']),
       member: json['member'] == null ? null : User.fromJSON(json['member']),
       invitationPending: json['invitationPending']);
+
+  @override
+  String toString() {
+    return 'GroupMembership{id: $id, member: $member, invitationPending: $invitationPending}';
+  }
 }
