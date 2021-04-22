@@ -237,4 +237,44 @@ class PoiEndpoint {
       throw Failure(FailureTranslation.text('parseFailure'));
     }
   }
+
+  Future<void> uploadImage(File image, Poi poi) async {
+    try {
+      print('Upload Image');
+      var bytesImage = image.readAsBytesSync();
+
+      final response = await http.post(
+        Uri.http(url, "/api/pois/${poi.poiId}/image"),
+        headers: {
+          "content-type": "image/jpeg",
+          "accept": "application/json",
+          "Authorization": "Bearer ${userService.token}"
+        },
+        body: bytesImage,
+      );
+
+      print('Upload Status Code' + response.statusCode.toString());
+      print('Upload Response Body: ' + response.body.toString());
+
+      if (response.statusCode == HttpStatus.ok) {
+        return Poi.fromJSON(jsonDecode(response.body));
+      }
+
+      if (response.statusCode == HttpStatus.notFound) {
+        throw Failure(FailureTranslation.text('responseCategoryIDInvalid'));
+      }
+
+      if (response.statusCode == HttpStatus.forbidden) {
+        throw Failure(FailureTranslation.text('responseUserInvalid'));
+      } else {
+        throw Failure(FailureTranslation.text('responseUnknownError'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
 }

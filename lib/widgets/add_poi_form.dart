@@ -90,7 +90,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                 break;
               default:
                 return notifier.categoriesResponse.fold(
-                      (failure) {
+                  (failure) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       notifier.resetState();
                     });
@@ -154,7 +154,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
             Provider.of<CategoriesServiceProvider>(context, listen: false).currentSeletedCategory.categoryId;
         final Position _position = Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
 
-        _createPoi(context, _title, _description, _categoryId, _position);
+        _createPoi(context, _title, _description, _categoryId, _position, _image);
 
         Navigator.of(context).pop();
       },
@@ -197,7 +197,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
         ),
       ),
       child: Icon(
-        Icons.camera_alt_outlined,
+        Icons.add_a_photo_outlined,
         size: 80,
       ),
     );
@@ -253,12 +253,14 @@ class _AddPoiFormState extends State<AddPoiForm> {
         });
   }
 
-  void _createPoi(BuildContext context, String _title, String _description, int _categoryId, Position _position) async {
+  void _createPoi(
+      BuildContext context, String _title, String _description, int _categoryId, Position _position, File image) async {
     await Provider.of<PoiServiceProvider>(context, listen: false).createPoi(
       title: _title,
       description: _description,
       categoryId: _categoryId,
       position: _position,
+      image: image,
     );
   }
 
