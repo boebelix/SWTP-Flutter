@@ -5,7 +5,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/position.dart';
-import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/models/comment.dart';
 
 class PoiServiceProvider extends ChangeNotifier {
@@ -24,6 +23,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Either<Failure, List<Comment>> poiCommentResponse;
   Either<Failure, Comment> poiCreateCommentResponse;
   Either<Failure, Poi> poiCreatePoiResponse;
+  Either<Failure,void> deleteCommentResponse;
 
   NotifierState get state => _state;
 
@@ -83,6 +83,8 @@ class PoiServiceProvider extends ChangeNotifier {
 
       poiAtId.comments.removeWhere((element) => element.commentId==commentId);
     }
+
+    this.deleteCommentResponse=deleteCommentResponse;
   }
 
   _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {

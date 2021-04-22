@@ -34,8 +34,6 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
   Widget build(BuildContext context) {
     final int poiId = ModalRoute.of(context).settings.arguments as int;
 
-    final FocusNode focusNode=FocusNode();
-
     final Poi poi =
         Provider.of<PoiServiceProvider>(context, listen: false).pois.where((element) => element.poiId == poiId).first;
 

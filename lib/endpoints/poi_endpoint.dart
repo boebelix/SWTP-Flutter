@@ -103,7 +103,7 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<Comment> comments = [];
 
-        for (dynamic content in jsonDecode(response.body)) {
+        for (dynamic content in jsonDecode(utf8.decode(response.bodyBytes))) {
           comments.add(Comment.fromJson(content));
         }
         return comments;
