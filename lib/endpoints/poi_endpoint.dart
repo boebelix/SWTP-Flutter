@@ -215,7 +215,6 @@ class PoiEndpoint {
             "categoryId": categoryId,
           }));
 
-      print('Create' + response.statusCode.toString());
       if (response.statusCode == HttpStatus.ok) {
         return Poi.fromJSON(jsonDecode(response.body));
       }
@@ -240,7 +239,6 @@ class PoiEndpoint {
 
   Future<void> uploadImage(File image, Poi poi) async {
     try {
-      print('Upload Image');
       var bytesImage = image.readAsBytesSync();
 
       final response = await http.post(

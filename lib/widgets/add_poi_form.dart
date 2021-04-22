@@ -112,22 +112,20 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   Future<void> getImageFromGallery() async {
     final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
+
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
       }
     });
   }
 
   Future<void> getImageFromCamera() async {
     final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
+
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
       }
     });
   }

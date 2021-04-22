@@ -7,7 +7,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/position.dart';
-import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/models/comment.dart';
 
 class PoiServiceProvider extends ChangeNotifier {
