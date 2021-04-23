@@ -23,7 +23,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Either<Failure, List<Comment>> poiCommentResponse;
   Either<Failure, Comment> poiCreateCommentResponse;
   Either<Failure, Poi> poiCreatePoiResponse;
-  Either<Failure,void> deleteCommentResponse;
+  Either<Failure, void> deleteCommentResponse;
 
   NotifierState get state => _state;
 
@@ -54,7 +54,7 @@ class PoiServiceProvider extends ChangeNotifier {
       poiAtId.image = poiImageResponse.getOrElse(null);
     }
 
-    this.poiImageResponse=poiImageResponse;
+    this.poiImageResponse = poiImageResponse;
   }
 
   _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
@@ -64,7 +64,7 @@ class PoiServiceProvider extends ChangeNotifier {
       poiAtId.comments.addAll(poiCommentResponse.getOrElse(null));
     }
 
-    this.poiCommentResponse=poiCommentResponse;
+    this.poiCommentResponse = poiCommentResponse;
   }
 
   _addPoiComment(Either<Failure, Comment> poiCreateCommentResponse, int poiId) {
@@ -74,17 +74,17 @@ class PoiServiceProvider extends ChangeNotifier {
       poiAtId.comments.add(poiCreateCommentResponse.getOrElse(null));
     }
 
-    this.poiCreateCommentResponse=poiCreateCommentResponse;
+    this.poiCreateCommentResponse = poiCreateCommentResponse;
   }
 
-  _deleteComment(Either<Failure,void> deleteCommentResponse, int poiId, int commentId){
-    if(deleteCommentResponse.isRight()){
-      var poiAtId =pois.where((element) => element.poiId==poiId).first;
+  _deleteComment(Either<Failure, void> deleteCommentResponse, int poiId, int commentId) {
+    if (deleteCommentResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
 
-      poiAtId.comments.removeWhere((element) => element.commentId==commentId);
+      poiAtId.comments.removeWhere((element) => element.commentId == commentId);
     }
 
-    this.deleteCommentResponse=deleteCommentResponse;
+    this.deleteCommentResponse = deleteCommentResponse;
   }
 
   _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
@@ -92,7 +92,7 @@ class PoiServiceProvider extends ChangeNotifier {
       pois.add(poiCreatePoiResponse.getOrElse(null));
     }
 
-    this.poiCreatePoiResponse=poiCreatePoiResponse;
+    this.poiCreatePoiResponse = poiCreatePoiResponse;
   }
 
   Future<void> getAllVisiblePois(List<int> userIds) async {
@@ -150,7 +150,11 @@ class PoiServiceProvider extends ChangeNotifier {
   Future<void> deleteComment(int poiId, int commentId) async {
     setState(NotifierState.loading);
 
-    await Task(()=>PoiEndpoint().deleteComment(commentId)).attempt().mapLeftToFailure().run().then((value) => _deleteComment(value, poiId, commentId));
+    await Task(() => PoiEndpoint().deleteComment(commentId))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _deleteComment(value, poiId, commentId));
 
     setState(NotifierState.loaded);
   }
