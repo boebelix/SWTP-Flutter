@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/position.dart';
+import 'package:swtp_app/models/image_coordinatation.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
 import 'package:swtp_app/widgets/build_radiobutton.dart';
@@ -28,6 +30,8 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   File _image;
   final _imagePicker = ImagePicker();
+  LatLng currentPosition;
+  Location location = Location();
 
   @override
   void dispose() {
@@ -41,7 +45,21 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   @override
   Widget build(BuildContext context) {
-    final LatLng currentPosition = ModalRoute.of(context).settings.arguments as LatLng;
+    final ImageCoordinatation takenImage = ModalRoute.of(context).settings.arguments as ImageCoordinatation;
+
+    // Koontrolloiert, ob er die Koordinaten vom gerade aufgenommenen Foto nehmen soll oder vom ausgewählten Poi
+    if (takenImage.file == null) {
+      setState(() {
+        currentPosition = takenImage.location;
+        print('Foto geschossen false: ${takenImage.location.toString()}');
+      });
+    } else {
+      setState(() {
+        _image = takenImage.file;
+        currentPosition = LatLng(takenImage.location.latitude, takenImage.location.longitude);
+        print('Foto geschossen ${takenImage.file.existsSync()} : ${takenImage.location.toString()}');
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -116,6 +134,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        print("getImageFromGallery");
       }
     });
   }
@@ -126,6 +145,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        print("getImageFromCamera");
       }
     });
   }
@@ -162,7 +182,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
         child: Card(
           color: Theme.of(context).buttonColor,
           elevation: 10,
-          child: Center(child: Text("Button")),
+          child: Center(child: Text(Language.of(context).create)),
         ),
       ),
     );
