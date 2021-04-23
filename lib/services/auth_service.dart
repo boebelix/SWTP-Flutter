@@ -11,7 +11,6 @@ import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
-
 class AuthService {
   static final AuthService _instance = AuthService._internal();
 

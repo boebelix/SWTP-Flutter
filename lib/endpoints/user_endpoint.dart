@@ -12,31 +12,6 @@ import 'package:swtp_app/services/auth_service.dart';
 class UserEndpoint {
   var url = Properties.url;
 
-  Future<Map<String, dynamic>> getUserById(int userId) async {
-    try {
-      final response = await http.get(
-        Uri.http(url, "/api/users/$userId"),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": "Bearer ${AuthService().token}"
-        },
-      );
-
-      if (response.statusCode == HttpStatus.notFound) {
-        throw Failure(FailureTranslation.text('responseNoUserFound'));
-      } else {
-        throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
-      }
-    } on SocketException {
-      throw Failure(FailureTranslation.text('noConnection'));
-    } on HttpException {
-      throw Failure(FailureTranslation.text('httpRestFailed'));
-    } on FormatException {
-      throw Failure(FailureTranslation.text('parseFailure'));
-    }
-  }
-
   Future<List<User>> getUsers() async {
     try {
       final response = await http.get(

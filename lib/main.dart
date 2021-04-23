@@ -14,12 +14,15 @@ import 'package:swtp_app/widgets/register.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final storage = new FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
