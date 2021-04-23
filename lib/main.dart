@@ -32,7 +32,7 @@ Future<String> init ()async{
     AuthService().token=await AuthEndpointProvider.storage.read(key: 'token');
     String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
     int userId= int.parse(userIdString);
-    AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
+    await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
 
     if(AuthEndpointProvider().reloadUserResponse.isRight()) {
       await GroupServiceProvider().loadAllGroups();
