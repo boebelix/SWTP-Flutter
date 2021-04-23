@@ -251,9 +251,6 @@ class PoiEndpoint {
         body: bytesImage,
       );
 
-      print('Upload Status Code' + response.statusCode.toString());
-      print('Upload Response Body: ' + response.body.toString());
-
       if (response.statusCode == HttpStatus.ok) {
         return Poi.fromJSON(jsonDecode(response.body));
       }

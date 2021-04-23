@@ -52,7 +52,6 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     Marker _setPoiHere = _createPoiAtPositionLatLng(context, _setPoiAtThisPosition);
 
     return Consumer<PoiServiceProvider>(
@@ -66,9 +65,9 @@ class _MapScreenState extends State<MapScreen> {
             break;
           default:
             return notifier.poiResponse.fold(
-                  (failure) {
+              (failure) {
                 WidgetsBinding.instance.addPostFrameCallback(
-                      (_) {
+                  (_) {
                     notifier.resetState();
                   },
                 );
@@ -126,6 +125,7 @@ class _MapScreenState extends State<MapScreen> {
         _imageCoordinatation = ImageCoordinatation(
           file: File(pickedImage.path),
           location: LatLng(currentPosition.latitude, currentPosition.longitude),
+          status: StatusImageSourceFrom.camera,
         );
       } else {
         _imageCoordinatation = null;

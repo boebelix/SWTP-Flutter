@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/notifier_state.dart';
@@ -30,8 +29,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   File _image;
   final _imagePicker = ImagePicker();
-  LatLng currentPosition;
-  Location location = Location();
+  LatLng _currentPosition;
 
   @override
   void dispose() {
@@ -47,18 +45,27 @@ class _AddPoiFormState extends State<AddPoiForm> {
   Widget build(BuildContext context) {
     final ImageCoordinatation takenImage = ModalRoute.of(context).settings.arguments as ImageCoordinatation;
 
-    // Koontrolloiert, ob er die Koordinaten vom gerade aufgenommenen Foto nehmen soll oder vom ausgewählten Poi
-    if (takenImage.file == null) {
-      setState(() {
-        currentPosition = takenImage.location;
-        print('Foto geschossen false: ${takenImage.location.toString()}');
-      });
-    } else {
-      setState(() {
-        _image = takenImage.file;
-        currentPosition = LatLng(takenImage.location.latitude, takenImage.location.longitude);
-        print('Foto geschossen ${takenImage.file.existsSync()} : ${takenImage.location.toString()}');
-      });
+    // Koontrolloiert, ob er die Koordinaten vom gerade aufgenommenen Foto nehmen soll oder vom ausgewählten Poi auf der Karte
+    switch (takenImage.status) {
+      case StatusImageSourceFrom.map:
+        {
+          setState(() {
+            _currentPosition = takenImage.location;
+          });
+        }
+        break;
+      case StatusImageSourceFrom.camera:
+        {
+          setState(() {
+            _image = takenImage.file;
+            _currentPosition = LatLng(takenImage.location.latitude, takenImage.location.longitude);
+          });
+        }
+        break;
+      default:
+        {
+          throw Exception("Quelle des Fotos umbestimmt");
+        }
     }
 
     return Scaffold(
@@ -90,7 +97,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                     _inputTitle(context),
                     _inputDescription(context),
                     _inputCategories(context),
-                    _buttonAddNewPoi(context, currentPosition)
+                    _buttonAddNewPoi(context, _currentPosition)
                   ],
                 ),
               ),
@@ -134,7 +141,6 @@ class _AddPoiFormState extends State<AddPoiForm> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        print("getImageFromGallery");
       }
     });
   }
@@ -145,7 +151,6 @@ class _AddPoiFormState extends State<AddPoiForm> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        print("getImageFromCamera");
       }
     });
   }

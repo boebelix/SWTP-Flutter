@@ -74,8 +74,6 @@ class _InviteUserScreenState extends State<InviteUserScreen> {
                     },
                   );
               }
-
-              {}
             },
           ),
         ],

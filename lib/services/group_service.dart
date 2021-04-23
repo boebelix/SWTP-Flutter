@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:swtp_app/endpoints/groups_endpoint.dart';
 import 'package:swtp_app/endpoints/user_endpoint.dart';
 import 'package:swtp_app/l10n/failure_translation.dart';

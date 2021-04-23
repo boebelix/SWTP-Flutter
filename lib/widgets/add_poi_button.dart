@@ -30,7 +30,11 @@ class AddPoiButton extends StatelessWidget {
             onPressed: () {
               _getAllCategoriesAsyn(context);
               Navigator.pushNamed(context, AddPoiForm.routeName,
-                  arguments: ImageCoordinatation(file: null, location: currentPosition));
+                  arguments: ImageCoordinatation(
+                    file: null,
+                    location: currentPosition,
+                    status: StatusImageSourceFrom.map,
+                  ));
             },
             child: Text(
               Language.of(context).addNewPoi,
