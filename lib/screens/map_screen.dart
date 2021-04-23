@@ -150,6 +150,7 @@ class _MapScreenState extends State<MapScreen> {
                   splashColor: Color.fromRGBO(248, 177, 1, 1),
                   // splash color
                   onTap: () async {
+                    await Provider.of<CategoriesServiceProvider>(context, listen: false).getAllCategories();
                     await getImageFromCamera().then(
                       (value) => Navigator.pushNamed(
                         context,
