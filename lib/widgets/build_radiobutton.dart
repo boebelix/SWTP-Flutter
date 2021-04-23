@@ -26,7 +26,7 @@ class _BuildRadioButtonsState extends State<BuildRadioButtons> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: widget.categories.length,
       itemBuilder: (context, index) {

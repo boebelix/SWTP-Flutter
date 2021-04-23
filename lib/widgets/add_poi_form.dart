@@ -158,7 +158,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   Container _buildImageBox(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15),
+      margin: EdgeInsets.all(20),
       height: MediaQuery.of(context).size.shortestSide * 0.66,
       width: MediaQuery.of(context).size.shortestSide * 0.66,
       child: GestureDetector(
