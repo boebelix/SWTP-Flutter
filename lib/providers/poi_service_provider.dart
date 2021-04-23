@@ -25,6 +25,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Either<Failure, List<Comment>> poiCommentResponse;
   Either<Failure, Comment> poiCreateCommentResponse;
   Either<Failure, Poi> poiCreatePoiResponse;
+  Either<Failure, void> deleteCommentResponse;
 
   NotifierState get state => _state;
 
@@ -83,6 +84,16 @@ class PoiServiceProvider extends ChangeNotifier {
     }
 
     this.poiCreateCommentResponse = poiCreateCommentResponse;
+  }
+
+  _deleteComment(Either<Failure, void> deleteCommentResponse, int poiId, int commentId) {
+    if (deleteCommentResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
+
+      poiAtId.comments.removeWhere((element) => element.commentId == commentId);
+    }
+
+    this.deleteCommentResponse = deleteCommentResponse;
   }
 
   _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
@@ -145,6 +156,18 @@ class PoiServiceProvider extends ChangeNotifier {
     setState(NotifierState.loaded);
   }
 
+  Future<void> deleteComment(int poiId, int commentId) async {
+    setState(NotifierState.loading);
+
+    await Task(() => PoiEndpoint().deleteComment(commentId))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _deleteComment(value, poiId, commentId));
+
+    setState(NotifierState.loaded);
+  }
+
   Future<void> createPoi({String title, String description, int categoryId, Position position, File image}) async {
     setState(NotifierState.loading);
 
@@ -171,7 +194,7 @@ class PoiServiceProvider extends ChangeNotifier {
 extension TaskX<T extends Either<Object, U>, U> on Task<T> {
   Task<Either<Failure, U>> mapLeftToFailure() {
     return this.map(
-          (either) => either.leftMap((obj) {
+      (either) => either.leftMap((obj) {
         try {
           return obj as Failure;
         } catch (e) {
