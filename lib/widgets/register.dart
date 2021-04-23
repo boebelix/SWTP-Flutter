@@ -79,6 +79,7 @@ class _RegisterStage extends State<Register> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;

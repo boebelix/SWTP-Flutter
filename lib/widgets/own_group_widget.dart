@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/l10n/failure_translation.dart';
-import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/group_membership.dart';
+import 'package:swtp_app/models/notifier_state.dart';
+import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/screens/invite_user_screen.dart';
-import 'package:swtp_app/services/group_service.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
+
+import 'loading_indicator.dart';
 
 class OwnGroupWidget extends StatefulWidget {
   @override
@@ -15,29 +16,44 @@ class OwnGroupWidget extends StatefulWidget {
 }
 
 class _OwnGroupState extends State<OwnGroupWidget> {
-  GroupService _groupService = GroupService();
   final TextEditingController _groupNameTextController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
+  GroupServiceProvider _groupServiceProvider;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: _groupService.loadOwnGroup(),
-      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (_groupService.ownGroup != null) {
-            return buildOwnGroupWidget();
-          } else {
-            return buildOwnGroupNonExistentWidget();
-          }
-        } else if (snapshot.hasError) {
-          return PopUpWarningDialog(context: context, failure: Failure(FailureTranslation.text('ownGroupLoadFailed')));
-        } else {
-          return SizedBox(
-            child: CircularProgressIndicator(),
-            width: 60,
-            height: 60,
-          );
+    _groupServiceProvider = Provider.of<GroupServiceProvider>(context, listen: false);
+    return Consumer<GroupServiceProvider>(
+      builder: (_, notifier, __) {
+        switch (notifier.state) {
+          case NotifierState.initial:
+            return Container();
+            break;
+          case NotifierState.loading:
+            return LoadingIndicator();
+            break;
+          default:
+            return notifier.ownMembershipsResponse.fold(
+              (failure) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) {
+                    notifier.resetState();
+                  },
+                );
+
+                return PopUpWarningDialog(
+                  context: context,
+                  failure: failure,
+                );
+              },
+              (_) {
+                if (_groupServiceProvider.ownGroup != null) {
+                  return buildOwnGroupWidget();
+                } else {
+                  return buildOwnGroupNonExistentWidget();
+                }
+              },
+            );
         }
       },
     );
@@ -63,9 +79,9 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             child: Padding(
               padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.02, 0, 0),
               child: TextButton(
-                onPressed: () => setState(() {
+                onPressed: () {
                   _createGroupWithName();
-                }),
+                },
                 child: Container(
                   height: 50,
                   width: MediaQuery.of(context).size.width * 0.98,
@@ -139,10 +155,12 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Widget _buildListViewAcceptedMembersOfOwnGroup() {
-    List<GroupMembership> group = _groupService.ownGroup.memberships;
-    List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
-
-    return buildList(inGroup, true);
+    List<GroupMembership> group = _groupServiceProvider.ownGroup.memberships;
+    if (group != null) {
+      List<GroupMembership> inGroup = group.where((element) => element.invitationPending == false).toList();
+      return buildList(inGroup, true);
+    }
+    return Container();
   }
 
   ListView buildList(List<GroupMembership> explicitList, bool shrink) {
@@ -157,10 +175,12 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Widget _buildListViewOfInvitedMembersOfOwnGroup() {
-    List<GroupMembership> group = _groupService.ownGroup.memberships;
-    List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
-
-    return buildList(notInGroup, false);
+    List<GroupMembership> group = _groupServiceProvider.ownGroup.memberships;
+    if (group.isNotEmpty) {
+      List<GroupMembership> notInGroup = group.where((element) => element.invitationPending == true).toList();
+      return buildList(notInGroup, false);
+    }
+    return Container();
   }
 
   Card _createMemberCard(GroupMembership membership) {
@@ -191,11 +211,11 @@ class _OwnGroupState extends State<OwnGroupWidget> {
   }
 
   Future<void> _removeUserFromGroup(int userId) async {
-    await _groupService.kickUserFromOwnGroup(userId);
+    await _groupServiceProvider.kickUserFromOwnGroup(userId);
   }
 
   Future<void> _showInvitationScreen(BuildContext context) async {
-    await Provider.of<UserServiceProvider>(context, listen: false).getAllUsers();
+    await Provider.of<UserServiceProvider>(context, listen: false).getAllUsers(_groupServiceProvider.ownGroup);
   }
 
   String _validatorGroupnameIsNotEmpty(value) {
@@ -208,10 +228,8 @@ class _OwnGroupState extends State<OwnGroupWidget> {
 
   Future<void> _createGroupWithName() async {
     if (_formKey.currentState.validate()) {
-      await GroupService().createGroup(_groupNameTextController.text);
+      await _groupServiceProvider.createGroup(_groupNameTextController.text);
+      await _groupServiceProvider.loadAllGroups();
     }
-    setState(() {
-      _groupNameTextController.clear();
-    });
   }
 }

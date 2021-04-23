@@ -103,7 +103,7 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<Comment> comments = [];
 
-        for (dynamic content in jsonDecode(response.body)) {
+        for (dynamic content in jsonDecode(utf8.decode(response.bodyBytes))) {
           comments.add(Comment.fromJson(content));
         }
         return comments;
@@ -159,6 +159,25 @@ class PoiEndpoint {
     }
   }
 
+  Future<void> deleteComment(int commentId) async {
+    try {
+      final response = await http.delete(
+        Uri.http(url, "/api/comments/$commentId"),
+        headers: {"accept": "application/json", "Authorization": "Bearer ${AuthService().token}"},
+      );
+
+      if (response.statusCode != HttpStatus.noContent) {
+        throw Failure(FailureTranslation.text('noConnection'));
+      }
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
   Future<List<Category>> getAllCategories() async {
     try {
       final response = await http.get(
@@ -169,8 +188,6 @@ class PoiEndpoint {
           "Authorization": "Bearer ${userService.token}"
         },
       );
-
-      await Future.delayed(Duration(milliseconds: 100));
 
       if (response.statusCode == HttpStatus.ok) {
         List<Category> categories = [];
@@ -215,7 +232,6 @@ class PoiEndpoint {
             "categoryId": categoryId,
           }));
 
-      print('Create' + response.statusCode.toString());
       if (response.statusCode == HttpStatus.ok) {
         return Poi.fromJSON(jsonDecode(response.body));
       }

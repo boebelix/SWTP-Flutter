@@ -7,7 +7,7 @@ class Group {
   int groupId;
   String groupName = "";
 
-  List<GroupMembership> memberships;
+  List<GroupMembership> memberships = [];
 
   Group({this.admin, this.groupId, this.groupName, this.memberships});
 
@@ -19,4 +19,9 @@ class Group {
         "groupId": groupId,
         "groupName": groupName,
       };
+
+  @override
+  String toString() {
+    return 'Group{admin: $admin, groupId: $groupId, groupName: $groupName, memberships: $memberships}';
+  }
 }
