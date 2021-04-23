@@ -45,7 +45,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
   Widget build(BuildContext context) {
     final ImageCoordinatation takenImage = ModalRoute.of(context).settings.arguments as ImageCoordinatation;
 
-    // Koontrolloiert, ob er die Koordinaten vom gerade aufgenommenen Foto nehmen soll oder vom ausgewählten Poi auf der Karte
+    // Kontrolliert, ob er die Koordinaten vom gerade aufgenommenen Foto nehmen soll oder vom ausgewählten Poi auf der Karte
     switch (takenImage.status) {
       case StatusImageSourceFrom.map:
         {
@@ -92,6 +92,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
               child: Form(
                 key: _formKey,
                 child: ListView(
+                  scrollDirection: Axis.vertical,
                   children: [
                     _buildImageBox(context),
                     _inputTitle(context),
@@ -124,7 +125,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                       failure: failure,
                     );
                   },
-                      (r) {
+                  (r) {
                     return Container();
                   },
                 );
@@ -157,6 +158,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
 
   Container _buildImageBox(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(15),
       height: MediaQuery.of(context).size.shortestSide * 0.66,
       width: MediaQuery.of(context).size.shortestSide * 0.66,
       child: GestureDetector(
