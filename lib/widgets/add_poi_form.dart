@@ -92,6 +92,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
               child: Form(
                 key: _formKey,
                 child: ListView(
+                  shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   children: [
                     _buildImageBox(context),
