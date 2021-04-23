@@ -10,18 +10,45 @@ import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
+import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/register.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
 import 'package:swtp_app/providers/categories_service_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+
 void main() {
-  runApp(MyApp());
+
+  init().then((route) => runApp(MyApp(route)));
+
+}
+
+Future<String> init ()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  bool hasToken=await AuthEndpointProvider.storage.containsKey(key: 'token');
+  bool hasUserId=await AuthEndpointProvider.storage.containsKey(key: 'userId');
+  if(hasToken&&hasUserId){
+    AuthService().token=await AuthEndpointProvider.storage.read(key: 'token');
+    String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
+    int userId= int.parse(userIdString);
+    AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
+
+    if(AuthEndpointProvider().reloadUserResponse.isRight()) {
+      await GroupServiceProvider().loadAllGroups();
+      await UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup);
+      await AuthService().loadDataAfterRestart();
+      return TabScreen.routeName;
+    }
+
+    return LoginScreen.routeName;
+  }
 }
 
 class MyApp extends StatelessWidget {
-  final storage = new FlutterSecureStorage();
+  String initialRoute;
+  MyApp(this.initialRoute);
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +85,7 @@ class MyApp extends StatelessWidget {
           canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
           buttonColor: Color.fromRGBO(255, 186, 53, 1.0),
         ),
+        initialRoute: initialRoute,
         routes: {
           '/': (ctx) => LoginScreen(),
           TabScreen.routeName: (ctx) => TabScreen(),

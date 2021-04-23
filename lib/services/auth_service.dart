@@ -11,6 +11,8 @@ import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 class AuthService {
   static final AuthService _instance = AuthService._internal();
 
@@ -18,6 +20,7 @@ class AuthService {
 
   AuthService._internal();
 
+  final storage=FlutterSecureStorage();
   User user;
   String token;
 
@@ -25,6 +28,9 @@ class AuthService {
     user = null;
     token = null;
     Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
+
+    storage.delete(key: 'token');
+    storage.delete(key: 'userId');
   }
 
   bool isSignedIn() {
@@ -73,6 +79,34 @@ class AuthService {
 
       try {
         await poiEndpointProvider.getAllVisiblePois(allUserIdsOfMembershipsOwner);
+      } catch (e) {
+        if (FailureTranslation.text('responseNoAccess') != e.toString()) {
+          throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
+        }
+      }
+    }
+  }
+  Future<void> loadDataAfterRestart() async
+  {
+    if (AuthService().isSignedIn()) {
+      await GroupServiceProvider().loadAllGroups();
+
+      await UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup);
+    }
+
+    if (AuthService().isSignedIn()) {
+
+      List<int> allUserIdsOfMembershipsOwner = [];
+      allUserIdsOfMembershipsOwner.add(AuthService().user.userId);
+
+      for (Group group in GroupServiceProvider().allGroupsExceptOwn) {
+
+        allUserIdsOfMembershipsOwner.add(group.admin.userId);
+
+      }
+
+      try {
+        await PoiServiceProvider().getAllVisiblePois(allUserIdsOfMembershipsOwner);
       } catch (e) {
         if (FailureTranslation.text('responseNoAccess') != e.toString()) {
           throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');

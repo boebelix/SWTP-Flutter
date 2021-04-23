@@ -12,7 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AuthEndpointProvider extends ChangeNotifier {
   static final AuthEndpointProvider _instance = AuthEndpointProvider._internal();
 
-  final storage=new FlutterSecureStorage();
+  static final storage=FlutterSecureStorage();
   factory AuthEndpointProvider() => _instance;
 
   AuthEndpointProvider._internal();
@@ -21,6 +21,8 @@ class AuthEndpointProvider extends ChangeNotifier {
   AuthEndpoint _logInEndpoint = AuthEndpoint();
   NotifierState _state = NotifierState.initial;
   Either<Failure, AuthResponse> _authResponse;
+
+  Either<Failure, User> get reloadUserResponse => _reloadUserResponse;
   Either<Failure, User> _reloadUserResponse;
 
   NotifierState get state => _state;
@@ -64,16 +66,9 @@ class AuthEndpointProvider extends ChangeNotifier {
     _state = NotifierState.loaded;
   }
 
-  Future<bool> checkIfAlreadyLoggedInAndLoadUser() async
+  Future<bool> checkIfAlreadyLoggedInAndLoadUser(int userId) async
   {
-    setState(NotifierState.loading);
-    if(!(await storage.containsKey(key: 'token')&& await storage.containsKey(key: 'userId'))) {
-      return false;
-    }
-    _authService.token=await storage.read(key: 'token');
-    String userId=await storage.read(key: 'userId');
-
-    await Task(() => _logInEndpoint.getUserById(int.parse(userId)))
+    await Task(() => _logInEndpoint.getUserById(userId))
         .attempt()
         .mapLeftToFailure()
         .run()
