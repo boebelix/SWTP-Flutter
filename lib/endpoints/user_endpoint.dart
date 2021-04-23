@@ -37,7 +37,7 @@ class UserEndpoint {
     }
   }
 
-  Future<List<User>> getUser() async {
+  Future<List<User>> getUsers() async {
     try {
       final response = await http.get(
         Uri.http(url, "/api/users/"),
@@ -72,10 +72,10 @@ class UserEndpoint {
     }
   }
 
-  Future<List<GroupMembership>> getMemberships(int userId) async {
+  Future<List<GroupMembership>> getMemberships() async {
     try {
       final response = await http.get(
-        Uri.http(url, "/api/users/$userId/memberships"),
+        Uri.http(url, "/api/users/${AuthService().user.userId}/memberships"),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",

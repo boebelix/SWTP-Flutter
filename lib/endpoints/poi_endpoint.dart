@@ -170,8 +170,6 @@ class PoiEndpoint {
         },
       );
 
-      await Future.delayed(Duration(milliseconds: 100));
-
       if (response.statusCode == HttpStatus.ok) {
         List<Category> categories = [];
 

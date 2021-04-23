@@ -6,7 +6,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/information_pre_loader_service.dart';
 
 class AuthEndpointProvider extends ChangeNotifier {
   static final AuthEndpointProvider _instance = AuthEndpointProvider._internal();
@@ -19,7 +18,6 @@ class AuthEndpointProvider extends ChangeNotifier {
   AuthEndpoint _logInEndpoint = AuthEndpoint();
   NotifierState _state = NotifierState.initial;
   Either<Failure, AuthResponse> _authResponse;
-  InformationPreLoaderService informationPreLoaderService = InformationPreLoaderService();
 
   NotifierState get state => _state;
 
@@ -35,13 +33,12 @@ class AuthEndpointProvider extends ChangeNotifier {
 
   Either<Failure, AuthResponse> get authResponse => _authResponse;
 
-  void _setAuthResponse(Either<Failure, AuthResponse> authResponse) async {
+  void _setAuthResponse(Either<Failure, AuthResponse> authResponse) {
     if (authResponse.isRight()) {
       final tmp = authResponse.getOrElse(null);
 
       _authService.token = tmp.token;
       _authService.user = tmp.user;
-      await informationPreLoaderService.loadAllRelevantUserIds();
     }
 
     _authResponse = authResponse;
