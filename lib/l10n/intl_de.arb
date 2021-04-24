@@ -58,5 +58,7 @@
   "inviteUsers": "Nutzer einladen",
   "createGroup": "Gruppe erstellen",
   "invite": "Einladen",
-  "create": "Erstellen"
+  "create": "Erstellen",
+  "noPoiYet": "Sie haben noch keine Pois erstellt",
+  "delete": "Löschen"
 }

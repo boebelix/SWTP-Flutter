@@ -58,5 +58,7 @@
   "inviteUsers": "Invite users",
   "createGroup": "Create group",
   "invite": "Invite",
-  "create": "Create"
+  "create": "Create",
+  "noPoiYet": "You have not yet created any Pois",
+  "delete": "Delete"
 }
