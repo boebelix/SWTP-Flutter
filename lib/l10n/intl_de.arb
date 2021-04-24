@@ -58,5 +58,10 @@
   "inviteUsers": "Nutzer einladen",
   "createGroup": "Gruppe erstellen",
   "invite": "Einladen",
-  "create": "Erstellen"
+  "create": "Erstellen",
+  "password_unsafe": "nicht sicher (Passwort zu kurz!)",
+  "password_acceptable": "akzeptabel",
+  "password_medium": "mittel sicher",
+  "password_safe": "sicher",
+  "password_very_safe": "sehr sicher"
 }

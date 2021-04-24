@@ -58,5 +58,10 @@
   "inviteUsers": "Invite users",
   "createGroup": "Create group",
   "invite": "Invite",
-  "create": "Create"
+  "create": "Create",
+  "password_unsafe": "unsafe (password too short!)",
+  "password_acceptable": "acceptable",
+  "password_medium": "good",
+  "password_safe": "safe",
+  "password_very_safe": "very safe"
 }
