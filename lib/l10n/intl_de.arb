@@ -59,5 +59,7 @@
   "createGroup": "Gruppe erstellen",
   "invite": "Einladen",
   "create": "Erstellen",
+  "noPoiYet": "Sie haben noch keine Pois erstellt",
+  "delete": "Löschen",
   "choseSource": "Wähle deine Quelle"
 }
