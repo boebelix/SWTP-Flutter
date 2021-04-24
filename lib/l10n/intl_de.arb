@@ -60,11 +60,10 @@
   "invite": "Einladen",
   "create": "Erstellen",
   "noPoiYet": "Sie haben noch keine Pois erstellt",
-  "delete": "Löschen"
-  "create": "Erstellen",
-  "password_unsafe": "nicht sicher (Passwort zu kurz!)",
-  "password_acceptable": "akzeptabel",
-  "password_medium": "mittel sicher",
-  "password_safe": "sicher",
-  "password_very_safe": "sehr sicher"
+  "delete": "Löschen",
+  "password_unsafe": "Nicht sicher (Passwort zu kurz!)",
+  "password_acceptable": "Akzeptabel",
+  "password_medium": "Mittel sicher",
+  "password_safe": "Sicher",
+  "password_very_safe": "Sehr sicher"
 }

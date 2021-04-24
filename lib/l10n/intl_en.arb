@@ -61,9 +61,9 @@
   "create": "Create",
   "noPoiYet": "You have not yet created any Pois",
   "delete": "Delete",
-  "password_unsafe": "unsafe (password too short!)",
-  "password_acceptable": "acceptable",
-  "password_medium": "good",
-  "password_safe": "safe",
-  "password_very_safe": "very safe"
+  "password_unsafe": "Unsafe (password too short!)",
+  "password_acceptable": "Acceptable",
+  "password_medium": "Good",
+  "password_safe": "Safe",
+  "password_very_safe": "Very safe"
 }
