@@ -59,6 +59,8 @@
   "createGroup": "Create group",
   "invite": "Invite",
   "create": "Create",
+  "noPoiYet": "You have not yet created any Pois",
+  "delete": "Delete",
   "password_unsafe": "unsafe (password too short!)",
   "password_acceptable": "acceptable",
   "password_medium": "good",
