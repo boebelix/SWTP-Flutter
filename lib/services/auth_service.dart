@@ -86,6 +86,7 @@ class AuthService {
       }
     }
   }
+
   Future<void> loadDataAfterRestart() async
   {
     if (AuthService().isSignedIn()) {
