@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:swtp_app/endpoints/poi_endpoint.dart';
@@ -55,6 +57,13 @@ class PoiServiceProvider extends ChangeNotifier {
     }
 
     this.poiImageResponse = poiImageResponse;
+  }
+
+  _setCreateImageForPoi(File image, int poiId) {
+    if (poiImageResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
+      poiAtId.image = Image.file(image);
+    }
   }
 
   _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
@@ -159,7 +168,7 @@ class PoiServiceProvider extends ChangeNotifier {
     setState(NotifierState.loaded);
   }
 
-  Future<void> createPoi({String title, String description, int categoryId, Position position}) async {
+  Future<void> createPoi({String title, String description, int categoryId, Position position, File image}) async {
     setState(NotifierState.loading);
 
     await Task(() => PoiEndpoint().createPoi(categoryId, title, description, position))
@@ -167,6 +176,16 @@ class PoiServiceProvider extends ChangeNotifier {
         .mapLeftToFailure()
         .run()
         .then((value) => _setNewPoi(value));
+
+    if (poiCreatePoiResponse.isRight() && image != null) {
+      Poi poi = poiCreatePoiResponse.getOrElse(() => null);
+
+      await Task(() => PoiEndpoint().uploadImage(image, poi))
+          .attempt()
+          .mapLeftToFailure()
+          .run()
+          .then((value) => _setCreateImageForPoi(image, poi.poiId));
+    }
 
     setState(NotifierState.loaded);
   }

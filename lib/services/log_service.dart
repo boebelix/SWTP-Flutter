@@ -1,4 +1,3 @@
-/*
 import 'package:logger/logger.dart';
 
 /// LogServie hilft beim Arbeiten
@@ -48,4 +47,3 @@ class LogService {
     output: null, // Use the default LogOutput (-> send everything to console)
   );
 }
-*/
