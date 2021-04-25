@@ -31,7 +31,7 @@ Future<String> init() async {
     int userId = int.parse(userIdString);
     await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
 
-    return AuthEndpointProvider().reloadUserResponse.fold((failure) {
+    AuthEndpointProvider().reloadUserResponse.fold((failure) {
       return LoginScreen.routeName;
     }, (success) {
       GroupServiceProvider()
