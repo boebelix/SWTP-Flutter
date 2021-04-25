@@ -183,7 +183,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
     return TextButton(
       onPressed: () {
         final String _title = _titleController.text;
-        final String _description = _titleController.text;
+        final String _description = _descriptionController.text;
         final int _categoryId = selectedCategory.categoryId;
         final Position _position = Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
 
