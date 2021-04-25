@@ -42,10 +42,11 @@ Future<String> init() async {
       return TabScreen.routeName;
     });
   }
+  return LoginScreen.routeName;
 }
 
 class MyApp extends StatelessWidget {
-  String initialRoute;
+  final String initialRoute;
 
   MyApp(this.initialRoute);
 
