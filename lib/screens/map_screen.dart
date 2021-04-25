@@ -77,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
                   failure: failure,
                 );
               },
-                  (_) {
+              (_) {
                 return Stack(
                   children: [
                     _showMap(context, _setPoiHere),
@@ -118,7 +118,10 @@ class _MapScreenState extends State<MapScreen> {
       currentPosition = await _location.getLocation();
     }
 
-    final pickedImage = await _imagePicker.getImage(source: ImageSource.camera);
+    final pickedImage = await _imagePicker.getImage(
+      source: ImageSource.camera,
+      maxWidth: 800,
+    );
 
     setState(() {
       if (pickedImage != null) {

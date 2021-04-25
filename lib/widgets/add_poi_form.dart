@@ -138,7 +138,10 @@ class _AddPoiFormState extends State<AddPoiForm> {
   }
 
   Future<void> getImageFromGallery() async {
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
+    final pickedFile = await _imagePicker.getImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+    );
 
     setState(() {
       if (pickedFile != null) {
@@ -148,7 +151,10 @@ class _AddPoiFormState extends State<AddPoiForm> {
   }
 
   Future<void> getImageFromCamera() async {
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
+    final pickedFile = await _imagePicker.getImage(
+      source: ImageSource.camera,
+      maxWidth: 800,
+    );
 
     setState(() {
       if (pickedFile != null) {
@@ -250,7 +256,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
                 ),
                 Center(
                   heightFactor: 2,
-                  child: Text(Language.of(context).choseSource),
+                  child: Text(Language.of(context).chooseSource),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

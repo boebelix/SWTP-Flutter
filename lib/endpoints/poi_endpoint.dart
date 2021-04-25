@@ -273,7 +273,7 @@ class PoiEndpoint {
       }
 
       if (response.statusCode == HttpStatus.notFound) {
-        throw Failure(FailureTranslation.text('responseCategoryIDInvalid'));
+        throw Failure("${response.statusCode} ${response.body}");
       }
 
       if (response.statusCode == HttpStatus.forbidden) {

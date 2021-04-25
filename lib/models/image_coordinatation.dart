@@ -7,12 +7,8 @@ enum StatusImageSourceFrom { camera, map }
 
 class ImageCoordinatation {
   File file;
-
-  @required
   LatLng location;
-
-  @required
   StatusImageSourceFrom status;
 
-  ImageCoordinatation({this.file, this.location, this.status});
+  ImageCoordinatation({this.file, @required this.location, @required this.status});
 }
