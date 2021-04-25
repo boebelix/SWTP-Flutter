@@ -98,7 +98,6 @@ class _TabScreenState extends State<TabScreen> {
             Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
             Provider.of<PoiServiceProvider>(context, listen: false).resetState();
             Provider.of<UserServiceProvider>(context, listen: false).resetState();
-            ModalRoute.withName(LoginScreen.routeName);
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()),
                 ModalRoute.withName(LoginScreen.routeName));
           });
