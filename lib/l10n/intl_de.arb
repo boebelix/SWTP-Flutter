@@ -61,5 +61,10 @@
   "create": "Erstellen",
   "chooseSource": "Wähle deine Quelle",
   "noPoiYet": "Sie haben noch keine Pois erstellt",
-  "delete": "Löschen"
+  "delete": "Löschen",
+  "password_unsafe": "Nicht sicher (Passwort zu kurz!)",
+  "password_acceptable": "Akzeptabel",
+  "password_medium": "Mittel sicher",
+  "password_safe": "Sicher",
+  "password_very_safe": "Sehr sicher"
 }
