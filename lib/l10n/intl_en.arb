@@ -59,6 +59,7 @@
   "createGroup": "Create group",
   "invite": "Invite",
   "create": "Create",
+  "chooseSource": "Chose your Source",
   "noPoiYet": "You have not yet created any Pois",
   "delete": "Delete"
 }

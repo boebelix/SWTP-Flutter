@@ -15,18 +15,7 @@ class CategoriesServiceProvider extends ChangeNotifier {
   NotifierState _state = NotifierState.initial;
 
   PoiEndpoint _poiEndpoint = PoiEndpoint();
-
   List<Category> categories = [];
-
-  Category _currentSeletedCategory;
-
-  Category get currentSeletedCategory => _currentSeletedCategory;
-
-  void setCurrentSeletedCategory(Category value) {
-    _currentSeletedCategory = value;
-    notifyListeners();
-  }
-
   Either<Failure, List<Category>> categoriesResponse;
 
   NotifierState get state => _state;

@@ -28,11 +28,13 @@ class PoiOverview extends StatelessWidget {
             children: [
               Flexible(
                 flex: 1,
+                fit: FlexFit.tight,
                 child: Container(
                   color: Colors.amber,
                   child: poi.image != null
                       ? Image(
                           image: poi.image.image,
+                          fit: BoxFit.cover,
                         )
                       : Container(),
                 ),
