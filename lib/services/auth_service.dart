@@ -89,12 +89,6 @@ class AuthService {
   Future<void> loadDataAfterRestart() async
   {
     if (AuthService().isSignedIn()) {
-      await GroupServiceProvider().loadAllGroups();
-
-      await UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup);
-    }
-
-    if (AuthService().isSignedIn()) {
 
       List<int> allUserIdsOfMembershipsOwner = [];
       allUserIdsOfMembershipsOwner.add(AuthService().user.userId);
