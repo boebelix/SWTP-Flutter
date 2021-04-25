@@ -64,30 +64,10 @@ class AuthService {
       await userEndpointProvider.getAllUsers(groupServiceProvider.ownGroup);
     }
 
-    if (AuthService().isSignedIn()) {
-
-      List<int> allUserIdsOfMembershipsOwner = [];
-      allUserIdsOfMembershipsOwner.add(AuthService().user.userId);
-
-      for (Group group in groupServiceProvider.allGroupsExceptOwn) {
-
-        allUserIdsOfMembershipsOwner.add(group.admin.userId);
-
-      }
-
-      var poiEndpointProvider = Provider.of<PoiServiceProvider>(context, listen: false);
-
-      try {
-        await poiEndpointProvider.getAllVisiblePois(allUserIdsOfMembershipsOwner);
-      } catch (e) {
-        if (FailureTranslation.text('responseNoAccess') != e.toString()) {
-          throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
-        }
-      }
-    }
+    await loadUsersAndPoiData();
   }
 
-  Future<void> loadDataAfterRestart() async
+  Future<void> loadUsersAndPoiData() async
   {
     if (AuthService().isSignedIn()) {
 

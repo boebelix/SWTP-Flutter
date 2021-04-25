@@ -37,7 +37,7 @@ Future<String> init() async {
       GroupServiceProvider()
           .loadAllGroups()
           .then((value) => UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup))
-          .then((value) => AuthService().loadDataAfterRestart());
+          .then((value) => AuthService().loadUsersAndPoiData());
 
       return TabScreen.routeName;
     });
