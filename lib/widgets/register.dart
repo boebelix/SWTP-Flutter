@@ -74,8 +74,6 @@ class _RegisterStage extends State<Register> {
         }
       }
     } on Failure catch (error) {
-      print(error.toString());
-
       PopUpWarningDialog(
         context: context,
         failure: error,
