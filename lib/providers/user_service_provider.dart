@@ -6,7 +6,6 @@ import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/user.dart';
-import 'package:swtp_app/services/auth_service.dart';
 
 class UserServiceProvider extends ChangeNotifier {
   static final UserServiceProvider _instance = UserServiceProvider._internal();

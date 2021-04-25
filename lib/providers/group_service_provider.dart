@@ -10,6 +10,12 @@ import 'package:swtp_app/services/auth_service.dart';
 
 class GroupServiceProvider extends ChangeNotifier {
 
+  static final GroupServiceProvider _instance = GroupServiceProvider._internal();
+
+  factory GroupServiceProvider() => _instance;
+
+  GroupServiceProvider._internal();
+
   NotifierState _state = NotifierState.initial;
 
   Either<Failure, List<GroupMembership>> ownMembershipsResponse;
