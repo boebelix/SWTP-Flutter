@@ -24,6 +24,7 @@ Future<String> init() async {
   WidgetsFlutterBinding.ensureInitialized();
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
+
   if (hasToken && hasUserId) {
     AuthService().token = await AuthEndpointProvider.storage.read(key: 'token');
     String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
