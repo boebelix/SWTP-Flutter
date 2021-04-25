@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
+import 'package:swtp_app/models/group.dart';
+import 'package:swtp_app/models/group_membership.dart';
 import 'package:swtp_app/properties/properties.dart';
 import 'package:swtp_app/services/auth_service.dart';
 
@@ -11,23 +13,74 @@ class GroupsEndpoint {
   var _url = Properties.url;
   AuthService _userService = AuthService();
 
-  Future<Map<String, dynamic>> getGroupById(int groupNumber) async {
+  Future<List<Group>> getAllRelevantGroups(List<int> groupIds) async {
+    try {
+      List<Group> groups = [];
+      for (int groupId in groupIds) {
+        final response = await http.get(
+          Uri.http(_url, "/api/groups/$groupId"),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer ${_userService.token}"
+          },
+        );
+        if (response.statusCode == HttpStatus.notFound) {
+          throw Failure(FailureTranslation.text('groupNotFound'));
+        }
+
+        if (response.statusCode == HttpStatus.ok) {
+          Map<String, dynamic> json = jsonDecode(response.body);
+          Group group = Group.fromJSON(jsonDecode(response.body));
+
+          List<GroupMembership> memberships = [];
+          for (dynamic elem in json['memberships']) {
+            memberships.add(GroupMembership.fromJSON(elem));
+          }
+          group.memberships = memberships;
+          groups.add(group);
+        } else {
+          throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
+        }
+      }
+      return groups;
+    } on SocketException {
+      throw Failure(FailureTranslation.text('noConnection'));
+    } on HttpException {
+      throw Failure(FailureTranslation.text('httpRestFailed'));
+    } on FormatException {
+      throw Failure(FailureTranslation.text('parseFailure'));
+    }
+  }
+
+  Future<Group> getOwnGroup() async {
     try {
       final response = await http.get(
-        Uri.http(_url, "/api/groups/$groupNumber"),
+        Uri.http(_url, "/api/groups/${AuthService().user.userId}"),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
           "Authorization": "Bearer ${_userService.token}"
         },
       );
-
       if (response.statusCode == HttpStatus.notFound) {
         throw Failure(FailureTranslation.text('groupNotFound'));
       }
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        Map<String, dynamic> json = jsonDecode(response.body);
+        Group group = Group.fromJSON(jsonDecode(response.body));
+
+        List<GroupMembership> memberships = [];
+        for (dynamic elem in json['memberships']) {
+
+          memberships.add(GroupMembership.fromJSON(elem));
+
+        }
+
+        group.memberships = memberships;
+
+        return group;
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }
@@ -40,23 +93,18 @@ class GroupsEndpoint {
     }
   }
 
-  Future<Map<String, dynamic>> createGroup(int adminId, String groupName) async {
+  Future<Group> createGroup(String groupName) async {
     try {
-      final response = await http.post(
-        Uri.http(_url, "/api/groups/"),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": "Bearer ${_userService.token}"
-        },
-        body: {
-          "adminId": "$adminId",
-          "groupName": "$groupName",
-        },
-      );
+      final response = await http.post(Uri.http(_url, "/api/groups/"),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer ${_userService.token}"
+          },
+          body: json.encode(<String, dynamic>{"adminId": AuthService().user.userId, "name": "$groupName"}));
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        return Group.fromJSON(json.decode(response.body));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }
@@ -69,22 +117,20 @@ class GroupsEndpoint {
     }
   }
 
-  Future<Map<String, dynamic>> inviteUserToGroup(int groupId, int userId) async {
+  Future<GroupMembership> inviteUserToGroup(int userId) async {
     try {
       final response = await http.post(
-        Uri.http(_url, "/api/groups/$groupId/members"),
+        Uri.http(_url, "/api/groups/${AuthService().user.userId}/members"),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
           "Authorization": "Bearer ${_userService.token}",
         },
-        body: {
-          "userId": "$userId",
-        },
+        body: json.encode({"userId": userId}),
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        return GroupMembership.fromJSON(jsonDecode(response.body));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }
@@ -119,10 +165,10 @@ class GroupsEndpoint {
     }
   }
 
-  Future<Map<String, dynamic>> acceptGroupInvitation(int groupId, int userId) async {
+  Future<GroupMembership> acceptGroupInvitation(int groupId) async {
     try {
       final response = await http.put(
-        Uri.http(_url, "/api/groups/$groupId/members/$userId"),
+        Uri.http(_url, "/api/groups/$groupId/members/${AuthService().user.userId}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${_userService.token}",
@@ -133,7 +179,7 @@ class GroupsEndpoint {
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        return GroupMembership.fromJSON(jsonDecode(response.body));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }

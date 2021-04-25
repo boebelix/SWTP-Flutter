@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:swtp_app/endpoints/poi_endpoint.dart';
@@ -5,7 +7,6 @@ import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/poi.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/position.dart';
-import 'package:swtp_app/services/log_service.dart';
 import 'package:swtp_app/models/comment.dart';
 
 class PoiServiceProvider extends ChangeNotifier {
@@ -24,6 +25,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Either<Failure, List<Comment>> poiCommentResponse;
   Either<Failure, Comment> poiCreateCommentResponse;
   Either<Failure, Poi> poiCreatePoiResponse;
+  Either<Failure, void> deleteCommentResponse;
 
   NotifierState get state => _state;
 
@@ -54,7 +56,14 @@ class PoiServiceProvider extends ChangeNotifier {
       poiAtId.image = poiImageResponse.getOrElse(null);
     }
 
-    this.poiImageResponse=poiImageResponse;
+    this.poiImageResponse = poiImageResponse;
+  }
+
+  _setCreateImageForPoi(File image, int poiId) {
+    if (poiImageResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
+      poiAtId.image = Image.file(image);
+    }
   }
 
   _setPoiComments(Either<Failure, List<Comment>> poiCommentResponse, int poiId) {
@@ -64,7 +73,7 @@ class PoiServiceProvider extends ChangeNotifier {
       poiAtId.comments.addAll(poiCommentResponse.getOrElse(null));
     }
 
-    this.poiCommentResponse=poiCommentResponse;
+    this.poiCommentResponse = poiCommentResponse;
   }
 
   _addPoiComment(Either<Failure, Comment> poiCreateCommentResponse, int poiId) {
@@ -74,7 +83,17 @@ class PoiServiceProvider extends ChangeNotifier {
       poiAtId.comments.add(poiCreateCommentResponse.getOrElse(null));
     }
 
-    this.poiCreateCommentResponse=poiCreateCommentResponse;
+    this.poiCreateCommentResponse = poiCreateCommentResponse;
+  }
+
+  _deleteComment(Either<Failure, void> deleteCommentResponse, int poiId, int commentId) {
+    if (deleteCommentResponse.isRight()) {
+      var poiAtId = pois.where((element) => element.poiId == poiId).first;
+
+      poiAtId.comments.removeWhere((element) => element.commentId == commentId);
+    }
+
+    this.deleteCommentResponse = deleteCommentResponse;
   }
 
   _setNewPoi(Either<Failure, Poi> poiCreatePoiResponse) {
@@ -82,7 +101,7 @@ class PoiServiceProvider extends ChangeNotifier {
       pois.add(poiCreatePoiResponse.getOrElse(null));
     }
 
-    this.poiCreatePoiResponse=poiCreatePoiResponse;
+    this.poiCreatePoiResponse = poiCreatePoiResponse;
   }
 
   Future<void> getAllVisiblePois(List<int> userIds) async {
@@ -137,7 +156,19 @@ class PoiServiceProvider extends ChangeNotifier {
     setState(NotifierState.loaded);
   }
 
-  Future<void> createPoi({String title, String description, int categoryId, Position position}) async {
+  Future<void> deleteComment(int poiId, int commentId) async {
+    setState(NotifierState.loading);
+
+    await Task(() => PoiEndpoint().deleteComment(commentId))
+        .attempt()
+        .mapLeftToFailure()
+        .run()
+        .then((value) => _deleteComment(value, poiId, commentId));
+
+    setState(NotifierState.loaded);
+  }
+
+  Future<void> createPoi({String title, String description, int categoryId, Position position, File image}) async {
     setState(NotifierState.loading);
 
     await Task(() => PoiEndpoint().createPoi(categoryId, title, description, position))
@@ -145,6 +176,16 @@ class PoiServiceProvider extends ChangeNotifier {
         .mapLeftToFailure()
         .run()
         .then((value) => _setNewPoi(value));
+
+    if (poiCreatePoiResponse.isRight() && image != null) {
+      Poi poi = poiCreatePoiResponse.getOrElse(() => null);
+
+      await Task(() => PoiEndpoint().uploadImage(image, poi))
+          .attempt()
+          .mapLeftToFailure()
+          .run()
+          .then((value) => _setCreateImageForPoi(image, poi.poiId));
+    }
 
     setState(NotifierState.loaded);
   }

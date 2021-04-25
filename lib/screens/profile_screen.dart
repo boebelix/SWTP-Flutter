@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
-import 'package:swtp_app/services/auth_service.dart';
-import 'package:swtp_app/services/group_service.dart';
+import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/widgets/own_group_widget.dart';
 import 'package:swtp_app/widgets/own_pois_widget.dart';
 
@@ -13,9 +13,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
-  GroupService _groupService = GroupService();
 
   TabController _controller;
+
+  GroupServiceProvider _groupServiceProvider;
 
   @override
   void initState() {
@@ -25,9 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final deviceSice = MediaQuery.of(context).size;
+    _groupServiceProvider=Provider.of<GroupServiceProvider>(context,listen: false);
+    final deviceSize = MediaQuery.of(context).size;
     return SizedBox(
-      height: deviceSice.height,
+      height: deviceSize.height,
       child: Column(
           key: UniqueKey(),
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,11 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           children: [
             TabBar(
               tabs: [
-                Tab(
-                  text: _groupService.ownGroup != null
-                      ? _groupService.ownGroup.groupName
-                      : Language.of(context).defaultNameGroup,
-                ),
+                createOwnGroupTextTab(),
                 Tab(text: Language.of(context).ownPOI)
               ],
               controller: _controller,
@@ -57,5 +55,12 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             )
           ]),
     );
+  }
+
+  Tab createOwnGroupTextTab() {
+    if (_groupServiceProvider.ownGroup != null)
+      return Tab(text: _groupServiceProvider.ownGroup.groupName);
+    else
+      return Tab(text: Language.of(context).ownGroup);
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_password_strength/flutter_password_strength.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/register_credentials.dart';
@@ -8,6 +9,7 @@ import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
+import 'package:swtp_app/widgets/user_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class Register extends StatefulWidget {
@@ -33,6 +35,9 @@ class _RegisterStage extends State<Register> {
   final TextEditingController zip = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController repeatPassword = TextEditingController();
+
+  String _passwordForStrength = "";
+  MapEntry<String, Color> _passwordStateMap = MapEntry("", Colors.white);
 
   Future<void> _sendRegisterData() async {
     try {
@@ -69,28 +74,11 @@ class _RegisterStage extends State<Register> {
         }
       }
     } on Failure catch (error) {
-      print(error.toString());
-
       PopUpWarningDialog(
         context: context,
         failure: error,
       );
     }
-  }
-
-  @override
-  void initState() {
-    username.text = "Bob";
-    password.text = "\$Test1234";
-    repeatPassword.text = "\$Test1234";
-    email.text = "abef1234@stud.hs-kl.de";
-    firstname.text = "Bob";
-    lastname.text = "Der";
-    street.text = "Baumeister";
-    streetNr.text = "1";
-    zip.text = "11111";
-    city.text = "Berlin";
-    super.initState();
   }
 
   @override
@@ -111,6 +99,7 @@ class _RegisterStage extends State<Register> {
             child: _formElements(deviceSize),
           ),
           AuthEndpointVisualisation(),
+          UserScreenVisualisation(),
           PoiEndpointVisualisation(
             destinationRouteBySuccess: TabScreen.routeName,
           ),
@@ -226,7 +215,31 @@ class _RegisterStage extends State<Register> {
             ),
             validator: _validatorPassword,
             controller: password,
+            onChanged: (value) {
+              setState(() {
+                _passwordForStrength = value;
+                _validatorPassword(value);
+              });
+            },
             obscureText: true,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 40, top: 15),
+            child: Container(
+              height: 10,
+              child: FlutterPasswordStrength(
+                password: _passwordForStrength,
+                backgroundColor: Colors.black38,
+                radius: 5,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 40, top: 15),
+            child: Text(
+              _passwordStateMap.key,
+              style: TextStyle(color: _passwordStateMap.value),
+            ),
           ),
           TextFormField(
             decoration: InputDecoration(
@@ -396,27 +409,23 @@ class _RegisterStage extends State<Register> {
     bool hasUpperAndLowerCase = regexUpperAndLowerCase.hasMatch(value);
 
     if (hasMinLen && hasUpperAndLowerCase && hasNumber && hasSpecialSign && hasLenBigger7) {
-      // TODO Passwortstärke Visual darstellen siehe SWTP Projekt
-      // sehr sicher
+      _passwordStateMap = MapEntry(Language.of(context).password_very_safe, Colors.blue);
 
       return null;
     } else if (hasMinLen && hasUpperAndLowerCase && hasNumber && hasSpecialSign) {
-      // TODO siehe oben
-      // sicher
+      _passwordStateMap = MapEntry(Language.of(context).password_safe, Colors.green);
 
       return null;
     } else if (hasMinLen && hasUpperAndLowerCase) {
-      // TODO siehe oben
-      // mittel sicher
+      _passwordStateMap = MapEntry(Language.of(context).password_medium, Colors.amber);
 
       return null;
     } else if (hasMinLen) {
-      // TODO siehe oben
-      // akzeptabel
+      _passwordStateMap = MapEntry(Language.of(context).password_acceptable, Colors.orange);
 
       return null;
     } else {
-      // nicht sicher
+      _passwordStateMap = MapEntry(Language.of(context).password_unsafe, Colors.red);
 
       return Language.of(context).password_level_not_save;
     }

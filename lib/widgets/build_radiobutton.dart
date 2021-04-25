@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:swtp_app/models/category.dart';
-import 'package:swtp_app/providers/categories_service_provider.dart';
 
-// ignore: must_be_immutable
 class BuildRadioButtons extends StatefulWidget {
-  List categories;
+  final List categories;
+  final SelectedCategoryCallback onCategorySelect;
 
-  BuildRadioButtons({this.categories});
+  BuildRadioButtons({this.categories, this.onCategorySelect});
 
   @override
   _BuildRadioButtonsState createState() => _BuildRadioButtonsState();
@@ -18,15 +16,15 @@ class _BuildRadioButtonsState extends State<BuildRadioButtons> {
 
   void setSelectedCategory({Category category}) {
     setState(() {
-      Provider.of<CategoriesServiceProvider>(context, listen: false).setCurrentSeletedCategory(category);
       _selectedCategory = category;
+      widget.onCategorySelect(category);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: widget.categories.length,
       itemBuilder: (context, index) {
@@ -49,3 +47,5 @@ class _BuildRadioButtonsState extends State<BuildRadioButtons> {
     );
   }
 }
+
+typedef SelectedCategoryCallback = void Function(Category category);

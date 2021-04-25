@@ -6,7 +6,6 @@ import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/properties/properties.dart';
-import 'package:swtp_app/services/log_service.dart';
 
 class RegisterEndpoint {
   var url = Properties.url;

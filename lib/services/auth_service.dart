@@ -3,14 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:swtp_app/endpoints/register_endpoint.dart';
 import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/failure.dart';
+import 'package:swtp_app/models/group.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/register_credentials.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
+import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
 import 'package:swtp_app/providers/poi_service_provider.dart';
-
-import 'information_pre_loader_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
@@ -19,6 +20,7 @@ class AuthService {
 
   AuthService._internal();
 
+  final storage=FlutterSecureStorage();
   User user;
   String token;
 
@@ -26,6 +28,9 @@ class AuthService {
     user = null;
     token = null;
     Provider.of<AuthEndpointProvider>(context, listen: false).resetState();
+
+    storage.delete(key: 'token');
+    storage.delete(key: 'userId');
   }
 
   bool isSignedIn() {
@@ -48,20 +53,35 @@ class AuthService {
     @required String password,
   }) async {
     var authEndpointProvider = Provider.of<AuthEndpointProvider>(context, listen: false);
+    var groupServiceProvider = Provider.of<GroupServiceProvider>(context, listen: false);
+    var userEndpointProvider = Provider.of<UserServiceProvider>(context, listen: false);
+
     await authEndpointProvider.logIn(LoginCredentials(username, password));
 
     if (AuthService().isSignedIn()) {
-      var userEndpointProvider = Provider.of<UserServiceProvider>(context, listen: false);
-      await userEndpointProvider.getAllUsers();
-      await userEndpointProvider.getMembersOfOwnGroup();
+      await groupServiceProvider.loadAllGroups();
+
+      await userEndpointProvider.getAllUsers(groupServiceProvider.ownGroup);
     }
 
+    await loadUsersAndPoiData();
+  }
+
+  Future<void> loadUsersAndPoiData() async
+  {
     if (AuthService().isSignedIn()) {
-      var allUserIdsOfMembershipsOwner = InformationPreLoaderService().userIds;
-      var poiEndpointProvider = Provider.of<PoiServiceProvider>(context, listen: false);
+
+      List<int> allUserIdsOfMembershipsOwner = [];
+      allUserIdsOfMembershipsOwner.add(AuthService().user.userId);
+
+      for (Group group in GroupServiceProvider().allGroupsExceptOwn) {
+
+        allUserIdsOfMembershipsOwner.add(group.admin.userId);
+
+      }
 
       try {
-        await poiEndpointProvider.getAllVisiblePois(allUserIdsOfMembershipsOwner);
+        await PoiServiceProvider().getAllVisiblePois(allUserIdsOfMembershipsOwner);
       } catch (e) {
         if (FailureTranslation.text('responseNoAccess') != e.toString()) {
           throw Failure('${FailureTranslation.text('unknownFailure')} ${e.toString()}');
