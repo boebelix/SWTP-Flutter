@@ -66,15 +66,16 @@ class AuthEndpointProvider extends ChangeNotifier {
     _state = NotifierState.loaded;
   }
 
-  Future<bool> checkIfAlreadyLoggedInAndLoadUser(int userId) async
+  Future<void> checkIfAlreadyLoggedInAndLoadUser(int userId) async
   {
+    setState(NotifierState.loading);
     await Task(() => _logInEndpoint.getUserById(userId))
         .attempt()
         .mapLeftToFailure()
         .run()
         .then((value) => _setUserResponse(value));
 
-    setState(NotifierState.loading);
+    setState(NotifierState.loaded);
   }
 
   _setUserResponse(Either<Failure,User> response)

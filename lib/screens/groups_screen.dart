@@ -33,6 +33,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               return LoadingIndicator();
               break;
             default:
+              print(notifier.ownGroup.admin.firstName);
               return notifier.ownMembershipsResponse.fold(
                 (failure) {
                   WidgetsBinding.instance.addPostFrameCallback(
