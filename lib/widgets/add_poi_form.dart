@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/category.dart';
 import 'package:swtp_app/models/notifier_state.dart';
 import 'package:swtp_app/models/position.dart';
 import 'package:swtp_app/models/image_coordinatation.dart';
@@ -30,6 +31,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
   File _image;
   final _imagePicker = ImagePicker();
   LatLng _currentPosition;
+  Category selectedCategory;
 
   @override
   void dispose() {
@@ -182,8 +184,7 @@ class _AddPoiFormState extends State<AddPoiForm> {
       onPressed: () {
         final String _title = _titleController.text;
         final String _description = _titleController.text;
-        final int _categoryId =
-            Provider.of<CategoriesServiceProvider>(context, listen: false).currentSeletedCategory.categoryId;
+        final int _categoryId = selectedCategory.categoryId;
         final Position _position = Position(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
 
         _createPoi(context, _title, _description, _categoryId, _position, _image);
@@ -302,6 +303,11 @@ class _AddPoiFormState extends State<AddPoiForm> {
         var categories = notifier.categories;
         return BuildRadioButtons(
           categories: categories,
+          onCategorySelect: (category) {
+            setState(() {
+              selectedCategory = category;
+            });
+          },
         );
       } else {
         return Container();
