@@ -40,8 +40,8 @@ class _OwnPOIWidgetState extends State<OwnPOIWidget> {
                 );
               },
               (r) {
-                List<Poi> ownPois=notifier.pois.where((elem)=>elem.author==AuthService().user).toList();
-                if(ownPois.isEmpty){
+                List<Poi> ownPois = notifier.pois.where((elem) => elem.author == AuthService().user).toList();
+                if (ownPois.isEmpty) {
                   return Center(
                     child: Text(Language.of(context).noPoiYet),
                   );
@@ -61,100 +61,86 @@ class _OwnPOIWidgetState extends State<OwnPOIWidget> {
     );
   }
 
-  Widget _buildCardForPoi(Poi poi)
-  {
+  Widget _buildCardForPoi(Poi poi) {
     return Card(
-      child:Container(
-      width: double.infinity,
-      height: 100,
-      color: Colors.white,
-      child: Card(
-        key: UniqueKey(),
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        margin: EdgeInsets.zero,
-        child: Row(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  color: Colors.amber,
-                  child: poi.image != null
-                      ? Image(
-                    image: poi.image.image,
-                  )
-                      : Container(),
+      child: Container(
+        width: double.infinity,
+        height: 100,
+        color: Colors.white,
+        child: Card(
+          key: UniqueKey(),
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          margin: EdgeInsets.zero,
+          child: Row(
+            children: [
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: poi.image != null
+                        ? Image(
+                            image: poi.image.image,
+                          )
+                        : Container(),
+                  ),
                 ),
               ),
-            ),
-            Flexible(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      poi.title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    SizedBox(
-                      height: 32,
-                      child: Text(
-                        poi.description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    //Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //children: [
-                        Container(
-                          alignment: Alignment.bottomRight,
-                          height: 22,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _getPoiComments(context,poi);
-                              Navigator.pushNamed(context, PoiDetailWidget.routeName, arguments: poi.poiId);
-                            },
-                            child: Text('Details'),
-                          ),
+              Flexible(
+                flex: 2,
+                fit: FlexFit.tight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        poi.title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        //Container(
-                          //alignment: Alignment.bottomRight,
-                          //height: 22,
-                          //child: ElevatedButton(
-                            //onPressed: () {
-                              //Falls irgendwann vorhanden, hier Methode zum Löschen eines POI aufrufen
-                            //},
-                            //child: Text(Language.of(context).delete),
-                          //),
-                        //),
-                      //],
-                    //),
-                  ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        height: 32,
+                        child: Text(
+                          poi.description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        height: 22,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _getPoiComments(context, poi);
+                            Navigator.pushNamed(context, PoiDetailWidget.routeName, arguments: poi.poiId);
+                          },
+                          child: Text('Details'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
+
   void _getPoiComments(BuildContext context, Poi poi) async {
     poi.comments = await Provider.of<PoiServiceProvider>(context, listen: false).getCommentsForPoi(poi.poiId);
   }
