@@ -154,12 +154,18 @@ class _MapScreenState extends State<MapScreen> {
                   // splash color
                   onTap: () async {
                     await Provider.of<CategoriesServiceProvider>(context, listen: false).getAllCategories();
+
                     await getImageFromCamera().then(
-                      (value) => Navigator.pushNamed(
-                        context,
-                        AddPoiForm.routeName,
-                        arguments: _imageCoordinatation,
-                      ),
+                      (value) {
+                        if (_imageCoordinatation == null) {
+                          return;
+                        }
+                        Navigator.pushNamed(
+                          context,
+                          AddPoiForm.routeName,
+                          arguments: _imageCoordinatation,
+                        );
+                      },
                     );
                   },
                   // button pressed

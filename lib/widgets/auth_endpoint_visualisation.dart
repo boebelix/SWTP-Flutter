@@ -31,22 +31,42 @@ class _AuthEndpointVisualisationState extends State<AuthEndpointVisualisation> {
 
           default:
             {
-              return notifier.authResponse.fold(
-                //Fehlerfall
-                (failure) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    notifier.resetState();
-                  });
-                  return PopUpWarningDialog(
-                    context: context,
-                    failure: failure,
-                  );
-                },
-                // Alles in Ordnung
-                (userService) {
-                  return Container();
-                },
-              );
+              if(notifier.authResponse!=null)
+              {
+                return notifier.authResponse.fold(
+                  //Fehlerfall
+                  (failure) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      notifier.resetState();
+                    });
+                    return PopUpWarningDialog(
+                      context: context,
+                      failure: failure,
+                    );
+                  },
+                  // Alles in Ordnung
+                  (userService) {
+                    return Container();
+                  },
+                );
+              }
+              else
+                return notifier.reloadUserResponse.fold(
+                  //Fehlerfall
+                      (failure) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      notifier.resetState();
+                    });
+                    return PopUpWarningDialog(
+                      context: context,
+                      failure: failure,
+                    );
+                  },
+                  // Alles in Ordnung
+                      (userService) {
+                    return Container();
+                  },
+                );
             }
         }
       },
