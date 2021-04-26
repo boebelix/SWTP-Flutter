@@ -32,7 +32,7 @@ Future<String> init() async {
     await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
 
     AuthEndpointProvider().reloadUserResponse.fold((failure) {
-      return LoginScreen.routeName;
+      //return LoginScreen.routeName;
     }, (success) {
       GroupServiceProvider()
           .loadAllGroups()
@@ -85,7 +85,6 @@ class MyApp extends StatelessWidget {
           canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
           buttonColor: Color.fromRGBO(255, 186, 53, 1.0),
         ),
-        initialRoute: initialRoute,
         routes: {
           '/': (ctx) => LoginScreen(),
           TabScreen.routeName: (ctx) => TabScreen(),

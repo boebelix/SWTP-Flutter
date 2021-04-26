@@ -32,7 +32,7 @@ class PoiEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<Poi> pois = [];
 
-        for (dynamic content in jsonDecode(response.body)) {
+        for (dynamic content in jsonDecode(utf8.decode(response.bodyBytes))) {
           pois.add(Poi.fromJSON(content));
         }
         return pois;
@@ -138,7 +138,7 @@ class PoiEndpoint {
           }));
 
       if (response.statusCode == HttpStatus.ok) {
-        return Comment.fromJson(jsonDecode(response.body));
+        return Comment.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       }
 
       if (response.statusCode == HttpStatus.internalServerError) {
@@ -233,7 +233,7 @@ class PoiEndpoint {
           }));
 
       if (response.statusCode == HttpStatus.ok) {
-        return Poi.fromJSON(jsonDecode(response.body));
+        return Poi.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
       }
 
       if (response.statusCode == HttpStatus.notFound) {
