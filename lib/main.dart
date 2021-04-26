@@ -44,8 +44,6 @@ Future<void> init() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp();
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
