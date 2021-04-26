@@ -20,7 +20,7 @@ void main() {
   init().then((_) => runApp(MyApp()));
 }
 
-Future<void> init() async { //void, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
+Future<void> init() async { //void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
   WidgetsFlutterBinding.ensureInitialized();
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
