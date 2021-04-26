@@ -20,7 +20,8 @@ void main() {
   init().then((_) => runApp(MyApp()));
 }
 
-Future<void> init() async { //void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
+//void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
+Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
@@ -31,10 +32,6 @@ Future<void> init() async { //void, da Route durch Endpoint visualisation gesetz
     int userId = int.parse(userIdString);
     await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
 
-    if(AuthEndpointProvider().reloadUserResponse.isRight())
-      {
-
-      }
     AuthEndpointProvider().reloadUserResponse.fold((failure) {
     }, (success) {
       GroupServiceProvider()
@@ -84,7 +81,8 @@ class MyApp extends StatelessWidget {
           canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
           buttonColor: Color.fromRGBO(255, 186, 53, 1.0),
         ),
-        routes: {//keine initial Route, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
+        //keine initial Route, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
+        routes: {
           '/': (ctx) => LoginScreen(),
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
