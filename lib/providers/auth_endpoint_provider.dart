@@ -15,7 +15,7 @@ class AuthEndpointProvider extends ChangeNotifier {
   AuthEndpointProvider._internal();
 
   AuthService _authService = AuthService();
-  AuthEndpoint _logInEndpoint = AuthEndpoint();
+  AuthEndpoint logInEndpoint = AuthEndpoint();
   NotifierState _state = NotifierState.initial;
   Either<Failure, AuthResponse> _authResponse;
 
@@ -49,7 +49,7 @@ class AuthEndpointProvider extends ChangeNotifier {
   Future<void> logIn(LoginCredentials credentials) async {
     setState(NotifierState.loading);
 
-    await Task(() => _logInEndpoint.signIn(credentials))
+    await Task(() => logInEndpoint.signIn(credentials))
         .attempt()
         .mapLeftToFailure()
         .run()
