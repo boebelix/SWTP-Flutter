@@ -17,10 +17,10 @@ import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/register.dart';
 
 void main() {
-  init().then((route) => runApp(MyApp(route)));
+  init().then((_) => runApp(MyApp()));
 }
 
-Future<String> init() async {
+Future<void> init() async { //void, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
   WidgetsFlutterBinding.ensureInitialized();
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
@@ -31,24 +31,23 @@ Future<String> init() async {
     int userId = int.parse(userIdString);
     await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
 
+    if(AuthEndpointProvider().reloadUserResponse.isRight())
+      {
+
+      }
     AuthEndpointProvider().reloadUserResponse.fold((failure) {
-      return LoginScreen.routeName;
     }, (success) {
       GroupServiceProvider()
           .loadAllGroups()
           .then((value) => UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup))
           .then((value) => AuthService().loadUsersAndPoiData());
 
-      return TabScreen.routeName;
     });
   }
-  return LoginScreen.routeName;
 }
 
 class MyApp extends StatelessWidget {
-  final String initialRoute;
-
-  MyApp(this.initialRoute);
+  MyApp();
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +84,7 @@ class MyApp extends StatelessWidget {
           canvasColor: Color.fromRGBO(255, 255, 255, 1.0),
           buttonColor: Color.fromRGBO(255, 186, 53, 1.0),
         ),
-        initialRoute: initialRoute,
-        routes: {
+        routes: {//keine initial Route, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
           '/': (ctx) => LoginScreen(),
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
