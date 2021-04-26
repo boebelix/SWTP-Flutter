@@ -23,6 +23,7 @@ class _LoginState extends State<LoginScreen> {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(Language.of(context).login),
       ),
       body: Padding(
