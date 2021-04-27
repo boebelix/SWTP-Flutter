@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:swtp_app/endpoints/auth_endpoint.dart';
@@ -9,128 +12,39 @@ import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/services/auth_service.dart';
 
+import '../fixtures/fixture_reader.dart';
+
 class MockAuthEndpoint extends Mock implements AuthEndpoint{}
 
 void main(){
+  //WidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
   LoginCredentials loginCredentials=LoginCredentials("test", "test");
   AuthService authService=AuthService();
   AuthEndpointProvider authEndpointProvider=AuthEndpointProvider();
   AuthEndpoint authEndpoint=MockAuthEndpoint();
   authEndpointProvider.logInEndpoint=authEndpoint;
 
-  User user=User.fromJSON({
-    "city": "Rychvald",
-    "email": "nwiley0@google.nl",
-    "firstname": "Test",
-    "groupMemberships": [
-      {
-        "id": {
-          "groupId": 3,
-          "userId": 1
-        },
-        "invitationPending": true,
-        "member": {
-          "city": "Rychvald",
-          "email": "nwiley0@google.nl",
-          "firstname": "Test",
-          "lastname": "User",
-          "street": "Hauk",
-          "streetNr": "50",
-          "userId": 1,
-          "username": "test",
-          "zip": "43450"
-        }
-      },
-      {
-        "id": {
-          "groupId": 5,
-          "userId": 1
-        },
-        "invitationPending": false,
-        "member": {
-          "city": "Rychvald",
-          "email": "nwiley0@google.nl",
-          "firstname": "Test",
-          "lastname": "User",
-          "street": "Hauk",
-          "streetNr": "50",
-          "userId": 1,
-          "username": "test",
-          "zip": "43450"
-        }
-      }
-    ],
-    "lastname": "User",
-    "street": "Hauk",
-    "streetNr": "50",
-    "userId": 1,
-    "username": "test",
-    "zip": "43450"
-  });
+  User user=User.fromJSON(jsonDecode(fixture('test_user.json')));
 
 
-  test("login test", () async{
-    when(authEndpoint.signIn(loginCredentials)).thenAnswer((_) async{
-      return AuthResponse.fromJSON({"token":"token","user":{
-        "city": "Rychvald",
-        "email": "nwiley0@google.nl",
-        "firstname": "Test",
-        "groupMemberships": [
-          {
-            "id": {
-              "groupId": 3,
-              "userId": 1
-            },
-            "invitationPending": true,
-            "member": {
-              "city": "Rychvald",
-              "email": "nwiley0@google.nl",
-              "firstname": "Test",
-              "lastname": "User",
-              "street": "Hauk",
-              "streetNr": "50",
-              "userId": 1,
-              "username": "test",
-              "zip": "43450"
-            }
-          },
-          {
-            "id": {
-              "groupId": 5,
-              "userId": 1
-            },
-            "invitationPending": false,
-            "member": {
-              "city": "Rychvald",
-              "email": "nwiley0@google.nl",
-              "firstname": "Test",
-              "lastname": "User",
-              "street": "Hauk",
-              "streetNr": "50",
-              "userId": 1,
-              "username": "test",
-              "zip": "43450"
-            }
-          }
-        ],
-        "lastname": "User",
-        "street": "Hauk",
-        "streetNr": "50",
-        "userId": 1,
-        "username": "test",
-        "zip": "43450"
-      }});
+  group("login", (){
+    test("login test", () async{
+      when(authEndpoint.signIn(loginCredentials)).thenAnswer((_) async{
+        return AuthResponse.fromJSON(jsonDecode(fixture('test_user_auth_response.json')));
+      });
+      await authEndpointProvider.logIn(loginCredentials);
+      verify(authEndpoint.signIn(loginCredentials));
+      expect(authService.user,user);
     });
-    await authEndpointProvider.logIn(loginCredentials);
-    verify(authEndpoint.signIn(loginCredentials));
-    expect(authService.user,user);
-  });
-  test("login fail", () async{
-    when(authEndpoint.signIn(loginCredentials)).thenThrow(Failure(FailureTranslation.text('authFail')));
+    test("login fail", () async{
+      when(authEndpoint.signIn(loginCredentials)).thenThrow(Failure(FailureTranslation.text('authFail')));
 
-    await authEndpointProvider.logIn(loginCredentials);
+      await authEndpointProvider.logIn(loginCredentials);
 
-    verify(authEndpoint.signIn(loginCredentials));
-    //expect(authEndpointProvider.authResponse.isLeft(), true);
+      verify(authEndpoint.signIn(loginCredentials));
+      //expect(authEndpointProvider.authResponse.isLeft(), true);
+    });
   });
+
 }
