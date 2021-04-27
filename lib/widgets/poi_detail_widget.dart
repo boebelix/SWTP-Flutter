@@ -38,6 +38,7 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
         Provider.of<PoiServiceProvider>(context, listen: false).pois.where((element) => element.poiId == poiId).first;
 
     _poiServiceProvider = Provider.of<PoiServiceProvider>(context, listen: false);
+    var deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,8 +48,14 @@ class _PoiDetailWidgetState extends State<PoiDetailWidget> {
         children: [
           poi.image == null
               ? Container()
-              : Image(
-                  image: poi.image.image,
+              : Container(
+                  constraints: BoxConstraints(
+                    maxHeight: deviceSize.height * 0.42,
+                    maxWidth: deviceSize.width,
+                  ),
+                  child: Image(
+                    image: poi.image.image,
+                  ),
                 ),
           Wrap(
             children: [

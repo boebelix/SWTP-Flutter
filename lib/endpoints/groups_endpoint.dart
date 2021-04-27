@@ -30,8 +30,8 @@ class GroupsEndpoint {
         }
 
         if (response.statusCode == HttpStatus.ok) {
-          Map<String, dynamic> json = jsonDecode(response.body);
-          Group group = Group.fromJSON(jsonDecode(response.body));
+          Map<String, dynamic> json = jsonDecode(utf8.decode((response.bodyBytes)));
+          Group group = Group.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
 
           List<GroupMembership> memberships = [];
           for (dynamic elem in json['memberships']) {
@@ -68,14 +68,12 @@ class GroupsEndpoint {
       }
 
       if (response.statusCode == HttpStatus.ok) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        Group group = Group.fromJSON(jsonDecode(response.body));
+        Map<String, dynamic> json = jsonDecode(utf8.decode((response.bodyBytes)));
+        Group group = Group.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
 
         List<GroupMembership> memberships = [];
         for (dynamic elem in json['memberships']) {
-
           memberships.add(GroupMembership.fromJSON(elem));
-
         }
 
         group.memberships = memberships;
@@ -104,7 +102,7 @@ class GroupsEndpoint {
           body: json.encode(<String, dynamic>{"adminId": AuthService().user.userId, "name": "$groupName"}));
 
       if (response.statusCode == HttpStatus.ok) {
-        return Group.fromJSON(json.decode(response.body));
+        return Group.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }
@@ -130,7 +128,7 @@ class GroupsEndpoint {
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return GroupMembership.fromJSON(jsonDecode(response.body));
+        return GroupMembership.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }
@@ -179,7 +177,7 @@ class GroupsEndpoint {
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return GroupMembership.fromJSON(jsonDecode(response.body));
+        return GroupMembership.fromJSON(jsonDecode(utf8.decode(response.bodyBytes)));
       } else {
         throw Failure('${FailureTranslation.text('unknownFailure')} ${response.statusCode}');
       }
