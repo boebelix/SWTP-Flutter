@@ -14,29 +14,27 @@ import 'package:swtp_app/services/auth_service.dart';
 
 import '../fixtures/fixture_reader.dart';
 
-class MockAuthEndpoint extends Mock implements AuthEndpoint{}
+class MockAuthEndpoint extends Mock implements AuthEndpoint {}
 
-void main(){
-  //WidgetsFlutterBinding.ensureInitialized();
+void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  LoginCredentials loginCredentials=LoginCredentials("test", "test");
-  AuthService authService=AuthService();
-  AuthEndpointProvider authEndpointProvider=AuthEndpointProvider();
-  AuthEndpoint authEndpoint=MockAuthEndpoint();
-  authEndpointProvider.logInEndpoint=authEndpoint;
+  LoginCredentials loginCredentials = LoginCredentials("test", "test");
+  AuthService authService = AuthService();
+  AuthEndpointProvider authEndpointProvider = AuthEndpointProvider();
+  AuthEndpoint authEndpoint = MockAuthEndpoint();
+  authEndpointProvider.logInEndpoint = authEndpoint;
 
-  User user=User.fromJSON(jsonDecode(fixture('test_user.json')));
+  User user = User.fromJSON(jsonDecode(fixture('test_user.json')));
 
-
-  group("login", (){
-    test("login test", () async{
-      when(authEndpoint.signIn(loginCredentials)).thenAnswer((_) async{
+  group("login", () {
+    test("login test", () async {
+      when(authEndpoint.signIn(loginCredentials)).thenAnswer((_) async {
         return AuthResponse.fromJSON(jsonDecode(fixture('test_user_auth_response.json')));
       });
       await authEndpointProvider.logIn(loginCredentials);
 
       verify(authEndpoint.signIn(loginCredentials));
-      expect(authService.user,user);
+      expect(authService.user, user);
     });
     //Problem: man kann nicht auf Fehler prüfen da diese nicht async kommen und wenn geworfen wird is der Task() nicht in der Lage das weiter zu verarbeiten?
     /*test("login fail", () async{
@@ -48,5 +46,4 @@ void main(){
       //expect(authEndpointProvider.authResponse.isLeft(), true);
     });*/
   });
-
 }
