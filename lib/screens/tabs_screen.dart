@@ -55,6 +55,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+      automaticallyImplyLeading: false,
         title: Text(_pages[_selectedPageIndex]['title_' + Intl.defaultLocale]),
         actions: [
           _pressedLogoutButton(context),

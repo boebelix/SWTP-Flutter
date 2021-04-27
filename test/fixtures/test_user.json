@@ -1,0 +1,49 @@
+{
+  "city": "Rychvald",
+  "email": "nwiley0@google.nl",
+  "firstname": "Test",
+  "groupMemberships": [
+    {
+      "id": {
+        "groupId": 3,
+        "userId": 1
+      },
+      "invitationPending": true,
+      "member": {
+        "city": "Rychvald",
+        "email": "nwiley0@google.nl",
+        "firstname": "Test",
+        "lastname": "User",
+        "street": "Hauk",
+        "streetNr": "50",
+        "userId": 1,
+        "username": "test",
+        "zip": "43450"
+      }
+    },
+    {
+      "id": {
+        "groupId": 5,
+        "userId": 1
+      },
+      "invitationPending": false,
+      "member": {
+        "city": "Rychvald",
+        "email": "nwiley0@google.nl",
+        "firstname": "Test",
+        "lastname": "User",
+        "street": "Hauk",
+        "streetNr": "50",
+        "userId": 1,
+        "username": "test",
+        "zip": "43450"
+      }
+    }
+  ],
+  "lastname": "User",
+  "street": "Hauk",
+  "streetNr": "50",
+  "userId": 1,
+  "username": "test",
+  "zip": "43450"
+}

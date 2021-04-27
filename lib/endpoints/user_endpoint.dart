@@ -26,7 +26,7 @@ class UserEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<User> allUsers = [];
 
-        for (dynamic elem in jsonDecode(response.body)) {
+        for (dynamic elem in jsonDecode(utf8.decode(response.bodyBytes))) {
           allUsers.add(User.fromJSON(elem));
         }
 
@@ -61,7 +61,7 @@ class UserEndpoint {
       if (response.statusCode == HttpStatus.ok) {
         List<GroupMembership> memberships = [];
 
-        for (dynamic elem in jsonDecode(response.body)) {
+        for (dynamic elem in jsonDecode(utf8.decode(response.bodyBytes))) {
           memberships.add(GroupMembership.fromJSON(elem));
         }
         return memberships;
@@ -93,7 +93,7 @@ class UserEndpoint {
       );
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        return jsonDecode(utf8.decode(response.bodyBytes));
       }
 
       if (response.statusCode == HttpStatus.notFound) {

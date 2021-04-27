@@ -28,7 +28,7 @@ class RegisterEndpoint {
       }
 
       if (response.statusCode == HttpStatus.ok) {
-        return jsonDecode(response.body);
+        return jsonDecode(utf8.decode(response.bodyBytes));
       } else {
         throw Failure(FailureTranslation.text('responseFailureRegister'));
       }
