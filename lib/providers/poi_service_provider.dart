@@ -18,6 +18,8 @@ class PoiServiceProvider extends ChangeNotifier {
 
   NotifierState _state = NotifierState.initial;
 
+  PoiEndpoint poiEndpoint=PoiEndpoint();
+
   List<Poi> pois = [];
 
   Either<Failure, List<Poi>> poiResponse;
@@ -108,7 +110,7 @@ class PoiServiceProvider extends ChangeNotifier {
     setState(NotifierState.loading);
 
     for (int i in userIds) {
-      await Task(() => PoiEndpoint().getPoiForUser(i))
+      await Task(() => poiEndpoint.getPoiForUser(i))
           .attempt()
           .mapLeftToFailure()
           .run()
@@ -116,7 +118,7 @@ class PoiServiceProvider extends ChangeNotifier {
     }
 
     for (Poi i in pois) {
-      await Task(() => PoiEndpoint().getPoiImage(i.poiId))
+      await Task(() => poiEndpoint.getPoiImage(i.poiId))
           .attempt()
           .mapLeftToFailure()
           .run()
@@ -133,7 +135,7 @@ class PoiServiceProvider extends ChangeNotifier {
       poi.comments.clear();
     }
 
-    await Task(() => PoiEndpoint().getCommentsForPoi(poiId))
+    await Task(() => poiEndpoint.getCommentsForPoi(poiId))
         .attempt()
         .mapLeftToFailure()
         .run()
@@ -147,7 +149,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Future<void> createCommentForPoi(int poiId, String comment) async {
     setState(NotifierState.loading);
 
-    await Task(() => PoiEndpoint().createCommentForPoi(poiId, comment))
+    await Task(() => poiEndpoint.createCommentForPoi(poiId, comment))
         .attempt()
         .mapLeftToFailure()
         .run()
@@ -159,7 +161,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Future<void> deleteComment(int poiId, int commentId) async {
     setState(NotifierState.loading);
 
-    await Task(() => PoiEndpoint().deleteComment(commentId))
+    await Task(() => poiEndpoint.deleteComment(commentId))
         .attempt()
         .mapLeftToFailure()
         .run()
@@ -171,7 +173,7 @@ class PoiServiceProvider extends ChangeNotifier {
   Future<void> createPoi({String title, String description, int categoryId, Position position, File image}) async {
     setState(NotifierState.loading);
 
-    await Task(() => PoiEndpoint().createPoi(categoryId, title, description, position))
+    await Task(() => poiEndpoint.createPoi(categoryId, title, description, position))
         .attempt()
         .mapLeftToFailure()
         .run()
@@ -180,7 +182,7 @@ class PoiServiceProvider extends ChangeNotifier {
     if (poiCreatePoiResponse.isRight() && image != null) {
       Poi poi = poiCreatePoiResponse.getOrElse(() => null);
 
-      await Task(() => PoiEndpoint().uploadImage(image, poi))
+      await Task(() => poiEndpoint.uploadImage(image, poi))
           .attempt()
           .mapLeftToFailure()
           .run()

@@ -1,0 +1,25 @@
+{
+  "author": {
+    "city": "Rychvald",
+    "email": "nwiley0@google.nl",
+    "firstname": "Test",
+    "lastname": "User",
+    "street": "Hauk",
+    "streetNr": "50",
+    "userId": 1,
+    "username": "test",
+    "zip": "43450"
+  },
+  "category": {
+    "categoryId": 3,
+    "name": "Freizeit"
+  },
+  "createDate": "2020-08-26T11:11:01.000+0000",
+  "description": "Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum.",
+  "poiId": 1,
+  "position": {
+    "latitude": 49.438271,
+    "longitude": 7.883253
+  },
+  "title": "luctus tincidunt nulla"
+}
