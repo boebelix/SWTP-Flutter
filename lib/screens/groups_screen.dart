@@ -188,6 +188,10 @@ class _GroupsScreenState extends State<GroupsScreen> {
               children: [
                 Center(
                   heightFactor: 2,
+                  child: Text(group.groupName),
+                ),
+                Center(
+                  heightFactor: 2,
                   child: Text(Language.of(context).sureToLeaveGroup),
                 ),
                 Row(
