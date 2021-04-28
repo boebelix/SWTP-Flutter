@@ -259,13 +259,13 @@ class _OwnGroupState extends State<OwnGroupWidget> {
                   children: [
                     TextButton(
                         child: Text(Language.of(context).yes),
-                        onPressed: () async {
+                        onPressed: () {
                           _removeUserFromGroup(member.member.userId);
                           Navigator.of(context).pop();
                         }),
                     TextButton(
                         child: Text(Language.of(context).no),
-                        onPressed: () async {
+                        onPressed: () {
                           Navigator.of(context).pop();
                         }),
                   ],
