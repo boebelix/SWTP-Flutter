@@ -153,11 +153,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       setState(() {
-                        if (isInvited) {
-                          _denyInvitationOrLeaveGroup(group);
-                        } else {
-                          _showAreYouSureDialog(group);
-                        }
+                        _showAreYouSureDialog(group, isInvited);
                       });
                     }),
               ],
@@ -176,7 +172,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
     await groupServiceProvider.loadAllGroups();
   }
 
-  void _showAreYouSureDialog(Group group) {
+  void _showAreYouSureDialog(Group group, bool isInvited) {
     showDialog(
         barrierDismissible: false,
         useRootNavigator: true,
@@ -192,7 +188,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 ),
                 Center(
                   heightFactor: 2,
-                  child: Text(Language.of(context).sureToLeaveGroup),
+                  child: Text(isInvited? Language.of(context).sureToDenyInvitation:Language.of(context).sureToLeaveGroup),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
