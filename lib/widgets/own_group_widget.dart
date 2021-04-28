@@ -249,7 +249,9 @@ class _OwnGroupState extends State<OwnGroupWidget> {
                 ),
                 Center(
                   heightFactor: 2,
-                  child: Text(member.invitationPending? Language.of(context).sureToWithdrawInvitation:Language.of(context).sureToRemoveUser),
+                  child: Text(member.invitationPending
+                      ? Language.of(context).sureToWithdrawInvitation
+                      : Language.of(context).sureToRemoveUser),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -188,7 +188,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 ),
                 Center(
                   heightFactor: 2,
-                  child: Text(isInvited? Language.of(context).sureToDenyInvitation:Language.of(context).sureToLeaveGroup),
+                  child: Text(
+                      isInvited ? Language.of(context).sureToDenyInvitation : Language.of(context).sureToLeaveGroup),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
