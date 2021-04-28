@@ -153,7 +153,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       setState(() {
-                        _showAreYouSureDialog(group);
+                        if(isInvited){
+                          _denyInvitationOrLeaveGroup(group);
+                        }else {
+                          _showAreYouSureDialog(group);
+                        }
                       });
                     }),
               ],
