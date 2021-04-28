@@ -71,6 +71,6 @@
   "sureToDenyInvitation": "Are you sure to deny the invitation to this group?",
   "yes": "Yes",
   "no": "No",
-  "sureToRemoveUser": "Do you really want to remove this User from your group ",
+  "sureToRemoveUser": "Do you really want to remove this user from your group ",
   "sureToWithdrawInvitation": "Do you really want to withdraw the invitation?"
 }
