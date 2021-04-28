@@ -67,7 +67,8 @@
   "password_medium": "Good",
   "password_safe": "Safe",
   "password_very_safe": "Very safe",
-  "sureToLeaveGroup": "do you really want to leave this Group?",
-  "yes": "yes",
-  "no": "no"
+  "sureToLeaveGroup": "Do you really want to leave this Group?",
+  "yes": "Yes",
+  "no": "No",
+  "sureToRemoveUser": "Do you really want to remove this User from your group / withdraw the Invitation?"
 }
