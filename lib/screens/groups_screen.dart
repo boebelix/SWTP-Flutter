@@ -153,7 +153,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     icon: Icon(Icons.clear),
                     onPressed: () {
                       setState(() {
-                        _denyInvitationOrLeaveGroup(group);
+                        _showAreYouSureDialog(group);
                       });
                     }),
               ],
@@ -170,5 +170,43 @@ class _GroupsScreenState extends State<GroupsScreen> {
   Future<void> _denyInvitationOrLeaveGroup(Group group) async {
     await groupServiceProvider.denyInvitationOrLeaveGroup(group.groupId);
     await groupServiceProvider.loadAllGroups();
+  }
+
+  void _showAreYouSureDialog(Group group){
+    showDialog(
+        barrierDismissible: false,
+        useRootNavigator: true,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  heightFactor: 2,
+                  child: Text(Language.of(context).sureToLeaveGroup),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      child: Text(Language.of(context).yes),
+                        onPressed: () async {
+                         _denyInvitationOrLeaveGroup(group);
+                          Navigator.of(context).pop();
+                        }),
+                    TextButton(
+                        child: Text(Language.of(context).no),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                        }
+                        ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 }

@@ -66,5 +66,8 @@
   "password_acceptable": "Acceptable",
   "password_medium": "Good",
   "password_safe": "Safe",
-  "password_very_safe": "Very safe"
+  "password_very_safe": "Very safe",
+  "sureToLeaveGroup": "do you really want to leave this Group?",
+  "yes": "yes",
+  "no": "no"
 }
