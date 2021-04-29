@@ -18,7 +18,7 @@ class PoiServiceProvider extends ChangeNotifier {
 
   NotifierState _state = NotifierState.initial;
 
-  PoiEndpoint poiEndpoint=PoiEndpoint();
+  PoiEndpoint poiEndpoint = PoiEndpoint();
 
   List<Poi> pois = [];
 
@@ -61,8 +61,8 @@ class PoiServiceProvider extends ChangeNotifier {
     this.poiImageResponse = poiImageResponse;
   }
 
-  _setCreateImageForPoi(File image, int poiId) {
-    if (poiImageResponse.isRight()) {
+  _setCreateImageForPoi(Either<Failure, void> createPoiImageResponse, File image, int poiId) {
+    if (createPoiImageResponse.isRight()) {
       var poiAtId = pois.where((element) => element.poiId == poiId).first;
       poiAtId.image = Image.file(image);
     }
@@ -181,12 +181,11 @@ class PoiServiceProvider extends ChangeNotifier {
 
     if (poiCreatePoiResponse.isRight() && image != null) {
       Poi poi = poiCreatePoiResponse.getOrElse(() => null);
-
       await Task(() => poiEndpoint.uploadImage(image, poi))
           .attempt()
           .mapLeftToFailure()
           .run()
-          .then((value) => _setCreateImageForPoi(image, poi.poiId));
+          .then((value) => _setCreateImageForPoi(value, image, poi.poiId));
     }
 
     setState(NotifierState.loaded);
