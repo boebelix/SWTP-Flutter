@@ -9,9 +9,9 @@ class Comment {
   Comment({this.author, this.comment, this.commentId, this.createDate});
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
-    author: User.fromJSON(json['author']),
-    comment: json['comment'],
-    commentId: json['commentId'],
-    createDate: json['createDate'],
-  );
+        author: User.fromJSON(json['author']),
+        comment: json['comment'],
+        commentId: json['commentId'],
+        createDate: json['createDate'],
+      );
 }
