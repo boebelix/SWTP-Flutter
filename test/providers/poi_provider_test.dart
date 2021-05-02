@@ -19,9 +19,14 @@ void main() {
   PoiEndpoint poiEndpoint;
   PoiServiceProvider poiServiceProvider;
 
-  List<Poi> pois = [Poi.fromJSON(jsonDecode(fixture('test_poi.json')))];
+  List<Poi> pois=[];
 
   setUp(() {
+    if(pois.isNotEmpty){
+      pois.clear();
+    }
+
+    pois=[Poi.fromJSON(jsonDecode(fixture('test_poi.json')))];
     poiEndpoint = MockPoiEndpoint();
     poiServiceProvider = PoiServiceProvider();
     poiServiceProvider.poiEndpoint = poiEndpoint;
@@ -42,9 +47,13 @@ void main() {
 
       verify(poiEndpoint.getPoiForUser(any)).called(1);
       expect(poiServiceProvider.pois.toString(), pois.toString());
+
+      poiServiceProvider.resetState();
     });
 
     test("get all Poi Comments for a specific Poi", () async {
+      poiServiceProvider.pois=pois;
+
       when(poiEndpoint.getCommentsForPoi(any)).thenAnswer((_) async {
         return [Comment.fromJson(jsonDecode(fixture('test_comment.json')))];
       });
@@ -52,11 +61,15 @@ void main() {
 
       verify(poiEndpoint.getCommentsForPoi(any)).called(1);
       expect(poiServiceProvider.pois.first.comments.toString(), pois[0].comments.toString());
+
+      poiServiceProvider.resetState();
     });
   });
 
   group("create and delete comments", () {
     test("create Comment", () async {
+      poiServiceProvider.pois=pois;
+
       when(poiEndpoint.createCommentForPoi(any, any)).thenAnswer((_) async {
         return Comment.fromJson(jsonDecode(fixture('test_comment.json')));
       });
@@ -64,10 +77,15 @@ void main() {
       await poiServiceProvider.createCommentForPoi(1, comment.comment);
 
       verify(poiEndpoint.createCommentForPoi(any, any)).called(1);
-      expect(poiServiceProvider.pois.first.comments.first.toString(), comment.toString());
+      expect(poiServiceProvider.pois.first.comments.length, 2);
+      expect(poiServiceProvider.pois.first.comments.last.toString(), comment.toString());
+
+      poiServiceProvider.resetState();
     });
 
     test("delete Comment", () async {
+      poiServiceProvider.pois=pois;
+
       when(poiEndpoint.deleteComment(any)).thenAnswer((_) async => null);
 
       await poiServiceProvider.deleteComment(1, 1);
@@ -75,7 +93,7 @@ void main() {
       verify(poiEndpoint.deleteComment(1)).called(1);
       expect(poiServiceProvider.pois.first.comments.isEmpty, true);
 
-      poiServiceProvider.pois.clear();
+      poiServiceProvider.resetState();
     });
   });
 
@@ -96,6 +114,7 @@ void main() {
         image: file);
 
     verify(poiEndpoint.createPoi(any, any, any, any)).called(1);
+    expect(poiServiceProvider.pois.length, 1);
     expect(poiServiceProvider.pois.last.toString(), poi.toString());
     expect(poiServiceProvider.pois.last.image != null, true);
   });
