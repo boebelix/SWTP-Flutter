@@ -5,7 +5,11 @@ import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
+import 'package:swtp_app/screens/login_screen.dart';
+import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
+import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
+import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
 
 class CheckBiometricsWidget extends StatefulWidget {
   static const routeName = '/biometrics';
@@ -19,20 +23,27 @@ class CheckBiometricsWidget extends StatefulWidget {
 }
 
 class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
-
-  final bool isOldLogInAvailable;
-
-  CheckBiometricsWidgetState({this.isOldLogInAvailable});
+  bool _isOldLogInAvailable;
 
   LocalAuthentication _authentication = LocalAuthentication();
   bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics = [];
   bool authenticated = false;
 
+
   @override
   void initState() {
     super.initState();
-    _checkIfBiometricsAvailable().then((value) => _getBiometrics());
+    _checkIfDataAvailable().then((_)=>_checkIfBiometricsAvailable()).then((value) => _getBiometrics());
+  }
+
+  Future<void> _checkIfDataAvailable() async{
+    bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
+    bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
+
+    setState(() {
+      _isOldLogInAvailable=hasToken && hasUserId;
+    });
   }
 
   Future<void> _checkIfBiometricsAvailable() async {
@@ -53,23 +64,21 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
   }
 
   Future<void> _getBiometrics() async {
-    List<BiometricType> availableBiometrics=[];
+    List<BiometricType> availableBiometrics = [];
     try {
-      availableBiometrics= await _authentication.getAvailableBiometrics();
+      availableBiometrics = await _authentication.getAvailableBiometrics();
     } on PlatformException catch (E) {
       print(E);
     }
 
     setState(() {
-      _availableBiometrics=availableBiometrics;
+      _availableBiometrics = availableBiometrics;
     });
   }
 
-  Future<void> authenticate() async
-  {
-    if(isOldLogInAvailable)
-    {
-      try{
+  Future<void> _authenticate() async {
+    if (_isOldLogInAvailable) {
+      try {
         print("number of verifications: ${_availableBiometrics.length}");
         print("canCheckBiometrics: $_canCheckBiometrics");
         if (_canCheckBiometrics) {
@@ -87,11 +96,17 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
         if (authenticated) {
           _loadLogInDataAndLogIn();
         }
+        else
+          {
+            setState(() {
+              Navigator.popAndPushNamed(context, LoginScreen.routeName);
+            });
+          }
       });
     }
   }
 
-  Future<void> _loadLogInDataAndLogIn()async{
+  Future<void> _loadLogInDataAndLogIn() async {
     AuthService().token = await AuthEndpointProvider.storage.read(key: 'token');
     String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
     int userId = int.parse(userIdString);
@@ -108,47 +123,59 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(Language.of(context).login),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Stack(
-          children: [
-            Form(
-              key: _formKey,
-              child: ListView(
-                children: [
-                  _selectLanguage(),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: Language.of(context).user_name,
-                    ),
-                    controller: username,
-                    validator: _validatorUsernameIsNotEmpty,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: Language.of(context).password,
-                    ),
-                    validator: _validatorPasswordIsNotEmpty,
-                    controller: password,
-                    obscureText: true,
-                  ),
-                  _buttonLogin(deviceSize, context),
-                  _buttonRegistration(deviceSize, context),
-                ],
-              ),
-            ),
-            AuthEndpointVisualisation(),
-            PoiEndpointVisualisation(
-              destinationRouteBySuccess: TabScreen.routeName,
-            ),
-          ],
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(Language.of(context).login),
         ),
-      ),
-    );
+        body: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Text(Language.of(context).continueSession),
+                      ElevatedButton(
+                        onPressed: _authenticate,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            (Colors.black12),
+                          ),
+                        ),
+                        child: Text(
+                          Language.of(context).yes,
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: (){
+                          Navigator.popAndPushNamed(context, LoginScreen.routeName);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            (Colors.black12),
+                          ),
+                        ),
+                        child: Text(
+                          Language.of(context).no,
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                      //_selectLanguage(),
+                    ],
+                  ),
+                ),
+                AuthEndpointVisualisation(),
+                PoiEndpointVisualisation(
+                  destinationRouteBySuccess: TabScreen.routeName,
+                ),
+              ],
+            )
+        )
     );
   }
 }

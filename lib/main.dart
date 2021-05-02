@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
@@ -15,100 +14,17 @@ import 'package:swtp_app/screens/profile_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
+import 'package:swtp_app/widgets/check_biometrics_widget.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/register.dart';
 
 void main() {
-  init().then((isloginAvailable) {
-    LocalAuthentication _auth = LocalAuthentication();
-    _checkIfBiometricsAvailable(_auth).then((value) => _getBiometrics(value, _auth)).then((value) => runApp(MyApp(
-          biometricTypes: value,
-        )));
-  });
-}
-
-//void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
-Future<bool> init() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
-  bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
-
-  return hasToken && hasUserId;
-}
-
-Future<bool> _checkIfBiometricsAvailable(LocalAuthentication authentication) async {
-  bool canCheckBiometrics = false;
-  try {
-    canCheckBiometrics = await authentication.canCheckBiometrics;
-    return canCheckBiometrics;
-  } on PlatformException catch (E) {
-    print(E);
-  }
-  return false;
-}
-
-Future<List<BiometricType>> _getBiometrics(bool isAuthenticationAvailable, LocalAuthentication authentication) async {
-  List<BiometricType> availableBiometrics = [];
-  try {
-    if (isAuthenticationAvailable) {
-      availableBiometrics = await authentication.getAvailableBiometrics();
-    }
-  } on PlatformException catch (E) {
-    print(E);
-  }
-  return availableBiometrics;
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final List<BiometricType> biometricTypes;
-
-  LocalAuthentication _authentication = LocalAuthentication();
-  bool _canCheckBiometrics = false;
-  List<BiometricType> _availableBiometrics = [];
-  bool authenticated = false;
-
-  MyApp({this.biometricTypes});
-
-  Future<void> authenticate(BuildContext context) async {
-    if (biometricTypes.isNotEmpty) {
-      try {
-        print("number of verifications: ${_availableBiometrics.length}");
-        print("canCheckBiometrics: $_canCheckBiometrics");
-        if (_canCheckBiometrics) {
-          if (_availableBiometrics != null &&
-              (_availableBiometrics.contains(BiometricType.face) ||
-                  _availableBiometrics.contains(BiometricType.fingerprint))) {
-            authenticated = await _authentication.authenticate(
-                localizedReason: Language.of(context).authMessage, biometricOnly: true);
-          }
-        }
-      } on PlatformException catch (E) {
-        print(E);
-      }
-      if (authenticated) {
-        _loadLogInDataAndLogIn();
-      }
-    }
-  }
-
-  Future<void> _loadLogInDataAndLogIn() async {
-    AuthService().token = await AuthEndpointProvider.storage.read(key: 'token');
-    String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
-    int userId = int.parse(userIdString);
-    await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
-
-    AuthEndpointProvider().reloadUserResponse.fold((failure) {}, (success) {
-      GroupServiceProvider()
-          .loadAllGroups()
-          .then((value) => UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup))
-          .then((value) => AuthService().loadUsersAndPoiData());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    authenticate(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -144,7 +60,8 @@ class MyApp extends StatelessWidget {
         ),
         //keine initial Route, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
         routes: {
-          '/': (ctx) => LoginScreen(),
+          '/': (ctx) => CheckBiometricsWidget(),
+          CheckBiometricsWidget.routeName: (ctx)=>CheckBiometricsWidget(),
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           Register.routeName: (ctx) => Register(),
