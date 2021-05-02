@@ -204,7 +204,7 @@ class _OwnGroupState extends State<OwnGroupWidget> {
             IconButton(
                 icon: Icon(Icons.person_remove_outlined),
                 onPressed: () {
-                  _removeUserFromGroup(membership.member.userId);
+                  _showAreYouSureDialog(membership);
                 })
           ],
         ));
@@ -231,5 +231,48 @@ class _OwnGroupState extends State<OwnGroupWidget> {
       await _groupServiceProvider.createGroup(_groupNameTextController.text);
       await _groupServiceProvider.loadAllGroups();
     }
+  }
+
+  void _showAreYouSureDialog(GroupMembership member) {
+    showDialog(
+        barrierDismissible: false,
+        useRootNavigator: true,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  heightFactor: 2,
+                  child: Text("${member.member.firstName} ${member.member.lastName}"),
+                ),
+                Center(
+                  heightFactor: 2,
+                  child: Text(member.invitationPending
+                      ? Language.of(context).sureToWithdrawInvitation
+                      : Language.of(context).sureToRemoveUser),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        child: Text(Language.of(context).yes),
+                        onPressed: () {
+                          _removeUserFromGroup(member.member.userId);
+                          Navigator.of(context).pop();
+                        }),
+                    TextButton(
+                        child: Text(Language.of(context).no),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 }

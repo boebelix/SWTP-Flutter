@@ -66,5 +66,11 @@
   "password_acceptable": "Akzeptabel",
   "password_medium": "Mittel sicher",
   "password_safe": "Sicher",
-  "password_very_safe": "Sehr sicher"
+  "password_very_safe": "Sehr sicher",
+  "sureToLeaveGroup":"Wollen sie diese Gruppe wirklich verlassen?",
+  "sureToDenyInvitation": "Sicher das sie die Einladung zur Gruppe ablehnen wollen?",
+  "yes": "Ja",
+  "no": "Nein",
+  "sureToRemoveUser": "Wollen sie diesen Nutzer wirklich aus ihrer Gruppe entfernen / die Einladung zurücknehmen?",
+  "sureToWithdrawInvitation": "Sicher das sie die Einladung zurückziehen wollen?"
 }
