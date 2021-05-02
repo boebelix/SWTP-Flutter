@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
@@ -16,13 +17,13 @@ import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/register.dart';
-import 'package:local_auth/local_auth.dart';
 
 void main() {
   init().then((isloginAvailable) {
-    LocalAuthentication _auth=LocalAuthentication();
-    _checkIfBiometricsAvailable(_auth).then((value) => _getBiometrics(value,_auth)).then((value) => runApp(MyApp(biometricTypes: value,)));
-
+    LocalAuthentication _auth = LocalAuthentication();
+    _checkIfBiometricsAvailable(_auth).then((value) => _getBiometrics(value, _auth)).then((value) => runApp(MyApp(
+          biometricTypes: value,
+        )));
   });
 }
 
@@ -30,11 +31,10 @@ void main() {
 Future<bool> init() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
 
-  return hasToken&&hasUserId;
+  return hasToken && hasUserId;
 }
 
 Future<bool> _checkIfBiometricsAvailable(LocalAuthentication authentication) async {
@@ -49,9 +49,9 @@ Future<bool> _checkIfBiometricsAvailable(LocalAuthentication authentication) asy
 }
 
 Future<List<BiometricType>> _getBiometrics(bool isAuthenticationAvailable, LocalAuthentication authentication) async {
-  List<BiometricType> availableBiometrics=[];
+  List<BiometricType> availableBiometrics = [];
   try {
-    if(isAuthenticationAvailable) {
+    if (isAuthenticationAvailable) {
       availableBiometrics = await authentication.getAvailableBiometrics();
     }
   } on PlatformException catch (E) {
@@ -61,7 +61,6 @@ Future<List<BiometricType>> _getBiometrics(bool isAuthenticationAvailable, Local
 }
 
 class MyApp extends StatefulWidget {
-
   final List<BiometricType> biometricTypes;
 
   MyApp({this.biometricTypes});
@@ -70,13 +69,13 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => MyAppState(biometricTypes: this.biometricTypes);
 }
 
-class MyAppState extends State<MyApp>{
+class MyAppState extends State<MyApp> {
   final List<BiometricType> biometricTypes;
+
   MyAppState({this.biometricTypes});
 
-
   LocalAuthentication _authentication = LocalAuthentication();
-  bool _canCheckBiometrics=false;
+  bool _canCheckBiometrics = false;
   List<BiometricType> _availableBiometrics = [];
   bool authenticated = false;
 
@@ -85,12 +84,9 @@ class MyAppState extends State<MyApp>{
     super.initState();
   }
 
-
-  Future<void> authenticate() async
-  {
-    if(biometricTypes.isNotEmpty)
-    {
-      try{
+  Future<void> authenticate() async {
+    if (biometricTypes.isNotEmpty) {
+      try {
         print("number of verifications: ${_availableBiometrics.length}");
         print("canCheckBiometrics: $_canCheckBiometrics");
         if (_canCheckBiometrics) {
@@ -112,7 +108,7 @@ class MyAppState extends State<MyApp>{
     }
   }
 
-  Future<void> _loadLogInDataAndLogIn()async{
+  Future<void> _loadLogInDataAndLogIn() async {
     AuthService().token = await AuthEndpointProvider.storage.read(key: 'token');
     String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
     int userId = int.parse(userIdString);
