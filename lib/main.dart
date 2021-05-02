@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
@@ -12,7 +11,6 @@ import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
 import 'package:swtp_app/widgets/check_biometrics_widget.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
