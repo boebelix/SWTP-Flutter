@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:swtp_app/generated/l10n.dart';
@@ -15,6 +16,7 @@ import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/register.dart';
+import 'package:local_auth/local_auth.dart';
 
 void main() {
   init().then((_) => runApp(MyApp()));
@@ -23,6 +25,29 @@ void main() {
 //void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
 Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final _authentication=LocalAuthentication();
+  bool authenticated=false;
+
+  try {
+    bool canCheckBiometrics = await _authentication.canCheckBiometrics;
+    List<BiometricType> availableBiometrics = await _authentication.getAvailableBiometrics();
+    print("number of verifications: ${availableBiometrics.length}");
+    print("canCheckBiometrics: $canCheckBiometrics");
+    if(canCheckBiometrics)
+      if(availableBiometrics.contains(BiometricType.face)||availableBiometrics.contains(BiometricType.fingerprint))
+        {
+          authenticated=await _authentication.authenticate(localizedReason: 'please authenticate', biometricOnly: true);
+        }
+  }
+   on PlatformException catch(E)
+  {
+   print(E.message);
+  }
+
+  if(!authenticated){
+    return;
+  }
+
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
 

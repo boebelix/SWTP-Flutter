@@ -72,5 +72,6 @@
   "yes": "Yes",
   "no": "No",
   "sureToRemoveUser": "Do you really want to remove this user from your group ",
-  "sureToWithdrawInvitation": "Do you really want to withdraw the invitation?"
+  "sureToWithdrawInvitation": "Do you really want to withdraw the invitation?",
+  "authMessage": "Please authenticate to resume previous session"
 }
