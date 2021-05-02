@@ -131,43 +131,61 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
             padding: const EdgeInsets.all(12.0),
             child: Stack(
               children: [
-                Center(
-                  child: Column(
-                    children: [
-                      Text(Language.of(context).continueSession),
-                      ElevatedButton(
-                        onPressed: _authenticate,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            (Colors.black12),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _selectLanguage(),
+                    Text(
+                      Language.of(context).continueSession,
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.02, 0, 0),
+                        child: ElevatedButton(
+                          onPressed: _authenticate,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              (Colors.black12),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          Language.of(context).yes,
-                          style: TextStyle(
-                            fontSize: 30,
+                          child: Text(
+                            Language.of(context).yes,
+                            style: TextStyle(
+                              fontSize: 30,
+                            ),
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.popAndPushNamed(context, LoginScreen.routeName);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            (Colors.black12),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height * 0.02, 0, 0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.popAndPushNamed(context, LoginScreen.routeName);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              (Colors.black12),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          Language.of(context).no,
-                          style: TextStyle(
-                            fontSize: 30,
+                          child: Text(
+                            Language.of(context).no,
+                            style: TextStyle(
+                              fontSize: 35,
+                            ),
                           ),
                         ),
                       ),
-                      //_selectLanguage(),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 AuthEndpointVisualisation(),
                 PoiEndpointVisualisation(
@@ -175,5 +193,29 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
                 ),
               ],
             )));
+  }
+
+  Row _selectLanguage() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              Language.load(Locale('en'));
+            });
+          },
+          icon: Image.asset('icons/flags/png/gb.png', package: 'country_icons'),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              Language.load(Locale('de'));
+            });
+          },
+          icon: Image.asset('icons/flags/png/de.png', package: 'country_icons'), //Text(Language.of(context).german)),
+        )
+      ],
+    );
   }
 }
