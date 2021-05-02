@@ -60,31 +60,17 @@ Future<List<BiometricType>> _getBiometrics(bool isAuthenticationAvailable, Local
   return availableBiometrics;
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   final List<BiometricType> biometricTypes;
-
-  MyApp({this.biometricTypes});
-
-  @override
-  State<MyApp> createState() => MyAppState(biometricTypes: this.biometricTypes);
-}
-
-class MyAppState extends State<MyApp> {
-  final List<BiometricType> biometricTypes;
-
-  MyAppState({this.biometricTypes});
 
   LocalAuthentication _authentication = LocalAuthentication();
   bool _canCheckBiometrics = false;
   List<BiometricType> _availableBiometrics = [];
   bool authenticated = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  MyApp({this.biometricTypes});
 
-  Future<void> authenticate() async {
+  Future<void> authenticate(BuildContext context) async {
     if (biometricTypes.isNotEmpty) {
       try {
         print("number of verifications: ${_availableBiometrics.length}");
@@ -100,11 +86,9 @@ class MyAppState extends State<MyApp> {
       } on PlatformException catch (E) {
         print(E);
       }
-      setState(() {
-        if (authenticated) {
-          _loadLogInDataAndLogIn();
-        }
-      });
+      if (authenticated) {
+        _loadLogInDataAndLogIn();
+      }
     }
   }
 
@@ -124,7 +108,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    authenticate();
+    authenticate(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

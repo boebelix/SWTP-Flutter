@@ -71,5 +71,6 @@
   "yes": "Ja",
   "no": "Nein",
   "sureToRemoveUser": "Wollen sie diesen NUtzer wirklich aus ihrer Gruppe entfernen / die Einladung zurücknehmen?",
-  "authMessage": "Bitte Identifizieren sie sich, um die letzte sitzung fort zu setzen"
+  "authMessage": "Bitte Identifizieren sie sich, um die letzte sitzung fort zu setzen",
+  "continueSession": "Möchten sie mit der letzten Sitzung fortfahren?"
 }
