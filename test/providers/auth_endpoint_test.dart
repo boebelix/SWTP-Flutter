@@ -1,12 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:swtp_app/endpoints/auth_endpoint.dart';
-import 'package:swtp_app/l10n/failure_translation.dart';
 import 'package:swtp_app/models/auth_response.dart';
-import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/models/login_credentials.dart';
 import 'package:swtp_app/models/user.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
@@ -36,14 +33,5 @@ void main() {
       verify(authEndpoint.signIn(loginCredentials));
       expect(authService.user, user);
     });
-    //Problem: man kann nicht auf Fehler prüfen da diese nicht async kommen und wenn geworfen wird is der Task() nicht in der Lage das weiter zu verarbeiten?
-    /*test("login fail", () async{
-      when(authEndpoint.signIn(loginCredentials)).thenThrow( Failure(FailureTranslation.text('authFail')));
-
-      await authEndpointProvider.logIn(loginCredentials);
-
-      verify(authEndpoint.signIn(loginCredentials));
-      //expect(authEndpointProvider.authResponse.isLeft(), true);
-    });*/
   });
 }
