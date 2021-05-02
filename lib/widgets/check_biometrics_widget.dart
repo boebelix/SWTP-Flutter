@@ -23,26 +23,28 @@ class CheckBiometricsWidget extends StatefulWidget {
 }
 
 class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
-  bool _isOldLogInAvailable;
+  bool _isOldLogInAvailable = true;
 
   LocalAuthentication _authentication = LocalAuthentication();
   bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics = [];
   bool authenticated = false;
 
-
   @override
   void initState() {
     super.initState();
-    _checkIfDataAvailable().then((_)=>_checkIfBiometricsAvailable()).then((value) => _getBiometrics());
+    _checkIfDataAvailable().then((_) => _checkIfBiometricsAvailable()).then((value) => _getBiometrics());
   }
 
-  Future<void> _checkIfDataAvailable() async{
+  Future<void> _checkIfDataAvailable() async {
     bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
     bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
 
     setState(() {
-      _isOldLogInAvailable=hasToken && hasUserId;
+      _isOldLogInAvailable = hasToken && hasUserId;
+      if (!_isOldLogInAvailable) {
+        Navigator.popAndPushNamed(context, LoginScreen.routeName);
+      }
     });
   }
 
@@ -95,13 +97,11 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
       setState(() {
         if (authenticated) {
           _loadLogInDataAndLogIn();
+        } else {
+          setState(() {
+            Navigator.popAndPushNamed(context, LoginScreen.routeName);
+          });
         }
-        else
-          {
-            setState(() {
-              Navigator.popAndPushNamed(context, LoginScreen.routeName);
-            });
-          }
       });
     }
   }
@@ -150,7 +150,7 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.popAndPushNamed(context, LoginScreen.routeName);
                         },
                         style: ButtonStyle(
@@ -174,8 +174,6 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
                   destinationRouteBySuccess: TabScreen.routeName,
                 ),
               ],
-            )
-        )
-    );
+            )));
   }
 }
