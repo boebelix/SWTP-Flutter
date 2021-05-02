@@ -19,58 +19,116 @@ import 'package:swtp_app/widgets/register.dart';
 import 'package:local_auth/local_auth.dart';
 
 void main() {
-  init().then((_) => runApp(MyApp()));
+  init().then((isloginAvailable) {
+    LocalAuthentication _auth=LocalAuthentication();
+    _checkIfBiometricsAvailable(_auth).then((value) => _getBiometrics(value,_auth)).then((value) => runApp(MyApp(biometricTypes: value,)));
+
+  });
 }
 
 //void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
-Future<void> init() async {
+Future<bool> init() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final _authentication=LocalAuthentication();
-  bool authenticated=false;
 
-  try {
-    bool canCheckBiometrics = await _authentication.canCheckBiometrics;
-    List<BiometricType> availableBiometrics = await _authentication.getAvailableBiometrics();
-    print("number of verifications: ${availableBiometrics.length}");
-    print("canCheckBiometrics: $canCheckBiometrics");
-    if(canCheckBiometrics)
-      if(availableBiometrics.contains(BiometricType.face)||availableBiometrics.contains(BiometricType.fingerprint))
-        {
-          authenticated=await _authentication.authenticate(localizedReason: 'please authenticate', biometricOnly: true);
-        }
-  }
-   on PlatformException catch(E)
-  {
-   print(E.message);
-  }
-
-  if(!authenticated){
-    return;
-  }
 
   bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
   bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
 
-  if (hasToken && hasUserId) {
+  return hasToken&&hasUserId;
+}
+
+Future<bool> _checkIfBiometricsAvailable(LocalAuthentication authentication) async {
+  bool canCheckBiometrics = false;
+  try {
+    canCheckBiometrics = await authentication.canCheckBiometrics;
+    return canCheckBiometrics;
+  } on PlatformException catch (E) {
+    print(E);
+  }
+  return false;
+}
+
+Future<List<BiometricType>> _getBiometrics(bool isAuthenticationAvailable, LocalAuthentication authentication) async {
+  List<BiometricType> availableBiometrics=[];
+  try {
+    if(isAuthenticationAvailable) {
+      availableBiometrics = await authentication.getAvailableBiometrics();
+    }
+  } on PlatformException catch (E) {
+    print(E);
+  }
+  return availableBiometrics;
+}
+
+class MyApp extends StatefulWidget {
+
+  final List<BiometricType> biometricTypes;
+
+  MyApp({this.biometricTypes});
+
+  @override
+  State<MyApp> createState() => MyAppState(biometricTypes: this.biometricTypes);
+}
+
+class MyAppState extends State<MyApp>{
+  final List<BiometricType> biometricTypes;
+  MyAppState({this.biometricTypes});
+
+
+  LocalAuthentication _authentication = LocalAuthentication();
+  bool _canCheckBiometrics=false;
+  List<BiometricType> _availableBiometrics = [];
+  bool authenticated = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  Future<void> authenticate() async
+  {
+    if(biometricTypes.isNotEmpty)
+    {
+      try{
+        print("number of verifications: ${_availableBiometrics.length}");
+        print("canCheckBiometrics: $_canCheckBiometrics");
+        if (_canCheckBiometrics) {
+          if (_availableBiometrics != null &&
+              (_availableBiometrics.contains(BiometricType.face) ||
+                  _availableBiometrics.contains(BiometricType.fingerprint))) {
+            authenticated = await _authentication.authenticate(
+                localizedReason: Language.of(context).authMessage, biometricOnly: true);
+          }
+        }
+      } on PlatformException catch (E) {
+        print(E);
+      }
+      setState(() {
+        if (authenticated) {
+          _loadLogInDataAndLogIn();
+        }
+      });
+    }
+  }
+
+  Future<void> _loadLogInDataAndLogIn()async{
     AuthService().token = await AuthEndpointProvider.storage.read(key: 'token');
     String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
     int userId = int.parse(userIdString);
     await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
 
-    AuthEndpointProvider().reloadUserResponse.fold((failure) {
-    }, (success) {
+    AuthEndpointProvider().reloadUserResponse.fold((failure) {}, (success) {
       GroupServiceProvider()
           .loadAllGroups()
           .then((value) => UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup))
           .then((value) => AuthService().loadUsersAndPoiData());
-
     });
   }
-}
 
-class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    authenticate();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
