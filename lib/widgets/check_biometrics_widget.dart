@@ -40,12 +40,10 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
     bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
     bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
 
-    setState(() {
       _isOldLogInAvailable = hasToken && hasUserId;
       if (!_isOldLogInAvailable) {
         Navigator.popAndPushNamed(context, LoginScreen.routeName);
       }
-    });
   }
 
   Future<void> _checkIfBiometricsAvailable() async {
@@ -98,9 +96,7 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
         if (authenticated) {
           _loadLogInDataAndLogIn();
         } else {
-          setState(() {
             Navigator.popAndPushNamed(context, LoginScreen.routeName);
-          });
         }
       });
     }
