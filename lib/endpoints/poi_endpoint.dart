@@ -268,18 +268,12 @@ class PoiEndpoint {
         body: bytesImage,
       );
 
-      if (response.statusCode == HttpStatus.ok) {
-        return Poi.fromJSON(jsonDecode(response.body));
-      }
-
       if (response.statusCode == HttpStatus.notFound) {
         throw Failure("${response.statusCode} ${response.body}");
       }
 
       if (response.statusCode == HttpStatus.forbidden) {
         throw Failure(FailureTranslation.text('responseUserInvalid'));
-      } else {
-        throw Failure(FailureTranslation.text('responseUnknownError'));
       }
     } on SocketException {
       throw Failure(FailureTranslation.text('noConnection'));

@@ -33,14 +33,5 @@ void main() {
       verify(authEndpoint.signIn(loginCredentials));
       expect(authService.user, user);
     });
-    //Problem: man kann nicht auf Fehler prüfen da diese nicht async kommen und wenn geworfen wird is der Task() nicht in der Lage das weiter zu verarbeiten?
-    /*test("login fail", () async{
-      when(authEndpoint.signIn(loginCredentials)).thenThrow( Failure(FailureTranslation.text('authFail')));
-
-      await authEndpointProvider.logIn(loginCredentials);
-
-      verify(authEndpoint.signIn(loginCredentials));
-      //expect(authEndpointProvider.authResponse.isLeft(), true);
-    });*/
   });
 }

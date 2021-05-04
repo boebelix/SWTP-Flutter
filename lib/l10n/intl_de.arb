@@ -68,9 +68,11 @@
   "password_safe": "Sicher",
   "password_very_safe": "Sehr sicher",
   "sureToLeaveGroup":"Wollen sie diese Gruppe wirklich verlassen?",
+  "sureToDenyInvitation": "Sicher das sie die Einladung zur Gruppe ablehnen wollen?",
   "yes": "Ja",
   "no": "Nein",
-  "sureToRemoveUser": "Wollen sie diesen NUtzer wirklich aus ihrer Gruppe entfernen / die Einladung zurücknehmen?",
+  "sureToRemoveUser": "Wollen sie diesen Nutzer wirklich aus ihrer Gruppe entfernen / die Einladung zurücknehmen?",
+  "sureToWithdrawInvitation": "Sicher das sie die Einladung zurückziehen wollen?",
   "authMessage": "Bitte Identifizieren sie sich, um die letzte sitzung fort zu setzen",
   "continueSession": "Möchten sie mit der letzten Sitzung fortfahren?"
 }
