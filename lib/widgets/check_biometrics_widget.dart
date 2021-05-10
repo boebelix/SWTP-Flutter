@@ -86,11 +86,11 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
               (_availableBiometrics.contains(BiometricType.face) ||
                   _availableBiometrics.contains(BiometricType.fingerprint))) {
             authenticated = await _authentication.authenticate(
-                localizedReason: Language.of(context).authMessage, biometricOnly: true);
+                localizedReason: Language.of(context).authMessage, biometricOnly: true,stickyAuth: true);
           }
         }
       } on PlatformException catch (E) {
-        print(E);
+        Navigator.popAndPushNamed(context, LoginScreen.routeName);
       }
       setState(() {
         if (authenticated) {
