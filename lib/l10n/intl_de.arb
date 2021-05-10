@@ -74,5 +74,6 @@
   "sureToRemoveUser": "Wollen sie diesen Nutzer wirklich aus ihrer Gruppe entfernen / die Einladung zurücknehmen?",
   "sureToWithdrawInvitation": "Sicher das sie die Einladung zurückziehen wollen?",
   "authMessage": "Bitte Identifizieren sie sich, um die letzte sitzung fort zu setzen",
-  "continueSession": "Möchten sie mit der letzten Sitzung fortfahren?"
+  "continueSession": "Möchten sie mit der letzten Sitzung fortfahren?",
+  "biometricNotPossible": "Biometrische Authentifizierung nicht möglich, bitte verwenden sie den regulären login, oder erstellen sie eine biometrsche Authentifizierung"
 }

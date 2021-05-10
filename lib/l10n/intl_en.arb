@@ -74,5 +74,6 @@
   "sureToRemoveUser": "Do you really want to remove this user from your group ",
   "sureToWithdrawInvitation": "Do you really want to withdraw the invitation?",
   "authMessage": "Please authenticate to resume previous session",
-  "continueSession": "Do you want to continue the last session?"
+  "continueSession": "Do you want to continue the last session?",
+  "biometricNotPossible": "Biometric authentication not possible, please use the regular login or set up your biometric authentification"
 }

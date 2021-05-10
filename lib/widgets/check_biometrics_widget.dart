@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:swtp_app/generated/l10n.dart';
+import 'package:swtp_app/models/failure.dart';
 import 'package:swtp_app/providers/auth_endpoint_provider.dart';
 import 'package:swtp_app/providers/group_service_provider.dart';
 import 'package:swtp_app/providers/user_service_provider.dart';
@@ -10,6 +11,7 @@ import 'package:swtp_app/screens/tabs_screen.dart';
 import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/auth_endpoint_visualisation.dart';
 import 'package:swtp_app/widgets/poi_endpoint_visualisation.dart';
+import 'package:swtp_app/widgets/warning_dialog.dart';
 
 class CheckBiometricsWidget extends StatefulWidget {
   static const routeName = '/biometrics';
@@ -26,7 +28,7 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
   bool _isOldLogInAvailable = true;
 
   LocalAuthentication _authentication = LocalAuthentication();
-  bool _canCheckBiometrics;
+  Future<bool> _canCheckBiometrics;
   List<BiometricType> _availableBiometrics = [];
   bool authenticated = false;
 
@@ -40,24 +42,20 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
     bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
     bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
 
-      _isOldLogInAvailable = hasToken && hasUserId;
-      if (!_isOldLogInAvailable) {
-        Navigator.popAndPushNamed(context, LoginScreen.routeName);
-      }
+    _isOldLogInAvailable = hasToken && hasUserId;
+    if (!_isOldLogInAvailable) {
+      Navigator.popAndPushNamed(context, LoginScreen.routeName);
+    }
   }
 
   Future<void> _checkIfBiometricsAvailable() async {
-    bool canCheckBiometrics = false;
     try {
-      canCheckBiometrics = await _authentication.canCheckBiometrics;
+      _canCheckBiometrics = _authentication.canCheckBiometrics;
 
       if (!mounted) {
         print("Not mounted");
         return;
       }
-      setState(() {
-        _canCheckBiometrics = canCheckBiometrics;
-      });
     } on PlatformException catch (E) {
       print(E);
     }
@@ -81,22 +79,22 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
       try {
         print("number of verifications: ${_availableBiometrics.length}");
         print("canCheckBiometrics: $_canCheckBiometrics");
-        if (_canCheckBiometrics) {
+        if (await _canCheckBiometrics) {
           if (_availableBiometrics != null &&
               (_availableBiometrics.contains(BiometricType.face) ||
                   _availableBiometrics.contains(BiometricType.fingerprint))) {
             authenticated = await _authentication.authenticate(
-                localizedReason: Language.of(context).authMessage, biometricOnly: true,stickyAuth: true);
+                localizedReason: Language.of(context).authMessage, biometricOnly: true, stickyAuth: true);
           }
         }
       } on PlatformException catch (E) {
-        Navigator.popAndPushNamed(context, LoginScreen.routeName);
+        setState(() {
+          _canCheckBiometrics = Future<bool>.value(false);
+        });
       }
       setState(() {
         if (authenticated) {
           _loadLogInDataAndLogIn();
-        } else {
-            Navigator.popAndPushNamed(context, LoginScreen.routeName);
         }
       });
     }
@@ -116,8 +114,7 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _createBiometricAuthWidget() {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -189,6 +186,31 @@ class CheckBiometricsWidgetState extends State<CheckBiometricsWidget> {
                 ),
               ],
             )));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+        future: _canCheckBiometrics,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Stack(
+              children: [
+                _createBiometricAuthWidget(),
+                if (!snapshot.data)
+                  PopUpWarningDialog(context: context, failure: Failure(Language.of(context).biometricNotPossible))
+              ],
+            );
+          } else {
+            return Center(
+              child: SizedBox(
+                child: CircularProgressIndicator(),
+                width: 60,
+                height: 60,
+              ),
+            );
+          }
+        });
   }
 
   Row _selectLanguage() {
