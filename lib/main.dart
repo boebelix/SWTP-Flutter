@@ -11,36 +11,13 @@ import 'package:swtp_app/screens/invite_user_screen.dart';
 import 'package:swtp_app/screens/login_screen.dart';
 import 'package:swtp_app/screens/profile_screen.dart';
 import 'package:swtp_app/screens/tabs_screen.dart';
-import 'package:swtp_app/services/auth_service.dart';
 import 'package:swtp_app/widgets/add_poi_form.dart';
+import 'package:swtp_app/widgets/check_biometrics_widget.dart';
 import 'package:swtp_app/widgets/poi_detail_widget.dart';
 import 'package:swtp_app/widgets/register.dart';
 
 void main() {
-  init().then((_) => runApp(MyApp()));
-}
-
-//void, da Route durch Endpoint visualisation gesetzt wird, die in einem Stack über LogIn Screen liegen
-Future<void> init() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  bool hasToken = await AuthEndpointProvider.storage.containsKey(key: 'token');
-  bool hasUserId = await AuthEndpointProvider.storage.containsKey(key: 'userId');
-
-  if (hasToken && hasUserId) {
-    AuthService().token = await AuthEndpointProvider.storage.read(key: 'token');
-    String userIdString = await AuthEndpointProvider.storage.read(key: 'userId');
-    int userId = int.parse(userIdString);
-    await AuthEndpointProvider().checkIfAlreadyLoggedInAndLoadUser(userId);
-
-    AuthEndpointProvider().reloadUserResponse.fold((failure) {
-    }, (success) {
-      GroupServiceProvider()
-          .loadAllGroups()
-          .then((value) => UserServiceProvider().getAllUsers(GroupServiceProvider().ownGroup))
-          .then((value) => AuthService().loadUsersAndPoiData());
-
-    });
-  }
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -81,7 +58,8 @@ class MyApp extends StatelessWidget {
         ),
         //keine initial Route, da Route durch Endpoint visualisation lassen gesetzt wird, die in Stack über LogIn Screen liegen
         routes: {
-          '/': (ctx) => LoginScreen(),
+          '/': (ctx) => CheckBiometricsWidget(),
+          CheckBiometricsWidget.routeName: (ctx)=>CheckBiometricsWidget(),
           TabScreen.routeName: (ctx) => TabScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           Register.routeName: (ctx) => Register(),
